@@ -1,18 +1,9 @@
 package com.paintail.android;
 
 import com.paintail.android.util.GSInfo;
-import com.paintail.android.util.WebApi;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.io.StringReader;
-//import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 //import java.util.ArrayList;
@@ -25,42 +16,23 @@ import android.location.LocationProvider;
 import com.paintail.android.R;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.R.drawable;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-//import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import android.util.Xml;
 
 import com.admob.android.ads.AdView;
 import com.google.android.maps.GeoPoint;
@@ -68,13 +40,11 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.paintail.android.ui.AboutActivity;
 import com.paintail.android.ui.SettingsActivity;
 import com.paintail.android.util.CenterCircleOverlay;
 import com.paintail.android.util.StandController;
-import com.paintail.android.util.XmlParserFromUrl;
 import com.paintail.android.util.InfoController;
 import com.paintail.android.util.LocationOverlay;
 

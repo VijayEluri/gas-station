@@ -21,12 +21,12 @@ public class GSInfo {
 	public String Rtc = null;
 	public String Self = null;
 	
-	//URL—R—ˆ‚ÌƒXƒgƒŠ[ƒ€
+	//URLç”±æ¥ã®ã‚¹ãƒˆãƒªãƒ¼ãƒ 
     protected InputStream is;
     
     protected ArrayList<GSInfo> list;
     
-    //ƒXƒgƒŠ[ƒ€‚ğ•Â‚¶‚éˆ—‚ğ‹¤’Êƒƒ\ƒbƒh‚Æ‚µ‚Ä’è‹`
+    //ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’é–‰ã˜ã‚‹å‡¦ç†ã‚’å…±é€šãƒ¡ã‚½ãƒƒãƒ‰ã¨ã—ã¦å®šç¾©
 	public void close() {
 		if (is != null) {
 			try {
@@ -38,7 +38,7 @@ public class GSInfo {
 		}
 	}
 	
-	// ƒKƒ\ƒŠƒ“ƒXƒ^ƒ“ƒhî•ñ‚ğæ“¾Eİ’è‚·‚é
+	// ã‚¬ã‚½ãƒªãƒ³ã‚¹ã‚¿ãƒ³ãƒ‰æƒ…å ±ã‚’å–å¾—ãƒ»è¨­å®šã™ã‚‹
 	public void setGSInfoList(String url) {
 
         is = WebApi.accessURL(url);

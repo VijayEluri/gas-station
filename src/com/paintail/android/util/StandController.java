@@ -174,10 +174,8 @@ public class StandController extends Thread {
 		scroll = view;
     }
     
-    //天気提供地域を取得
+    // ビューの取得
 	public ScrollView getView() {
 	    return scroll;
-	}
-
-    
+	}   
 }

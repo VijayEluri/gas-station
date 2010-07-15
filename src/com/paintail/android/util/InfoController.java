@@ -12,24 +12,24 @@ public class InfoController extends Thread {
     
 	private GSInfo gsInfo;
 	
-    //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	public InfoController(Handler handler, Runnable listener, String url) {
 		this.handler   = handler;
 		this.listener  = listener;
 		this.url       = url;
 		
-		//Šeî•ñæ“¾ƒNƒ‰ƒX‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»
+		//å„æƒ…å ±å–å¾—ã‚¯ãƒ©ã‚¹ã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
         gsInfo = new GSInfo();
 	}
 	
     @Override
     public void run() {
     	gsInfo.setGSInfoList(this.url);
-        //I—¹‚ğ’Ê’m
+        //çµ‚äº†ã‚’é€šçŸ¥
         handler.post(listener);
     }
     
-    //“V‹C’ñ‹Ÿ’nˆæ‚ğæ“¾
+    // ã‚¬ã‚½ãƒªãƒ³ã‚¹ã‚¿ãƒ³ãƒ‰æƒ…å ±ã‚’å–å¾—
 	public ArrayList<GSInfo> getGSInfoList() {
 		return gsInfo.getGSInfoList();
 	}
