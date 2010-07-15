@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_title">
+    <ListPreference
+      android:key="settings_pin_type"
+      android:title="@string/settings_pin_type_title"
+      android:summary="@string/settings_pin_type_summary"
+      android:dialogTitle="@string/settings_pin_type_dialogtitle"
+      android:entries="@array/settings_list_pin_type"
+      android:entryValues="@array/settings_list_pin_typevalues" />
+  </PreferenceCategory>  
+  <PreferenceCategory android:title="@string/settings_search_title">
+    <ListPreference
+      android:key="settings_dist"
+      android:title="@string/settings_dist_title"
+      android:summary="@string/settings_dist_summary"
+      android:dialogTitle="@string/settings_dist_dialogtitle"
+      android:entries="@array/settings_list_dist"
+      android:entryValues="@array/settings_list_distvalues" />
+    <ListPreference
+      android:key="settings_num"
+      android:title="@string/settings_num_title"
+      android:summary="@string/settings_num_summary"
+      android:dialogTitle="@string/settings_num_dialogtitle"
+      android:entries="@array/settings_list_num"
+      android:entryValues="@array/settings_list_numvalues" />
+    <ListPreference
+      android:key="settings_span"
+      android:title="@string/settings_span_title"
+      android:summary="@string/settings_span_summary"
+      android:dialogTitle="@string/settings_span_dialogtitle"
+      android:entries="@array/settings_list_span"
+      android:entryValues="@array/settings_list_spanvalues" />
+    <ListPreference
+      android:key="settings_kind"
+      android:title="@string/settings_kind_title"
+      android:summary="@string/settings_kind_summary"
+      android:dialogTitle="@string/settings_kind_dialogtitle"
+      android:entries="@array/settings_list_kind"
+      android:entryValues="@array/settings_list_kindvalues" />
+    <CheckBoxPreference
+      android:key="settings_member"
+      android:title="@string/settings_member_title"
+      android:summary="@string/settings_member_summary" />
+  </PreferenceCategory>
+</PreferenceScreen>

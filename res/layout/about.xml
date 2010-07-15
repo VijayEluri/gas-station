@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+
+<TableLayout android:id="@+id/TableLayout01" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ガススタについて" android:paddingLeft="5px" android:paddingTop="25px" android:textColor="#6699FF" android:textSize="17sp"></TextView>
+<TextView android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="このアプリはgogo.gsの「ガソリン価格情報WEBサービスAPI」を利用したガソリンスタンド検索アプリです。" android:paddingLeft="10px" android:paddingTop="5px" android:paddingBottom="3px"></TextView>
+<TextView android:id="@+id/TextView03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingLeft="20px" android:text="・提供される情報は正確性を保証するものではありません。" android:textSize="11sp"></TextView>
+
+<TextView android:id="@+id/TextView04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="・情報が継続して提供されることは保証されていません。" android:paddingLeft="20px" android:textSize="11sp"></TextView>
+<ImageView android:id="@+id/ImageView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/credit" android:padding="5px"></ImageView><Button android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="地図に戻る" android:layout_marginTop="20px"></Button>
+</TableLayout>

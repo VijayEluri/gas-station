@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="app_name">ガススタ！</string>
+    <string name="title">サンプル</string>
+    <string name="settings_label">設定</string>
+    <string name="settings_title">地図の設定</string>
+    <string name="settings_search_title">検索条件</string>
+ 	<string name="settings_pin_type_key">settings_pin_type</string>
+    <string name="settings_pin_type_title">ピンの種類</string>
+    <string name="settings_pin_type_summary">地図上に表示するピンの種類を設定します</string>
+    <string name="settings_pin_type_dialogtitle">ピンの種類</string>
+    
+    <string name="settings_dist_key">settings_dist</string>
+    <string name="settings_dist_title">中心からの距離</string>
+    <string name="settings_dist_summary">指定された半径にあるガソリンスタンドを検索します</string>
+    <string name="settings_dist_dialogtitle">中心からの距離</string>
+    <string name="settings_num_title">件数</string>
+    <string name="settings_num_summary">表示されるガソリンスタンドの件数を設定します</string>
+    <string name="settings_num_dialogtitle">件数</string>
+    <string name="settings_span_title">期間</string>
+    <string name="settings_span_summary">指定された期間に登録された情報を検索します</string>
+    <string name="settings_span_dialogtitle">期間</string>
+    <string name="settings_kind_title">油種</string>
+    <string name="settings_kind_summary">検索するガソリンの油種を設定します</string>
+    <string name="settings_kind_dialogtitle">油種</string>
+    <string name="settings_member_summary">チェックを外すと現金フリー価格で検索します</string>
+    <string name="settings_member_title">会員価格</string>
+    
+    <string name="dialog_title_err">エラー</string>
+	<string name="dialog_message_out_of_range">データがありません</string>
+    <string name="dialog_message_getting_data">データ取得中</string>
+    
+</resources>

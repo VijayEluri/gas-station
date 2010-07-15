@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="list_entries">
+    <item>First</item>
+    <item>Second</item>
+    <item>Third</item>
+  </string-array>
+  <string-array name="list_entryvalues">
+    <item>first</item>
+    <item>second</item>
+    <item>third</item>
+  </string-array>
+  <string-array name="settings_list_pin_type">
+    <item>価格</item>
+    <item>ブランド</item>
+  </string-array>
+  <string-array name="settings_list_pin_typevalues">
+    <item>price</item>
+    <item>brand</item>
+  </string-array>
+  <string-array name="settings_list_dist">
+    <item>5km</item>
+    <item>10km</item>
+    <item>25km</item>
+    <item>50km</item>
+  </string-array>
+  <string-array name="settings_list_distvalues">
+    <item>5</item>
+    <item>10</item>
+    <item>25</item>
+    <item>50</item>
+  </string-array>
+  <string-array name="settings_list_num">
+    <item>10件</item>
+    <item>25件</item>
+    <item>50件</item>
+    <item>100件</item>
+  </string-array>
+  <string-array name="settings_list_numvalues">
+    <item>10</item>
+    <item>25</item>
+    <item>50</item>
+    <item>100</item>
+  </string-array>
+  <string-array name="settings_list_span">
+    <item>3日以内</item>
+    <item>7日以内</item>
+    <item>14日以内</item>
+    <item>30日以内</item>
+  </string-array>
+  <string-array name="settings_list_spanvalues">
+    <item>3</item>
+    <item>7</item>
+    <item>14</item>
+    <item>30</item>
+  </string-array>
+  <string-array name="settings_list_kind">
+    <item>レギュラー</item>
+    <item>ハイオク</item>
+    <item>軽油</item>
+    <item>灯油</item>
+  </string-array>
+  <string-array name="settings_list_kindvalues">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+  </string-array>
+</resources>
