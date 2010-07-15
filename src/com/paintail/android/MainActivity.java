@@ -92,7 +92,7 @@ public class MainActivity extends MapActivity implements Runnable {
     private ProgressDialog dialog;
 	private Resources resource;
 
-	//“VŒóî•ñ¶¬ƒNƒ‰ƒX
+	//å¤©å€™æƒ…å ±ç”Ÿæˆã‚¯ãƒ©ã‚¹
 	private InfoController infoController;
 	
 	private final Handler handler = new Handler();
@@ -120,7 +120,7 @@ public class MainActivity extends MapActivity implements Runnable {
 
 //        mMapView.invalidate();
 	    
-        // ˆÊ’uî•ñ‚Ìæ“¾‚ğŠJn
+        // ä½ç½®æƒ…å ±ã®å–å¾—ã‚’é–‹å§‹
         mLocationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME,
                 LOCATION_MIN_DISTANCE, mListener);
@@ -218,23 +218,23 @@ public class MainActivity extends MapActivity implements Runnable {
 	    }
 	    
 		/**
-		 * ƒAƒCƒeƒ€‚ªƒ^ƒbƒv‚³‚ê‚½‚Ìˆ—
+		 * ã‚¢ã‚¤ãƒ†ãƒ ãŒã‚¿ãƒƒãƒ—ã•ã‚ŒãŸæ™‚ã®å‡¦ç†
 		 */
 		@Override
 		protected boolean onTap(int index) {
 			
-			//ƒ}ƒbƒv’†S‚Ìü•Ó‚É‚ ‚éƒKƒ\ƒŠƒ“ƒXƒ^ƒ“ƒhî•ñ‚ğæ“¾‚·‚é
+			//ãƒãƒƒãƒ—ä¸­å¿ƒã®å‘¨è¾ºã«ã‚ã‚‹ã‚¬ã‚½ãƒªãƒ³ã‚¹ã‚¿ãƒ³ãƒ‰æƒ…å ±ã‚’å–å¾—ã™ã‚‹
 			stand = new StandController(handler, this, MainActivity.this, gsInfo.get(index));
 
-	        //ƒvƒƒOƒŒƒXƒ_ƒCƒAƒƒO‚ğ•\¦
+	        //ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
             resource = getResources();
             dialog = new ProgressDialog(MainActivity.this);
 	        dialog.setIndeterminate(true);
 	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
 	        dialog.show();
 
-			// ƒ}ƒbƒv‚Ì’†SÀ•W‚ğAƒ^ƒbƒv‚³‚ê‚½ƒAƒCƒeƒ€‚É‡‚í‚¹‚é
-			// mapControler‚ÍAƒpƒbƒP[ƒWƒXƒR[ƒv‚ÅéŒ¾
+			// ãƒãƒƒãƒ—ã®ä¸­å¿ƒåº§æ¨™ã‚’ã€ã‚¿ãƒƒãƒ—ã•ã‚ŒãŸã‚¢ã‚¤ãƒ†ãƒ ã«åˆã‚ã›ã‚‹
+			// mapControlerã¯ã€ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã‚¹ã‚³ãƒ¼ãƒ—ã§å®£è¨€
 			mMapController.animateTo(this.getItem(index).getPoint());
 
 	        stand.start();
@@ -243,7 +243,7 @@ public class MainActivity extends MapActivity implements Runnable {
 		
 		@Override
 		public void run() {
-			//ƒvƒƒOƒŒƒXƒ_ƒCƒAƒƒO‚ğ•Â‚¶‚é
+			//ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’é–‰ã˜ã‚‹
 			dialog.dismiss();
 
 	    	AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -302,19 +302,19 @@ public class MainActivity extends MapActivity implements Runnable {
 	
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO ©“®¶¬‚³‚ê‚½ƒƒ\ƒbƒhEƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸãƒ¡ã‚½ãƒƒãƒ‰ãƒ»ã‚¹ã‚¿ãƒ–
 		return false;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
 	    super.onCreateOptionsMenu( menu );
-	    // ƒƒjƒ…[ƒAƒCƒeƒ€‚ğ’Ç‰Á
-	    MenuItem item1 = menu.add( 0, 2, 0, "ŒŸõ" );
-	    MenuItem item2 = menu.add( 0, 0, 0, "İ’è" );
-	    MenuItem item0 = menu.add( 0, 1, 0, "Œ»İ’n" );
+	    // ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚¢ã‚¤ãƒ†ãƒ ã‚’è¿½åŠ 
+	    MenuItem item1 = menu.add( 0, 2, 0, "æ¤œç´¢" );
+	    MenuItem item2 = menu.add( 0, 0, 0, "è¨­å®š" );
+	    MenuItem item0 = menu.add( 0, 1, 0, "ç¾åœ¨åœ°" );
 	    MenuItem item3 = menu.add( 0, 3, 0, "about" );
-	    // ’Ç‰Á‚µ‚½ƒƒjƒ…[ƒAƒCƒeƒ€‚ÌƒAƒCƒRƒ“‚ğİ’è
+	    // è¿½åŠ ã—ãŸãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚¢ã‚¤ãƒ†ãƒ ã®ã‚¢ã‚¤ã‚³ãƒ³ã‚’è¨­å®š
 	    item0.setIcon( android.R.drawable.ic_menu_mylocation);
 	    item1.setIcon( android.R.drawable.ic_menu_search );
 	    item2.setIcon( android.R.drawable.ic_menu_preferences );
@@ -332,7 +332,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	        return true;
 	    case 1:
 	        if (myLocation == null) {
-        		Toast.makeText(MainActivity.this, "Œ»İ’n‚ğ“Á’è‚Å‚«‚Ü‚¹‚ñ", Toast.LENGTH_LONG).show();
+        		Toast.makeText(MainActivity.this, "ç¾åœ¨åœ°ã‚’ç‰¹å®šã§ãã¾ã›ã‚“", Toast.LENGTH_LONG).show();
 	            return true;
 	        }
 	        
@@ -340,7 +340,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	        location.setMyLocation(myLocation);
 	        mMapView.getOverlays().add(location);
 
-            // æ“¾‚µ‚½ˆÊ’u‚ğAƒ}ƒbƒv‚Ì’†S‚ğİ’è
+            // å–å¾—ã—ãŸä½ç½®ã‚’ã€ãƒãƒƒãƒ—ã®ä¸­å¿ƒã‚’è¨­å®š
             mMapController.animateTo( new GeoPoint(
                     (int) (myLocation.getLatitude() * E6),
                     (int) (myLocation.getLongitude() * E6)));
@@ -358,7 +358,7 @@ public class MainActivity extends MapActivity implements Runnable {
                 }
                 url_string = url_string + "&kind=" +  PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_kind", "0");
 
-                // ’n}‚Ì’†SˆÊ’u‚ğæ“¾
+                // åœ°å›³ã®ä¸­å¿ƒä½ç½®ã‚’å–å¾—
                 GeoPoint center = mMapView.getMapCenter();
                 url_string = url_string + "&lat=" +  (double) center.getLatitudeE6() / E6;
                 url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
@@ -366,10 +366,10 @@ public class MainActivity extends MapActivity implements Runnable {
                 String url = url_string + "&sort=d";
                 Log.d(LOG_TAG, "url = " + url.toString());
                 
-    			//ƒ}ƒbƒv’†S‚Ìü•Ó‚É‚ ‚éƒKƒ\ƒŠƒ“ƒXƒ^ƒ“ƒhî•ñ‚ğæ“¾‚·‚é
+    			//ãƒãƒƒãƒ—ä¸­å¿ƒã®å‘¨è¾ºã«ã‚ã‚‹ã‚¬ã‚½ãƒªãƒ³ã‚¹ã‚¿ãƒ³ãƒ‰æƒ…å ±ã‚’å–å¾—ã™ã‚‹
     			infoController = new InfoController(handler, this, url);
 
-    	        //ƒvƒƒOƒŒƒXƒ_ƒCƒAƒƒO‚ğ•\¦
+    	        //ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
                 resource = getResources();
                 dialog = new ProgressDialog(this);
     	        dialog.setIndeterminate(true);
@@ -391,15 +391,15 @@ public class MainActivity extends MapActivity implements Runnable {
 	}
 	
 	@Override
-	//“ssˆê——‚Ìæ“¾ˆ—I—¹Œã‚ÉÀs‚³‚ê‚é
+	//éƒ½å¸‚ä¸€è¦§ã®å–å¾—å‡¦ç†çµ‚äº†å¾Œã«å®Ÿè¡Œã•ã‚Œã‚‹
 	public void run() {
-		//ƒvƒƒOƒŒƒXƒ_ƒCƒAƒƒO‚ğ•Â‚¶‚é
+		//ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’é–‰ã˜ã‚‹
 		dialog.dismiss();
 
         ArrayList<GSInfo> list = infoController.getGSInfoList();
         PinItemizedOverlay pinOverlay = null;
         
-        //æ“¾‚É¸”s
+        //å–å¾—ã«å¤±æ•—
 		if(list == null | list.size() <= 0) {
     		Toast.makeText(this, resource.getText(R.string.dialog_message_out_of_range), Toast.LENGTH_LONG).show();
 /*
@@ -415,9 +415,9 @@ public class MainActivity extends MapActivity implements Runnable {
 			ad.show();
 			*/
 		} else {
-    		Toast.makeText(this, list.size() + "Œ‚ÌƒXƒ^ƒ“ƒh‚ªŒ©‚Â‚©‚è‚Ü‚µ‚½", Toast.LENGTH_LONG).show();
+    		Toast.makeText(this, list.size() + "ä»¶ã®ã‚¹ã‚¿ãƒ³ãƒ‰ãŒè¦‹ã¤ã‹ã‚Šã¾ã—ãŸ", Toast.LENGTH_LONG).show();
 
-	    	// MapViewã‚É•\¦‚µ‚½‚¢ƒrƒbƒgƒ}ƒbƒvî•ñ‚ğAƒŠƒ\[ƒX‚©‚çæ“¾
+	    	// MapViewä¸Šã«è¡¨ç¤ºã—ãŸã„ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—æƒ…å ±ã‚’ã€ãƒªã‚½ãƒ¼ã‚¹ã‹ã‚‰å–å¾—
 			Drawable brand01 = getResources().getDrawable(R.drawable.jomo);
 			Drawable brand02 = getResources().getDrawable(R.drawable.esso);
 			Drawable brand03 = getResources().getDrawable(R.drawable.eneos);
@@ -498,7 +498,7 @@ public class MainActivity extends MapActivity implements Runnable {
     	        pinOverlay.addPoint( new GeoPoint(
                         (int) ((double) info.getLatitude() * E6),
                         (int) (Double.parseDouble(info.getLongitude()) * E6)));
-    	        pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n" + info.Address + "\n" + info.Price + "‰~");
+    	        pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n" + info.Address + "\n" + info.Price + "å††");
     	        pinOverlay.setPrice(info.Price);
        	        pinOverlay.setGSInfo(info);
       	        mMapView.getOverlays().add(pinOverlay);
@@ -514,7 +514,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	}
 
     /**
-     * ˆÊ’uî•ñ‚ÌXV‚ğˆ—‚·‚éƒŠƒXƒi[
+     * ä½ç½®æƒ…å ±ã®æ›´æ–°ã‚’å‡¦ç†ã™ã‚‹ãƒªã‚¹ãƒŠãƒ¼
      */
     private LocationListener mListener = new LocationListener() {
         public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -523,10 +523,10 @@ public class MainActivity extends MapActivity implements Runnable {
         	case LocationProvider.AVAILABLE:
         		break;
         	case LocationProvider.OUT_OF_SERVICE:
-        		Toast.makeText(MainActivity.this, "GPSƒT[ƒrƒX‚ª—˜—p‚Å‚«‚Ü‚¹‚ñ", Toast.LENGTH_LONG).show();
+        		Toast.makeText(MainActivity.this, "GPSã‚µãƒ¼ãƒ“ã‚¹ãŒåˆ©ç”¨ã§ãã¾ã›ã‚“", Toast.LENGTH_LONG).show();
         		break;
         	case LocationProvider.TEMPORARILY_UNAVAILABLE:
-//        		Toast.makeText(MainActivity.this, "GPSƒf[ƒ^‚ğæ“¾‚Å‚«‚Ü‚¹‚ñ", Toast.LENGTH_LONG).show();
+//        		Toast.makeText(MainActivity.this, "GPSãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã§ãã¾ã›ã‚“", Toast.LENGTH_LONG).show();
         		break;
         	}
         }
