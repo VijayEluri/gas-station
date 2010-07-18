@@ -1,7 +1,6 @@
 package org.chrysaor.android.gas_station.util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Handler;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">ガススタ</string>
+    <string name="app_name">ガススタ!</string>
     <string name="title">サンプル</string>
     <string name="settings_label">設定</string>
     <string name="settings_title">地図の設定</string>

@@ -150,7 +150,7 @@ public class StandController extends Thread {
 			Bitmap imgBitmap;
 			ImageView imgView = new ImageView(context);
 			String url = "http://gogo.gs/images/rally/" + info.ShopCode + "-" + info.Photo + ".jpg";
-            Log.d(LOG_TAG, "url = " + url);
+//            Log.d(LOG_TAG, "url = " + url);
 
 			imgBitmap = WebApi.getImageBitmapOnWeb(url);
 

@@ -6,28 +6,16 @@ import com.google.android.maps.Overlay;
 import org.chrysaor.android.gas_station.R;
 
 import android.content.Context;
-import android.content.Intent;
-import android.view.MotionEvent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.preference.PreferenceManager;
-
-import java.util.ArrayList;
-
-import org.chrysaor.android.gas_station.MainActivity;
 
 public class CenterCircleOverlay extends Overlay {
 
   private final Paint errorCirclePaint;
   private final Paint centerCirclePaint;
   private final Context context;
-
-  private Location myLocation;
 
   public CenterCircleOverlay(Context context) {
     this.context = context;

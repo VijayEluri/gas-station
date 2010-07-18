@@ -107,11 +107,12 @@ public class MainActivity extends MapActivity implements Runnable {
         mMapView.addView(adView);
 
         mMapView.invalidate();
-	    
+	    /*
         // 位置情報の取得を開始
         mLocationManager = ((LocationManager) getSystemService(Context.LOCATION_SERVICE));
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME,
                 LOCATION_MIN_DISTANCE, mListener);
+                */
     }
 	
     
@@ -125,7 +126,7 @@ public class MainActivity extends MapActivity implements Runnable {
         
         super.onResume();
 
-        Log.d(LOG_TAG, "gas resume");
+//        Log.d(LOG_TAG, "gas resume");
     }
     
     @Override
@@ -135,7 +136,7 @@ public class MainActivity extends MapActivity implements Runnable {
             mLocationManager.removeUpdates(mListener);
         }
         
-        Log.d(LOG_TAG, "gas pause");
+//        Log.d(LOG_TAG, "gas pause");
 
         super.onPause();
     }
@@ -172,7 +173,7 @@ public class MainActivity extends MapActivity implements Runnable {
 
 	    @Override
 	    protected PinOverlayItem createItem(int i) {
-            Log.d(LOG_TAG, "index = " + this.size());
+//            Log.d(LOG_TAG, "index = " + this.size());
 
 	    	GeoPoint point = points.get(i);
 	    	return new PinOverlayItem(point);
@@ -184,26 +185,15 @@ public class MainActivity extends MapActivity implements Runnable {
 	    }
 
 	    public void addPoint(GeoPoint point) {
-	        this.points.add(point);
+	        points.add(point);
 	        populate();
 	    }
 		
 	    public void clearPoint() {
-	        this.points.clear();
+	        points.clear();
 	        populate();
 	    }
-	    
-	    public Boolean checkPoint(GeoPoint point) {
-	    	Integer i = 0;
-	    	for(i=0;i< this.points.size();i++) {
-	            if (point.equals(this.points.get(i))) {
-	                return true;
-	             }
-	    	}
-	    	
-	    	return false;
-	    }
-	    
+	    	    
 	    public void setMsg(String msg) {
 	        this.msgs.add(msg);
 	    }
@@ -261,8 +251,6 @@ public class MainActivity extends MapActivity implements Runnable {
 		    if (shadow) {
 		    	return;
 		    }
-		    
-		    String pin_type = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_pin_type", "price");
 		    
             for (int i=0;i<prices.size();i++) {
 
@@ -340,7 +328,7 @@ public class MainActivity extends MapActivity implements Runnable {
     		GeoPoint l = overlay.getMyLocation();
     		
     		if (l == null) {
-        		Toast.makeText(this, "現在地を取得できません", Toast.LENGTH_LONG).show();	    			
+        		Toast.makeText(this, "現在地を特定できません", Toast.LENGTH_LONG).show();	    			
     		} else {
                 // 取得した位置をマップの中心に設定
                 mMapController.animateTo(l);
@@ -364,7 +352,7 @@ public class MainActivity extends MapActivity implements Runnable {
                 url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
 
                 String url = url_string + "&sort=d";
-                Log.d(LOG_TAG, "url = " + url.toString());
+//                Log.d(LOG_TAG, "url = " + url.toString());
                 
     			//マップ中心の周辺にあるガソリンスタンド情報を取得する
     			infoController = new InfoController(handler, this, url);
@@ -376,6 +364,13 @@ public class MainActivity extends MapActivity implements Runnable {
     	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
     	        dialog.show();
     	        
+    	        mMapView.getOverlays().clear();
+    	        CenterCircleOverlay location = new CenterCircleOverlay(this);
+    	        mMapView.getOverlays().add(location);
+    	        
+    			// Overlayとして登録
+    			mMapView.getOverlays().add(overlay);
+
     	        infoController.start();
             }catch(Exception e){
                 Log.d(LOG_TAG, e.getMessage());
@@ -396,7 +391,7 @@ public class MainActivity extends MapActivity implements Runnable {
 
         ArrayList<GSInfo> list = infoController.getGSInfoList();
         PinItemizedOverlay pinOverlay = null;
-        
+        		
         //取得に失敗
 		if(list == null | list.size() <= 0) {
     		Toast.makeText(this, resource.getText(R.string.dialog_message_out_of_range), Toast.LENGTH_LONG).show();
@@ -443,10 +438,10 @@ public class MainActivity extends MapActivity implements Runnable {
             for (int i=0;i<list.size();i++) {
 
             	GSInfo info = list.get(i);
-            	Log.d(LOG_TAG, "i:" + i);
+//            	Log.d(LOG_TAG, "i:" + i);
 //                Log.d(LOG_TAG, "lat:" + info.getLatitude().toString());
 //                Log.d(LOG_TAG, info.getLongitude());
-                Log.d(LOG_TAG, info.Brand);
+//                Log.d(LOG_TAG, info.Brand);
                 
                 if (pin_type.compareTo("price") == 0) {
                 	pinOverlay = speechOverlay;                	
@@ -486,14 +481,13 @@ public class MainActivity extends MapActivity implements Runnable {
                         (int) ((double) info.getLatitude() * E6),
                         (int) (Double.parseDouble(info.getLongitude()) * E6));
                 
-                if (pinOverlay.checkPoint(point) == false) {
-    	            pinOverlay.addPoint(point);
-    	            pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n" + info.Address + "\n" + info.Price + "円");
-    	            pinOverlay.setPrice(info.Price);
-    	            pinOverlay.setPinType(PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price"));
-       	            pinOverlay.setGSInfo(info);
-      	            mMapView.getOverlays().add(pinOverlay);
-                }
+	            pinOverlay.addPoint(point);
+	            pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n" + info.Address + "\n" + info.Price + "円");
+	            pinOverlay.setPrice(info.Price);
+	            pinOverlay.setPinType(PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price"));
+   	            pinOverlay.setGSInfo(info);
+  	            mMapView.getOverlays().add(pinOverlay);
+
             }
             
             /*
@@ -502,7 +496,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	        mMapView.getOverlays().add(location);
 */
             mMapView.invalidate();
-        }		
+        }
 	}
 
     /**

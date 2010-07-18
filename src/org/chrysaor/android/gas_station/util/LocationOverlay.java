@@ -1,9 +1,7 @@
 package org.chrysaor.android.gas_station.util;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
-import org.chrysaor.android.gas_station.R;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,10 +14,11 @@ public class LocationOverlay extends MyLocationOverlay {
     public LocationOverlay(Context context, MapView mapView) {  
         super(context, mapView);  
         this.mv = mapView;  
+        this.disableCompass();
     }  
   
     public void setMyLocationFlag(boolean flag){  
-        myLocationFlag = flag;  
+        myLocationFlag = flag;
           
     }  
       

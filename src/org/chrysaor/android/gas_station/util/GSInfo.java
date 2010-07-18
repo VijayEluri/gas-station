@@ -43,8 +43,6 @@ public class GSInfo {
 
         is = WebApi.accessURL(url);
               
-        String alert = null;
-      
         XmlParserFromUrl xml = new XmlParserFromUrl();
         this.list = xml.getGSInfoFromXML(is);
 
@@ -56,7 +54,7 @@ public class GSInfo {
 	}
 
 	public void setData(String key, String value) {
-        Log.d(LOG_TAG, "key:" + key + ", value" + value);
+//        Log.d(LOG_TAG, "key:" + key + ", value" + value);
 
 		if (key.compareTo("ShopCode") == 0) {
 			this.ShopCode = value;
