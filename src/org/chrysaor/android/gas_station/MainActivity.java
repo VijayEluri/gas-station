@@ -25,7 +25,11 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.app.AlertDialog;
@@ -49,7 +53,7 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 
 public class MainActivity extends MapActivity implements Runnable {
-    private static final String LOG_TAG = "MainActivity";
+    private static final String LOG_TAG = "GasStation";
 
     private static final int E6 = 1000000;
     private MapController mMapController = null;
@@ -99,6 +103,13 @@ public class MainActivity extends MapActivity implements Runnable {
 
 		// Overlayとして登録
 		mMapView.getOverlays().add(overlay);
+		
+		ImageButton img = (ImageButton) findViewById(R.id.main_search);
+        img.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+    	    	MainActivity.this.searchAction();
+        	}
+        });
 		
         AdView adView = new AdView(this); 
         adView.setVisibility(android.view.View.VISIBLE); 
@@ -158,141 +169,6 @@ public class MainActivity extends MapActivity implements Runnable {
   	  return true;
     }
 	
-	public class PinItemizedOverlay extends ItemizedOverlay<PinOverlayItem> implements Runnable {
-
-	    private List<GeoPoint> points = new ArrayList<GeoPoint>();
-	    private List<String> msgs = new ArrayList<String>();
-	    private List<String> prices = new ArrayList<String>();
-	    private List<String> pin_types = new ArrayList<String>();
-	    private List<GSInfo> gsInfo = new ArrayList<GSInfo>();
-	    private StandController stand;
-
-	    public PinItemizedOverlay(Drawable defaultMarker) {
-	        super( boundCenterBottom(defaultMarker) );
-	    }
-
-	    @Override
-	    protected PinOverlayItem createItem(int i) {
-//            Log.d(LOG_TAG, "index = " + this.size());
-
-	    	GeoPoint point = points.get(i);
-	    	return new PinOverlayItem(point);
-	    }
-
-	    @Override
-	    public int size() {
-	        return points.size();
-	    }
-
-	    public void addPoint(GeoPoint point) {
-	        points.add(point);
-	        populate();
-	    }
-		
-	    public void clearPoint() {
-	        points.clear();
-	        populate();
-	    }
-	    	    
-	    public void setMsg(String msg) {
-	        this.msgs.add(msg);
-	    }
-
-	    public void setPinType(String type) {
-	        this.pin_types.add(type);
-	    }
-
-	    public void setPrice(String title) {
-	        this.prices.add(title);
-	    }
-	    
-	    public void setGSInfo(GSInfo info) {
-	        this.gsInfo.add(info);
-	    }
-	    
-		/**
-		 * アイテムがタップされた時の処理
-		 */
-		@Override
-		protected boolean onTap(int index) {
-			
-			//マップ中心の周辺にあるガソリンスタンド情報を取得する
-			stand = new StandController(handler, this, MainActivity.this, gsInfo.get(index));
-
-	        //プログレスダイアログを表示
-            resource = getResources();
-            dialog = new ProgressDialog(MainActivity.this);
-	        dialog.setIndeterminate(true);
-	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
-	        dialog.show();
-
-			// マップの中心座標を、タップされたアイテムに合わせる
-			// mapControlerは、パッケージスコープで宣言
-			mMapController.animateTo(this.getItem(index).getPoint());
-
-	        stand.start();
-			return true;
-		}
-		
-		@Override
-		public void run() {
-			//プログレスダイアログを閉じる
-			dialog.dismiss();
-
-	    	AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-	        alertDialogBuilder.setView(stand.getView());
-	        alertDialogBuilder.show();
-		}		
-		
-		@Override
-		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-		    super.draw(canvas, mapView, shadow);
-		    
-		    if (shadow) {
-		    	return;
-		    }
-		    
-            for (int i=0;i<prices.size();i++) {
-
-            	String price = prices.get(i);
-            	GeoPoint locate = points.get(i);
-            	String pin = pin_types.get(i);
-                
-            	if (pin.compareTo("brand") == 0) {
-            		continue;
-            	}
-            	
-    		    Paint p = new Paint();
-    		    int sz = 5;
-    		    
-    		    Point pt = new Point();
-    		    mapView.getProjection().toPixels(locate, pt);
-    		        
-    		    // Convert to screen coords
-//    		    pc.getPointXY(mDefPoint, scoords);
-
-    		    // Draw point caption and its bounding rectangle
-    		    p.setTextSize(14);
-    		    p.setAntiAlias(true);
-    		    int sw = (int)(p.measureText(price) + 0.5f);
-    		    int sh = 25;
-    		    int sx = pt.x - sw / 2 - 5;
-    		    int sy = pt.y - sh - sz - 2;
-
-    		    canvas.drawText(price, sx + 5, sy + sh - 8, p);
-            }
-		    return;
-		}
-	}
-	
-	public class PinOverlayItem extends OverlayItem {
-
-	    public PinOverlayItem(GeoPoint point){
-	        super(point, "", "");
-	    }
-	    
-	}
-	
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -335,53 +211,57 @@ public class MainActivity extends MapActivity implements Runnable {
     		}
             return true;
 	    case 2:
-            try{
-                String url_string = "http://api.gogo.gs/v1.2/?apid=gsearcho0o0";
-                url_string = url_string + "&dist=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_dist", "10");
-                url_string = url_string + "&num=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_num", "60");
-                url_string = url_string + "&span=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_span", "");
-                Boolean member = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("settings_member", false);
-                if (member == true) {
-                	url_string = url_string + "&member=1";
-                }
-                url_string = url_string + "&kind=" +  PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_kind", "0");
-
-                // 地図の中心位置を取得
-                GeoPoint center = mMapView.getMapCenter();
-                url_string = url_string + "&lat=" +  (double) center.getLatitudeE6() / E6;
-                url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
-
-                String url = url_string + "&sort=d";
-//                Log.d(LOG_TAG, "url = " + url.toString());
-                
-    			//マップ中心の周辺にあるガソリンスタンド情報を取得する
-    			infoController = new InfoController(handler, this, url);
-
-    	        //プログレスダイアログを表示
-                resource = getResources();
-                dialog = new ProgressDialog(this);
-    	        dialog.setIndeterminate(true);
-    	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
-    	        dialog.show();
-    	        
-    	        mMapView.getOverlays().clear();
-    	        CenterCircleOverlay location = new CenterCircleOverlay(this);
-    	        mMapView.getOverlays().add(location);
-    	        
-    			// Overlayとして登録
-    			mMapView.getOverlays().add(overlay);
-
-    	        infoController.start();
-            }catch(Exception e){
-                Log.d(LOG_TAG, e.getMessage());
-            }
-	    	return true;
+	    	return searchAction();
 	    case 3:
 	        Intent intent2 = new Intent(MainActivity.this, AboutActivity.class);
 	        startActivity(intent2);  
 	        return true;
 	    }  
 	    return false;  
+	}
+	
+	public Boolean searchAction() {
+        try{
+            String url_string = "http://api.gogo.gs/v1.2/?apid=gsearcho0o0";
+            url_string = url_string + "&dist=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_dist", "10");
+            url_string = url_string + "&num=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_num", "60");
+            url_string = url_string + "&span=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_span", "");
+            Boolean member = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("settings_member", false);
+            if (member == true) {
+            	url_string = url_string + "&member=1";
+            }
+            url_string = url_string + "&kind=" +  PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_kind", "0");
+
+            // 地図の中心位置を取得
+            GeoPoint center = mMapView.getMapCenter();
+            url_string = url_string + "&lat=" +  (double) center.getLatitudeE6() / E6;
+            url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
+
+            String url = url_string + "&sort=d";
+            Log.d(LOG_TAG, "url = " + url.toString());
+            
+			//マップ中心の周辺にあるガソリンスタンド情報を取得する
+			infoController = new InfoController(handler, this, url);
+
+	        //プログレスダイアログを表示
+            resource = getResources();
+            dialog = new ProgressDialog(this);
+	        dialog.setIndeterminate(true);
+	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
+	        dialog.show();
+	        
+	        mMapView.getOverlays().clear();
+	        CenterCircleOverlay location = new CenterCircleOverlay(this);
+	        mMapView.getOverlays().add(location);
+	        
+			// Overlayとして登録
+			mMapView.getOverlays().add(overlay);
+
+	        infoController.start();
+        }catch(Exception e){
+            Log.d(LOG_TAG, e.getMessage());
+        }
+    	return true;
 	}
 	
 	@Override
@@ -393,7 +273,7 @@ public class MainActivity extends MapActivity implements Runnable {
         PinItemizedOverlay pinOverlay = null;
         		
         //取得に失敗
-		if(list == null | list.size() <= 0) {
+		if(list == null || list.size() <= 0) {
     		Toast.makeText(this, resource.getText(R.string.dialog_message_out_of_range), Toast.LENGTH_LONG).show();
 		} else {
     		Toast.makeText(this, list.size() + "件のスタンドが見つかりました", Toast.LENGTH_LONG).show();
@@ -528,4 +408,139 @@ public class MainActivity extends MapActivity implements Runnable {
             MainActivity.myLocation = location;     
         }
     };
+    
+	public class PinItemizedOverlay extends ItemizedOverlay<PinOverlayItem> implements Runnable {
+
+	    private List<GeoPoint> points = new ArrayList<GeoPoint>();
+	    private List<String> msgs = new ArrayList<String>();
+	    private List<String> prices = new ArrayList<String>();
+	    private List<String> pin_types = new ArrayList<String>();
+	    private List<GSInfo> gsInfo = new ArrayList<GSInfo>();
+	    private StandController stand;
+
+	    public PinItemizedOverlay(Drawable defaultMarker) {
+	        super( boundCenterBottom(defaultMarker) );
+	    }
+
+	    @Override
+	    protected PinOverlayItem createItem(int i) {
+//            Log.d(LOG_TAG, "index = " + this.size());
+
+	    	GeoPoint point = points.get(i);
+	    	return new PinOverlayItem(point);
+	    }
+
+	    @Override
+	    public int size() {
+	        return points.size();
+	    }
+
+	    public void addPoint(GeoPoint point) {
+	        points.add(point);
+	        populate();
+	    }
+		
+	    public void clearPoint() {
+	        points.clear();
+	        populate();
+	    }
+	    	    
+	    public void setMsg(String msg) {
+	        this.msgs.add(msg);
+	    }
+
+	    public void setPinType(String type) {
+	        this.pin_types.add(type);
+	    }
+
+	    public void setPrice(String title) {
+	        this.prices.add(title);
+	    }
+	    
+	    public void setGSInfo(GSInfo info) {
+	        this.gsInfo.add(info);
+	    }
+	    
+		/**
+		 * アイテムがタップされた時の処理
+		 */
+		@Override
+		protected boolean onTap(int index) {
+			
+			//マップ中心の周辺にあるガソリンスタンド情報を取得する
+			stand = new StandController(handler, this, MainActivity.this, gsInfo.get(index));
+
+	        //プログレスダイアログを表示
+            resource = getResources();
+            dialog = new ProgressDialog(MainActivity.this);
+	        dialog.setIndeterminate(true);
+	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
+	        dialog.show();
+
+			// マップの中心座標を、タップされたアイテムに合わせる
+			// mapControlerは、パッケージスコープで宣言
+			mMapController.animateTo(this.getItem(index).getPoint());
+
+	        stand.start();
+			return true;
+		}
+		
+		@Override
+		public void run() {
+			//プログレスダイアログを閉じる
+			dialog.dismiss();
+
+	    	AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+	        alertDialogBuilder.setView(stand.getView());
+	        alertDialogBuilder.show();
+		}		
+		
+		@Override
+		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+		    super.draw(canvas, mapView, shadow);
+		    
+		    if (shadow) {
+		    	return;
+		    }
+		    
+            for (int i=0;i<prices.size();i++) {
+
+            	String price = prices.get(i);
+            	GeoPoint locate = points.get(i);
+            	String pin = pin_types.get(i);
+                
+            	if (pin.compareTo("brand") == 0) {
+            		continue;
+            	}
+            	
+    		    Paint p = new Paint();
+    		    int sz = 5;
+    		    
+    		    Point pt = new Point();
+    		    mapView.getProjection().toPixels(locate, pt);
+    		        
+    		    // Convert to screen coords
+//    		    pc.getPointXY(mDefPoint, scoords);
+
+    		    // Draw point caption and its bounding rectangle
+    		    p.setTextSize(14);
+    		    p.setAntiAlias(true);
+    		    int sw = (int)(p.measureText(price) + 0.5f);
+    		    int sh = 25;
+    		    int sx = pt.x - sw / 2 - 5;
+    		    int sy = pt.y - sh - sz - 2;
+
+    		    canvas.drawText(price, sx + 5, sy + sh - 8, p);
+            }
+		    return;
+		}
+	}
+	
+	public class PinOverlayItem extends OverlayItem {
+
+	    public PinOverlayItem(GeoPoint point){
+	        super(point, "", "");
+	    }
+	    
+	}
 }
