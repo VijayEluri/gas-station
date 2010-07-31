@@ -19,6 +19,10 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 
 import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.util.DatabaseHelper;
+import org.chrysaor.android.gas_station.util.StandsDao;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -35,8 +39,14 @@ import android.widget.Toast;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -56,16 +66,23 @@ public class MainActivity extends MapActivity implements Runnable {
     private static final String LOG_TAG = "GasStation";
 
     private static final int E6 = 1000000;
+    private static final int MIN_IMAGE = 100;
+    private static final int MAX_IMAGE = 160;
     private MapController mMapController = null;
 	private MapView mMapView = null;
     private LocationManager mLocationManager;
     private static final long LOCATION_MIN_TIME = 10000 * 1;
     private static final float LOCATION_MIN_DISTANCE = 5.0F;
     public static Location myLocation = null;
+    private static Boolean donate = false; 
     protected InputStream is;
     private ProgressDialog dialog;
 	private Resources resource;
 	private LocationOverlay overlay;
+	private SQLiteDatabase db;
+	public static final String DONATE_PACKAGE = "org.chrysaor.android.gas_station.plus";
+	public static final String ACTION_FAVORITE = "org.chrysaor.android.intent.receive.FAVORITE";
+	private Drawable[] images = new Drawable[61];
 
 	//天候情報生成クラス
 	private InfoController infoController;
@@ -79,6 +96,9 @@ public class MainActivity extends MapActivity implements Runnable {
         String num = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_dist", "60");
         Log.d(LOG_TAG, LOG_TAG + num);
 
+       	// Donateの確認
+        checkDonate();
+        	 
         mMapView = (MapView) findViewById(R.id.main_map);
 	    mMapView.setBuiltInZoomControls(true);
 
@@ -111,11 +131,13 @@ public class MainActivity extends MapActivity implements Runnable {
         	}
         });
 		
-        AdView adView = new AdView(this); 
-        adView.setVisibility(android.view.View.VISIBLE); 
-        adView.requestFreshAd(); 
-        adView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-        mMapView.addView(adView);
+        if (donate == false) {
+            AdView adView = new AdView(this); 
+            adView.setVisibility(android.view.View.VISIBLE); 
+            adView.requestFreshAd(); 
+            adView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            mMapView.addView(adView);
+        }
 
         mMapView.invalidate();
 	    /*
@@ -134,6 +156,10 @@ public class MainActivity extends MapActivity implements Runnable {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME,
                     LOCATION_MIN_DISTANCE, mListener);
         }
+        
+       	// Donateの確認
+        checkDonate();
+        Log.d(LOG_TAG, "donate:" + donate.toString());
         
         super.onResume();
 
@@ -167,6 +193,19 @@ public class MainActivity extends MapActivity implements Runnable {
           break;
       }
   	  return true;
+    }
+    
+    protected void checkDonate() {
+       	// PackageManagerの取得
+        PackageManager manager = getPackageManager();
+            
+        // 特定のパッケージがインストールされているか判定
+        try {
+            ApplicationInfo ai = manager.getApplicationInfo(DONATE_PACKAGE, 0);
+            donate = true;
+        } catch (NameNotFoundException e) {
+
+        }
     }
 	
 	@Override
@@ -295,6 +334,68 @@ public class MainActivity extends MapActivity implements Runnable {
 			Drawable brand99 = getResources().getDrawable(R.drawable.icon_maker99);
 
 			Drawable speech  = getResources().getDrawable(R.drawable.speech);
+			images[0] = getResources().getDrawable(R.drawable.p100);
+			images[1] = getResources().getDrawable(R.drawable.p101);
+			images[2] = getResources().getDrawable(R.drawable.p102);
+			images[3] = getResources().getDrawable(R.drawable.p103);
+			images[4] = getResources().getDrawable(R.drawable.p104);
+			images[5] = getResources().getDrawable(R.drawable.p105);
+			images[6] = getResources().getDrawable(R.drawable.p106);
+			images[7] = getResources().getDrawable(R.drawable.p107);
+			images[8] = getResources().getDrawable(R.drawable.p108);
+			images[9] = getResources().getDrawable(R.drawable.p109);
+			images[10] = getResources().getDrawable(R.drawable.p110);
+			images[11] = getResources().getDrawable(R.drawable.p111);
+			images[12] = getResources().getDrawable(R.drawable.p112);
+			images[13] = getResources().getDrawable(R.drawable.p113);
+			images[14] = getResources().getDrawable(R.drawable.p114);
+			images[15] = getResources().getDrawable(R.drawable.p115);
+			images[16] = getResources().getDrawable(R.drawable.p116);
+			images[17] = getResources().getDrawable(R.drawable.p117);
+			images[18] = getResources().getDrawable(R.drawable.p118);
+			images[19] = getResources().getDrawable(R.drawable.p119);
+			images[20] = getResources().getDrawable(R.drawable.p120);
+			images[21] = getResources().getDrawable(R.drawable.p121);
+			images[22] = getResources().getDrawable(R.drawable.p122);
+			images[23] = getResources().getDrawable(R.drawable.p123);
+			images[24] = getResources().getDrawable(R.drawable.p124);
+			images[25] = getResources().getDrawable(R.drawable.p125);
+			images[26] = getResources().getDrawable(R.drawable.p126);
+			images[27] = getResources().getDrawable(R.drawable.p127);
+			images[28] = getResources().getDrawable(R.drawable.p128);
+			images[29] = getResources().getDrawable(R.drawable.p129);
+			images[30] = getResources().getDrawable(R.drawable.p130);
+			images[31] = getResources().getDrawable(R.drawable.p131);
+			images[32] = getResources().getDrawable(R.drawable.p132);
+			images[33] = getResources().getDrawable(R.drawable.p133);
+			images[34] = getResources().getDrawable(R.drawable.p134);
+			images[35] = getResources().getDrawable(R.drawable.p135);
+			images[36] = getResources().getDrawable(R.drawable.p136);
+			images[37] = getResources().getDrawable(R.drawable.p137);
+			images[38] = getResources().getDrawable(R.drawable.p138);
+			images[39] = getResources().getDrawable(R.drawable.p139);
+			images[40] = getResources().getDrawable(R.drawable.p140);
+			images[41] = getResources().getDrawable(R.drawable.p141);
+			images[42] = getResources().getDrawable(R.drawable.p142);
+			images[43] = getResources().getDrawable(R.drawable.p143);
+			images[44] = getResources().getDrawable(R.drawable.p144);
+			images[45] = getResources().getDrawable(R.drawable.p145);
+			images[46] = getResources().getDrawable(R.drawable.p146);
+			images[47] = getResources().getDrawable(R.drawable.p147);
+			images[48] = getResources().getDrawable(R.drawable.p148);
+			images[49] = getResources().getDrawable(R.drawable.p149);
+			images[50] = getResources().getDrawable(R.drawable.p150);
+			images[51] = getResources().getDrawable(R.drawable.p151);
+			images[52] = getResources().getDrawable(R.drawable.p152);
+			images[53] = getResources().getDrawable(R.drawable.p153);
+			images[54] = getResources().getDrawable(R.drawable.p154);
+			images[55] = getResources().getDrawable(R.drawable.p155);
+			images[56] = getResources().getDrawable(R.drawable.p156);
+			images[57] = getResources().getDrawable(R.drawable.p157);
+			images[58] = getResources().getDrawable(R.drawable.p158);
+			images[59] = getResources().getDrawable(R.drawable.p159);
+			images[60] = getResources().getDrawable(R.drawable.p160);
+//			Drawable speech  = getResources().getDrawable(R.drawable.speech);
 
 			PinItemizedOverlay brand01Overlay = new PinItemizedOverlay(brand01);
 	        PinItemizedOverlay brand02Overlay = new PinItemizedOverlay(brand02);
@@ -315,7 +416,8 @@ public class MainActivity extends MapActivity implements Runnable {
 	        
             String pin_type = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price");
 
-            for (int i=0;i<list.size();i++) {
+            int size = list.size();
+            for (int i=0;i<size;i++) {
 
             	GSInfo info = list.get(i);
 //            	Log.d(LOG_TAG, "i:" + i);
@@ -324,7 +426,12 @@ public class MainActivity extends MapActivity implements Runnable {
 //                Log.d(LOG_TAG, info.Brand);
                 
                 if (pin_type.compareTo("price") == 0) {
-                	pinOverlay = speechOverlay;                	
+                	int price = Integer.parseInt(info.Price);
+                	if (MIN_IMAGE <= price && price <= MAX_IMAGE) {
+                	    pinOverlay = new PinItemizedOverlay(images[price - MIN_IMAGE]);
+                	} else {
+                    	pinOverlay = speechOverlay;
+                	}
                 } else {
                 	if (info.Brand.compareTo("JOMO") == 0) {
                 		pinOverlay = brand01Overlay;
@@ -492,6 +599,61 @@ public class MainActivity extends MapActivity implements Runnable {
 
 	    	AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 	        alertDialogBuilder.setView(stand.getView());
+	        
+	        if (donate == true) {
+	   	        // アラートダイアログの中立ボタンがクリックされた時に呼び出されるコールバックを登録します
+		        alertDialogBuilder.setNeutralButton("ルート検索", new DialogInterface.OnClickListener() {
+		            @Override
+		            public void onClick(DialogInterface dialog, int which) {
+			    	    GSInfo info = stand.getGSInfo();
+
+		            	Intent intent = new Intent(); 
+		                intent.setAction(Intent.ACTION_VIEW); 
+		                intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+		                intent.setData(Uri.parse("http://maps.google.com/maps?myl=saddr&daddr=" + info.Address + "&dirflg=d")); 
+		                startActivity(intent); 
+		            }});
+/*
+    	    	DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
+	        	db = dbHelper.getWritableDatabase();
+	        	StandsDao standsDao = new StandsDao(db);
+	    	    GSInfo info = stand.getGSInfo();
+                GSInfo res = standsDao.findByShopCd(info.ShopCode);
+
+                if (res == null) {
+        	        // アラートダイアログの肯定ボタンがクリックされた時に呼び出されるコールバックを登録します
+        	        alertDialogBuilder.setPositiveButton("お気に入り登録", new DialogInterface.OnClickListener() {
+        	            @Override
+        	            public void onClick(DialogInterface dialog, int which) {
+        	        
+        	    	        StandsDao standsDao = new StandsDao(db);
+        	    	        standsDao.insert(stand.getGSInfo());
+
+        	    	        Toast.makeText(MainActivity.this, "お気に入り登録しました", Toast.LENGTH_LONG).show();
+                        }});
+                } else {
+            	    // アラートダイアログの肯定ボタンがクリックされた時に呼び出されるコールバックを登録します
+        	        alertDialogBuilder.setPositiveButton("お気に入り解除", new DialogInterface.OnClickListener() {
+        	            @Override
+        	            public void onClick(DialogInterface dialog, int which) {
+        	    	        StandsDao standsDao = new StandsDao(db);
+        		    	    GSInfo info = stand.getGSInfo();
+        	        	    standsDao.deleteByShopCd(info.ShopCode);
+
+        	    	        Toast.makeText(MainActivity.this, "お気に入りを解除しました", Toast.LENGTH_LONG).show();
+                        }});
+                }
+*/
+            }
+        	// アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックを登録します
+        	alertDialogBuilder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
+        	    @Override
+        	    public void onClick(DialogInterface dialog, int which) {
+        	        
+        	    }});
+        	// アラートダイアログのキャンセルが可能かどうかを設定します
+        	alertDialogBuilder.setCancelable(true);
+
 	        alertDialogBuilder.show();
 		}		
 		
@@ -503,7 +665,9 @@ public class MainActivity extends MapActivity implements Runnable {
 		    	return;
 		    }
 		    
-            for (int i=0;i<prices.size();i++) {
+		    
+		    int size = prices.size();
+            for (int i=0;i<size;i++) {
 
             	String price = prices.get(i);
             	GeoPoint locate = points.get(i);
@@ -513,16 +677,17 @@ public class MainActivity extends MapActivity implements Runnable {
             		continue;
             	}
             	
+            	if (MIN_IMAGE <= Integer.parseInt(price) && Integer.parseInt(price) <= MAX_IMAGE) {
+            	    continue;
+            	}
+            		
     		    Paint p = new Paint();
     		    int sz = 5;
     		    
     		    Point pt = new Point();
     		    mapView.getProjection().toPixels(locate, pt);
-    		        
-    		    // Convert to screen coords
-//    		    pc.getPointXY(mDefPoint, scoords);
-
-    		    // Draw point caption and its bounding rectangle
+    		    
+        		// Draw point caption and its bounding rectangle
     		    p.setTextSize(14);
     		    p.setAntiAlias(true);
     		    int sw = (int)(p.measureText(price) + 0.5f);
@@ -530,8 +695,9 @@ public class MainActivity extends MapActivity implements Runnable {
     		    int sx = pt.x - sw / 2 - 5;
     		    int sy = pt.y - sh - sz - 2;
 
-    		    canvas.drawText(price, sx + 5, sy + sh - 8, p);
+  		        canvas.drawText(price, sx + 5, sy + sh - 8, p);
             }
+            
 		    return;
 		}
 	}

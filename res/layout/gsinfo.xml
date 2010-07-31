@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent" android:layout_margin="10px" android:background="@color/black">
+<ScrollView
+    android:id="@+id/ScrollView01"
+    android:layout_height="wrap_content" android:layout_width="fill_parent">
+<LinearLayout
+  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:padding="5px"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical">
+        <ImageView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/brand_image">
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/price"
+            android:text="価格"
+            android:paddingLeft="4px"
+            android:paddingRight="4px">
+        </TextView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/self"
+            android:src="@drawable/service002"
+            android:paddingRight="4px"
+            android:paddingLeft="4px">
+        </ImageView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/service001"
+            android:paddingRight="4px"
+            android:paddingLeft="4px"
+            android:id="@+id/rtc">
+        </ImageView>
+</LinearLayout>
+<TableLayout
+   android:id="@+id/TableLayout01"
+   android:layout_height="wrap_content"
+   android:orientation="vertical"
+   android:layout_width="fill_parent"
+   android:padding="5px" android:layout_marginLeft="5px" android:layout_marginRight="10px" android:shrinkColumns="1" android:stretchColumns="1">
+   <TableRow android:id="@+id/TableRow01"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:background="@color/white">
+     <TextView android:id="@+id/TextView01"
+       android:text="店名"
+       android:layout_margin="1px" android:paddingLeft="4px" android:layout_height="fill_parent" android:layout_width="wrap_content" android:gravity="center_vertical" android:background="@color/darkgray"></TextView><TextView android:layout_height="wrap_content" android:id="@+id/shop_text" android:layout_marginBottom="1px" android:layout_marginTop="1px" android:layout_marginRight="1px" android:layout_width="fill_parent" android:paddingLeft="4px" android:paddingRight="4px" android:background="@color/black"></TextView></TableRow><TableRow android:id="@+id/TableRow02" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="@color/white">
+<TextView android:text="住所" android:id="@+id/address" android:paddingLeft="4px" android:layout_marginBottom="1px" android:layout_marginLeft="1px" android:layout_marginRight="1px" android:layout_width="wrap_content" android:layout_height="fill_parent" android:gravity="center_vertical" android:background="@color/darkgray"></TextView><TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/address_text" android:layout_marginBottom="1px" android:layout_marginRight="1px" android:paddingLeft="3px" android:paddingRight="3px" android:background="@color/black"></TextView>
+</TableRow>
+<TableRow android:id="@+id/TableRow03" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="@color/white">
+<TextView android:layout_height="wrap_content" android:text="距離" android:id="@+id/distance" android:layout_width="wrap_content" android:layout_marginLeft="1px" android:layout_marginBottom="1px" android:layout_marginRight="1px" android:paddingLeft="4px" android:background="@color/darkgray"></TextView><TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/distance_text" android:paddingLeft="4px" android:paddingRight="10px" android:layout_marginRight="1px" android:background="@color/black"></TextView></TableRow>
+<TableRow android:id="@+id/TableRow04" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="@color/white">
+<TextView android:layout_height="wrap_content" android:text="更新日" android:id="@+id/date" android:layout_width="wrap_content" android:layout_marginBottom="1px" android:layout_marginLeft="1px" android:layout_marginRight="1px" android:paddingLeft="4px" android:paddingRight="4px" android:background="@color/darkgray"></TextView><TextView android:layout_height="wrap_content" android:id="@+id/date_text" android:paddingLeft="4px" android:layout_width="fill_parent" android:layout_marginBottom="1px" android:layout_marginRight="1px" android:background="@color/black"></TextView></TableRow>
+</TableLayout>
+
+
+
+<ImageView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/shop_image"></ImageView></LinearLayout>
+
+
+
+
+
+
+
+
+
+
+</ScrollView>
+
+
+
+
+</LinearLayout>
+

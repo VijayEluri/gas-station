@@ -6,8 +6,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -15,16 +18,18 @@ public class StandController extends Thread {
     private static final String LOG_TAG = "StandContoller";
     private Handler handler;
     private final Runnable listener;
-    private ScrollView scroll;
+    private View scroll;
     private Context context;
     private GSInfo info;
-
+	private LayoutInflater inflater;
     
 	public StandController(Handler handler, Runnable listener, Context context, GSInfo info) {
 		this.handler   = handler;
 		this.listener  = listener;
 		this.context   = context;
 		this.info      = info;
+	    this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);  
+
 	}
 
     @Override
@@ -35,21 +40,11 @@ public class StandController extends Thread {
     }
     
     public void setDispGASStand() {
+    	
+        View view = inflater.inflate(R.layout.gsinfo, null);
 
-    	ScrollView view =  new ScrollView(context);
-
-		LinearLayout layoutDialogMain = new LinearLayout(context);
-		LinearLayout layoutPrice      = new LinearLayout(context);
-		LinearLayout layoutShopName   = new LinearLayout(context);
-		LinearLayout layoutAddress    = new LinearLayout(context);
-		LinearLayout layoutDistance   = new LinearLayout(context);
-		LinearLayout layoutDate       = new LinearLayout(context);
-		LinearLayout layoutIcon       = new LinearLayout(context);
-		layoutDialogMain.setOrientation(LinearLayout.VERTICAL);
-//		layoutIcon.setOrientation(LinearLayout.HORIZONTAL);
 		if (info != null) {
-			ImageView imgBrand = new ImageView(context);
-			imgBrand.setPadding(5, 5, 0, 0);
+	        ImageView imgBrand = (ImageView) view.findViewById(R.id.brand_image);
 
         	if (info.Brand.compareTo("JOMO") == 0) {
 				imgBrand.setImageResource(R.drawable.jomo);
@@ -81,74 +76,43 @@ public class StandController extends Thread {
 				imgBrand.setImageResource(R.drawable.icon_maker99);
             }
 
-			layoutPrice.addView(imgBrand);
 
 			// 価格
-			TextView textPrice = new TextView(context);
+            TextView textPrice = (TextView) view.findViewById(R.id.price);
 			textPrice.setText("価格" + info.Price + "円");
-//			textPrice.setGravity(Gravity.RIGHT);
-//			textIcon.setTextSize(WHEATER_FONT_SIZE);
-			textPrice.setPadding(5, 10, 0, 0);
-			layoutPrice.addView(textPrice);
 
 			// セルフ
-			if (info.Self.compareTo("SELF") == 0) {
-				ImageView imgSelf = new ImageView(context);
-				imgSelf.setPadding(5, 5, 0, 0);
-				imgSelf.setImageResource(R.drawable.service002);
-				layoutPrice.addView(imgSelf);
+			if (info.Self.compareTo("SELF") != 0) {
+				ImageView imgSelf = (ImageView) view.findViewById(R.id.self);
+				imgSelf.setVisibility(View.INVISIBLE);
 			}
 
 			// 24時間営業
-			if (info.Rtc.compareTo("24H") == 0) {
-				ImageView imgRtc = new ImageView(context);
-				imgRtc.setPadding(5, 5, 0, 0);
-				imgRtc.setImageResource(R.drawable.service001);
-				layoutPrice.addView(imgRtc);
+			if (info.Rtc.compareTo("24H") != 0) {
+				ImageView imgRtc = (ImageView) view.findViewById(R.id.rtc);
+				imgRtc.setVisibility(View.INVISIBLE);
 			}				
 
-			layoutDialogMain.addView(layoutPrice);
-
 			// 店名
-			TextView textShopName = new TextView(context);
-			textShopName.setText("店名" + info.ShopName);
-//			textShopName.setGravity(Gravity.RIGHT);
-//			textIcon.setTextSize(WHEATER_FONT_SIZE);
-			textShopName.setPadding(5, 5, 0, 0);
-			layoutShopName.addView(textShopName);
-			layoutDialogMain.addView(layoutShopName);
+			TextView textShopName = (TextView) view.findViewById(R.id.shop_text);
+			textShopName.setText(info.ShopName);
 
 			// 住所
-			TextView textAddress = new TextView(context);
-			textAddress.setText("住所" + info.Address);
-//			textAddress.setGravity(Gravity.RIGHT);
-//			textIcon.setTextSize(WHEATER_FONT_SIZE);
-			textAddress.setPadding(5, 5, 0, 0);
-			layoutAddress.addView(textAddress);
-			layoutDialogMain.addView(layoutAddress);
+			TextView textAddress = (TextView) view.findViewById(R.id.address_text);
+			textAddress.setText(info.Address);
 
 			// 距離
-			TextView textDistance = new TextView(context);
+			TextView textDistance = (TextView) view.findViewById(R.id.distance_text);
 			Float dist = Float.parseFloat(info.Distance) / 1000;
-			textDistance.setText("距離" + dist.toString() + "km");
-//			textDistance.setGravity(Gravity.RIGHT);
-//			textDistance.setTextSize(WHEATER_FONT_SIZE);
-			textDistance.setPadding(5, 5, 0, 0);
-			layoutDistance.addView(textDistance);
-			layoutDialogMain.addView(layoutDistance);
+			textDistance.setText(dist.toString() + "km");
 
 			// 更新日
-			TextView textDate = new TextView(context);
-			textDate.setText("更新日" + info.Date);
-//			textDate.setGravity(Gravity.RIGHT);
-//			textIcon.setTextSize(WHEATER_FONT_SIZE);
-			textDate.setPadding(5, 5, 0, 0);
-			layoutDate.addView(textDate);
-			layoutDialogMain.addView(layoutDate);
+			TextView textDate = (TextView) view.findViewById(R.id.date_text);
+			textDate.setText(info.Date);
 
 			//画像
 			Bitmap imgBitmap;
-			ImageView imgView = new ImageView(context);
+			ImageView imgView = (ImageView) view.findViewById(R.id.shop_image);
 			String url = "http://gogo.gs/images/rally/" + info.ShopCode + "-" + info.Photo + ".jpg";
 //            Log.d(LOG_TAG, "url = " + url);
 
@@ -156,19 +120,17 @@ public class StandController extends Thread {
 
 			if(imgBitmap != null) {
 				imgView.setImageBitmap(imgBitmap);
-				imgView.setPadding(5, 0, 0, 0);
-				layoutIcon.addView(imgView);
-				layoutDialogMain.addView(layoutIcon);
 			}
 		}
         
-		view.addView(layoutDialogMain);
 		scroll = view;
     }
     
-	public ScrollView getView() {
+	public View getView() {
 	    return scroll;
 	}
-
-    
+	
+	public GSInfo getGSInfo() {
+		return info;
+	}
 }
