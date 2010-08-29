@@ -53,6 +53,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -103,6 +104,9 @@ public class MainActivity extends MapActivity implements Runnable {
         String num = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_dist", "60");
         Log.d(LOG_TAG, LOG_TAG + num);
 
+        // 操作パネルの透過率設定
+        setPenetration();
+		
        	// Donateの確認
         checkDonate();
         	 
@@ -224,6 +228,10 @@ public class MainActivity extends MapActivity implements Runnable {
             View header = (View) findViewById(R.id.header);
         	header.setVisibility(View.VISIBLE);
         }
+        
+        // 操作パネルの透過率設定
+        setPenetration();
+
         Log.d(LOG_TAG, "donate:" + donate.toString());
         
         super.onResume();
@@ -283,6 +291,15 @@ public class MainActivity extends MapActivity implements Runnable {
         } catch (NameNotFoundException e) {
 
         }
+    }
+    
+    protected void setPenetration() {
+        int penetration = PreferenceManager.getDefaultSharedPreferences(this).getInt("settings_penetration", 40);
+        View header = (View) findViewById(R.id.header);
+        header.setBackgroundColor(Color.argb((int)((100 - penetration) * 2.55), 0, 0, 0));
+
+        View footer = (View) findViewById(R.id.footer);
+        footer.setBackgroundColor(Color.argb((int)((100 - penetration) * 2.55), 0, 0, 0));
     }
 	
 	@Override

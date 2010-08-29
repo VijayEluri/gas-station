@@ -10,6 +10,11 @@
       android:entries="@array/settings_list_pin_type"
       android:entryValues="@array/settings_list_pin_typevalues"
       android:defaultValue="price" />
+    <org.chrysaor.android.gas_station.util.SeekBarPreference
+        android:id="@+id/seekbar"
+        android:key="@string/settings_penetration_key"
+        android:title="@string/settings_penetration_title"
+        android:summary="@string/settings_penetration_summary" />
   </PreferenceCategory>  
   <PreferenceCategory android:title="@string/settings_search_title">
     <ListPreference

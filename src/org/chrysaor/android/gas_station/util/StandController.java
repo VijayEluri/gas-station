@@ -5,6 +5,9 @@ import org.chrysaor.android.gas_station.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,6 +113,23 @@ public class StandController extends Thread {
 			TextView textDate = (TextView) view.findViewById(R.id.date_text);
 			textDate.setText(info.Date);
 
+            TextView link = (TextView)view.findViewById(R.id.link_text);  
+
+			// LinkMovementMethod のインスタンスを取得します
+	        MovementMethod movementmethod = LinkMovementMethod.getInstance();
+	        
+	        // TextView に LinkMovementMethod を登録します
+	        link.setMovementMethod(movementmethod);
+	        
+	        // <a>タグを含めたテキストを用意します
+	        String html = "<a href=\"http://gogo.gs/shop/" + info.ShopCode + ".html\">PCサイト</a> " +
+	                      "<a href=\"http://m.gogo.gs/shop/?code=" + info.ShopCode + "\">携帯サイト</a>";
+	        
+	        // URLSpan をテキストにを組み込みます
+	        CharSequence spanned = Html.fromHtml(html);
+	        
+	        link.setText(spanned);
+	        
 			//画像
 			Bitmap imgBitmap;
 			ImageView imgView = (ImageView) view.findViewById(R.id.shop_image);

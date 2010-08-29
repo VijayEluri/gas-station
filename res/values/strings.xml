@@ -11,6 +11,9 @@
     <string name="settings_pin_type_title">ピンの種類</string>
     <string name="settings_pin_type_summary">地図上に表示するピンの種類を設定します</string>
     <string name="settings_pin_type_dialogtitle">ピンの種類</string>
+ 	<string name="settings_penetration_key">settings_penetration</string>
+    <string name="settings_penetration_title">操作パネルの透過率</string>
+    <string name="settings_penetration_summary">操作パネルの透過率を設定します</string>
     
     <string name="settings_dist_key">settings_dist</string>
     <string name="settings_dist_title">中心からの距離</string>

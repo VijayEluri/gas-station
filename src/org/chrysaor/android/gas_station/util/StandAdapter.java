@@ -89,7 +89,7 @@ public class StandAdapter extends ArrayAdapter {
 	    			Float distance = Float.parseFloat(item.Distance) / 1000;
 	                dist.setText(distance.toString() + "km");  
 	            }
-	            
+	            	            
 	            ImageView brand = (ImageView)view.findViewById(R.id.icon);  
 
             	if (item.Brand.compareTo("JOMO") == 0) {
