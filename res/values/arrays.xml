@@ -66,4 +66,12 @@
     <item>2</item>
     <item>3</item>
   </string-array>
+  <string-array name="settings_sort_kind">
+    <item>近い順</item>
+    <item>安い順</item>
+  </string-array>
+  <string-array name="settings_sort_kindvalues">
+    <item>dist</item>
+    <item>price</item>
+  </string-array>
 </resources>

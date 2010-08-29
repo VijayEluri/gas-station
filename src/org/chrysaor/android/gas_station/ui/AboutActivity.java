@@ -18,7 +18,7 @@ public class AboutActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.about);
 	    
-        Button btn = (Button) this.findViewById(R.id.Button01);  
+        Button btn = (Button) this.findViewById(R.id.close);  
         
         btn.setOnClickListener(new OnClickListener(){
 

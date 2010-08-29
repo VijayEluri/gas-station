@@ -27,6 +27,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	private static final String DROP_PLACES_TABLE_SQL = "drop table if exists stands";
 	
+	private static final String CREATE_STANDS_WIDGET_TABLE_SQL = "create table stands_widget " +
+            "(rowid integer primary key autoincrement, " +
+            "shop_cd text not null, " +
+            "brand text not null, " +
+            "shop_name text not null, " +
+			"latitude text not null, " +
+			"longitude text not null, " +
+			"distance text not null," +
+			"address text not null," +
+			"price text not null," +
+			"date text not null," +
+			"photo text not null," +
+			"rtc text not null," +
+			"self text not null)";
+
+private static final String DROP_STANDS_WIDGET_TABLE_SQL = "drop table if exists stands_widget";
+
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -34,11 +51,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_PLACES_TABLE_SQL);
+		db.execSQL(CREATE_STANDS_WIDGET_TABLE_SQL);
 	}
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL(DROP_PLACES_TABLE_SQL);
+		db.execSQL(DROP_STANDS_WIDGET_TABLE_SQL);
 		onCreate(db);
 	}
 

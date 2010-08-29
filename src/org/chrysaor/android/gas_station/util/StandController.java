@@ -120,6 +120,7 @@ public class StandController extends Thread {
 
 			if(imgBitmap != null) {
 				imgView.setImageBitmap(imgBitmap);
+				imgView.setMaxWidth(view.getWidth() - 40);
 			}
 		}
         

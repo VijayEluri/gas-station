@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:id="@+id/RelativeLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content"><LinearLayout android:id="@+id/LinearLayout01" android:layout_height="wrap_content" android:background="@android:drawable/bottom_bar" android:layout_width="fill_parent" android:layout_alignParentTop="true"><LinearLayout android:id="@+id/LinearLayout04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="left"><ImageView android:id="@+id/ImageView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@android:drawable/ic_menu_search" android:layout_margin="5px"></ImageView></LinearLayout><LinearLayout android:id="@+id/LinearLayout05" android:layout_weight="1" android:layout_width="wrap_content" android:gravity="right|center_vertical" android:layout_height="wrap_content" android:layout_gravity="center_vertical"><RadioGroup android:id="@+id/RadioGroup01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="5px" android:orientation="horizontal"><RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="近い順" android:layout_marginRight="5px" android:id="@+id/sort_distance"></RadioButton><RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="安い順" android:id="@+id/sort_price"></RadioButton></RadioGroup>
+
+
+</LinearLayout></LinearLayout><LinearLayout android:id="@+id/LinearLayout03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" android:layout_below="@+id/LinearLayout01" android:layout_above="@+id/LinearLayout02"><ListView android:id="@+id/savedList" android:layout_width="fill_parent" android:layout_height="wrap_content"></ListView>
+
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout><LinearLayout android:id="@+id/LinearLayout02" android:layout_height="wrap_content" android:layout_width="fill_parent" android:background="@android:drawable/bottom_bar" android:layout_alignParentBottom="true"><Button android:layout_height="wrap_content" android:id="@+id/close" android:text="地図に戻る" android:layout_width="fill_parent" android:layout_weight="1" android:layout_marginBottom="5px" android:layout_marginTop="5px" android:layout_marginLeft="30px" android:layout_marginRight="30px"></Button></LinearLayout>
+
+
+
+
+</RelativeLayout>
+

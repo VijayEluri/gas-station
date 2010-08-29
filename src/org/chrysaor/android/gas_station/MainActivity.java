@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.chrysaor.android.gas_station.ui.AboutActivity;
+import org.chrysaor.android.gas_station.ui.ListActivity;
 import org.chrysaor.android.gas_station.ui.SettingsActivity;
 import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.InfoController;
 import org.chrysaor.android.gas_station.util.LocationOverlay;
+import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandController;
 
 import android.location.Location;
@@ -35,7 +37,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -80,9 +85,11 @@ public class MainActivity extends MapActivity implements Runnable {
 	private Resources resource;
 	private LocationOverlay overlay;
 	private SQLiteDatabase db;
+	public ArrayList<GSInfo> list;
 	public static final String DONATE_PACKAGE = "org.chrysaor.android.gas_station.plus";
 	public static final String ACTION_FAVORITE = "org.chrysaor.android.intent.receive.FAVORITE";
 	private Drawable[] images = new Drawable[61];
+    private StandAdapter adapter = null;  
 
 	//天候情報生成クラス
 	private InfoController infoController;
@@ -100,16 +107,20 @@ public class MainActivity extends MapActivity implements Runnable {
         checkDonate();
         	 
         mMapView = (MapView) findViewById(R.id.main_map);
-	    mMapView.setBuiltInZoomControls(true);
+//	    mMapView.setBuiltInZoomControls(true);
 
         mMapController = mMapView.getController();
 
         CenterCircleOverlay location = new CenterCircleOverlay(this);
         mMapView.getOverlays().add(location);
         
+		ToggleButton toggle = (ToggleButton) findViewById(R.id.trace_mylocation);
+
 		// 今回の主役。有効にすることでGPSの取得が可能に
 		overlay = new LocationOverlay(getApplicationContext(), mMapView);
 		overlay.enableMyLocation();
+		overlay.enableCompass();
+		overlay.setTraceToggle(toggle);
 
 		// GPS取得が可能な状態になり、GPS初取得時の動作を決定（らしい）
 		overlay.runOnFirstFix(new Runnable(){
@@ -124,19 +135,49 @@ public class MainActivity extends MapActivity implements Runnable {
 		// Overlayとして登録
 		mMapView.getOverlays().add(overlay);
 		
-		ImageButton img = (ImageButton) findViewById(R.id.main_search);
-        img.setOnClickListener(new OnClickListener() {
+		// 検索ボタンのonClick設定
+		ImageView search_img = (ImageView) findViewById(R.id.search_img);
+        search_img.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
     	    	MainActivity.this.searchAction();
         	}
         });
+        
+        
+		// リストボタンのonClick設定
+		ImageView list = (ImageView) findViewById(R.id.main_list);
+        list.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+    	        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+    	        startActivityForResult(intent, 0);  
+        	}
+        });
+        
+		// ズームアウトボタンのonClick設定
+        ImageView zoomout_img = (ImageView) findViewById(R.id.zoomout);
+		zoomout_img.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+        		mMapController.zoomOut();
+        	}
+        });
 		
+		// ズームインボタンのonClick設定
+		ImageView zoomin_img = (ImageView) findViewById(R.id.zoomin);
+		zoomin_img.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+        		mMapController.zoomIn();
+        	}
+        });
+
         if (donate == false) {
             AdView adView = new AdView(this); 
             adView.setVisibility(android.view.View.VISIBLE); 
             adView.requestFreshAd(); 
             adView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             mMapView.addView(adView);
+        } else {
+            View header = (View) findViewById(R.id.header);
+        	header.setVisibility(View.VISIBLE);
         }
 
         mMapView.invalidate();
@@ -148,10 +189,29 @@ public class MainActivity extends MapActivity implements Runnable {
                 */
     }
 	
+	   //アクティビティ呼び出し結果の取得
+    @Override
+    protected void onActivityResult(int requestCode,
+        int resultCode,Intent intent) {
+        if (requestCode==0 && resultCode==RESULT_OK) {
+            //インテントからのパラメータ取得
+            Bundle extras=intent.getExtras();
+            if (extras!=null) {
+            	Double lan = extras.getDouble("lat");
+            	String lon = extras.getString("lon");
+            	
+                GeoPoint point = new GeoPoint(
+                        (int) ((double) lan * E6),
+                        (int) (Double.parseDouble(lon) * E6));
+    			mMapController.animateTo(point);
+            }
+        }
+    }
     
     @Override
     protected void onResume() {
     	overlay.enableMyLocation();
+    	overlay.enableCompass();
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME,
                     LOCATION_MIN_DISTANCE, mListener);
@@ -159,6 +219,11 @@ public class MainActivity extends MapActivity implements Runnable {
         
        	// Donateの確認
         checkDonate();
+        
+        if (donate == true) {
+            View header = (View) findViewById(R.id.header);
+        	header.setVisibility(View.VISIBLE);
+        }
         Log.d(LOG_TAG, "donate:" + donate.toString());
         
         super.onResume();
@@ -169,6 +234,7 @@ public class MainActivity extends MapActivity implements Runnable {
     @Override
     protected void onPause() {
     	overlay.disableMyLocation();
+    	overlay.disableCompass();
         if (mLocationManager != null) {
             mLocationManager.removeUpdates(mListener);
         }
@@ -176,6 +242,17 @@ public class MainActivity extends MapActivity implements Runnable {
 //        Log.d(LOG_TAG, "gas pause");
 
         super.onPause();
+    }
+    
+    @Override
+    protected void onDestroy() {
+    	DatabaseHelper dbHelper = new DatabaseHelper(this);
+    	SQLiteDatabase db = dbHelper.getWritableDatabase();
+    	
+    	StandsDao standsDao = new StandsDao(db);
+    	standsDao.deleteAll();
+    	
+    	super.onDestroy();
     }
     
     @Override
@@ -276,7 +353,12 @@ public class MainActivity extends MapActivity implements Runnable {
             url_string = url_string + "&lat=" +  (double) center.getLatitudeE6() / E6;
             url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
 
-            String url = url_string + "&sort=d";
+            String sort = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_sort", "dist");
+            if (sort.equals("dist")) {
+            	url_string = url_string + "&sort=d";
+            }
+
+            String url = url_string;
             Log.d(LOG_TAG, "url = " + url.toString());
             
 			//マップ中心の周辺にあるガソリンスタンド情報を取得する
@@ -308,13 +390,23 @@ public class MainActivity extends MapActivity implements Runnable {
 		//プログレスダイアログを閉じる
 		dialog.dismiss();
 
-        ArrayList<GSInfo> list = infoController.getGSInfoList();
+        list = infoController.getGSInfoList();
         PinItemizedOverlay pinOverlay = null;
         		
+    	DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
+    	SQLiteDatabase db = dbHelper.getWritableDatabase();
+    	
+    	StandsDao standsDao = new StandsDao(db);
+    	standsDao.deleteAll();
+
+    	ImageView btn = (ImageView) findViewById(R.id.main_list);
+
         //取得に失敗
 		if(list == null || list.size() <= 0) {
+	    	btn.setVisibility(View.INVISIBLE);
     		Toast.makeText(this, resource.getText(R.string.dialog_message_out_of_range), Toast.LENGTH_LONG).show();
 		} else {
+	    	btn.setVisibility(View.VISIBLE);
     		Toast.makeText(this, list.size() + "件のスタンドが見つかりました", Toast.LENGTH_LONG).show();
 
 	    	// MapView上に表示したいビットマップ情報を、リソースから取得
@@ -415,11 +507,12 @@ public class MainActivity extends MapActivity implements Runnable {
 	        PinItemizedOverlay speechOverlay  = new PinItemizedOverlay(speech);
 	        
             String pin_type = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price");
-
+	    	
             int size = list.size();
             for (int i=0;i<size;i++) {
 
             	GSInfo info = list.get(i);
+    	    	standsDao.insert(info);
 //            	Log.d(LOG_TAG, "i:" + i);
 //                Log.d(LOG_TAG, "lat:" + info.getLatitude().toString());
 //                Log.d(LOG_TAG, info.getLongitude());
@@ -482,7 +575,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	        location.setMyLocation(myLocation);
 	        mMapView.getOverlays().add(location);
 */
-            mMapView.invalidate();
+            mMapView.invalidate();            
         }
 	}
 

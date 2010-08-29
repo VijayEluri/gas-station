@@ -8,7 +8,8 @@
       android:summary="@string/settings_pin_type_summary"
       android:dialogTitle="@string/settings_pin_type_dialogtitle"
       android:entries="@array/settings_list_pin_type"
-      android:entryValues="@array/settings_list_pin_typevalues" />
+      android:entryValues="@array/settings_list_pin_typevalues"
+      android:defaultValue="price" />
   </PreferenceCategory>  
   <PreferenceCategory android:title="@string/settings_search_title">
     <ListPreference
@@ -17,31 +18,43 @@
       android:summary="@string/settings_dist_summary"
       android:dialogTitle="@string/settings_dist_dialogtitle"
       android:entries="@array/settings_list_dist"
-      android:entryValues="@array/settings_list_distvalues" />
+      android:entryValues="@array/settings_list_distvalues"
+      android:defaultValue="10" />
     <ListPreference
       android:key="settings_num"
       android:title="@string/settings_num_title"
       android:summary="@string/settings_num_summary"
       android:dialogTitle="@string/settings_num_dialogtitle"
       android:entries="@array/settings_list_num"
-      android:entryValues="@array/settings_list_numvalues" />
+      android:entryValues="@array/settings_list_numvalues"
+      android:defaultValue="25" />
     <ListPreference
       android:key="settings_span"
       android:title="@string/settings_span_title"
       android:summary="@string/settings_span_summary"
       android:dialogTitle="@string/settings_span_dialogtitle"
       android:entries="@array/settings_list_span"
-      android:entryValues="@array/settings_list_spanvalues" />
+      android:entryValues="@array/settings_list_spanvalues"
+      android:defaultValue="30" />
     <ListPreference
       android:key="settings_kind"
       android:title="@string/settings_kind_title"
       android:summary="@string/settings_kind_summary"
       android:dialogTitle="@string/settings_kind_dialogtitle"
       android:entries="@array/settings_list_kind"
-      android:entryValues="@array/settings_list_kindvalues" />
+      android:entryValues="@array/settings_list_kindvalues"
+      android:defaultValue="0" />
     <CheckBoxPreference
       android:key="settings_member"
       android:title="@string/settings_member_title"
       android:summary="@string/settings_member_summary" />
+    <ListPreference
+      android:key="settings_sort"
+      android:title="@string/settings_sort_title"
+      android:summary="@string/settings_sort_summary"
+      android:dialogTitle="@string/settings_sort_dialogtitle"
+      android:entries="@array/settings_sort_kind"
+      android:entryValues="@array/settings_sort_kindvalues"
+      android:defaultValue="price" />
   </PreferenceCategory>
 </PreferenceScreen>

@@ -11,28 +11,35 @@
    android:layout_height="fill_parent"
    android:enabled="true"
    android:clickable="true"
-   android:apiKey="04KLh3UZFDQH7a0NVEnmf0GCUEcmAux6y2atFoA"
-   />
+   android:apiKey="04KLh3UZFDQH7a0NVEnmf0GCUEcmAux6y2atFoA"/><LinearLayout android:layout_height="wrap_content" android:id="@+id/header" android:layout_alignParentTop="true" android:layout_width="fill_parent" android:gravity="right|center" android:background="#99000000" android:padding="5px" android:visibility="invisible"><LinearLayout android:id="@+id/LinearLayout05" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginRight="2dip"><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="現在地" android:textSize="14dip" android:textColor="#FFFFFF"></TextView><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#FFFFFF" android:textSize="14dip" android:id="@+id/trace_mylocation_label" android:layout_gravity="center" android:text="追跡"></TextView></LinearLayout><ToggleButton android:text="@+id/ToggleButton01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/trace_mylocation"></ToggleButton>
+
+
+
+
+
+
+</LinearLayout>
    <!-- 本番用：04KLh3UZFDQH7a0NVEnmf0GCUEcmAux6y2atFoA -->
    <!-- 開発用：04KLh3UZFDQGlY_hsPDWOd3KKLGAgQfOCE5Jo6g -->
     <LinearLayout
       android:orientation="horizontal"
-      android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:layout_gravity="center"
-      android:paddingTop="10dip">
-      <LinearLayout
-        android:layout_width = "wrap_content"
-        android:layout_height= "wrap_content"
-        android:layout_weight="1"/>
-      <ImageButton
-        android:id="@+id/main_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:visibility="visible"
-        android:src="@android:drawable/ic_menu_search"/>
-    </LinearLayout>
+      android:layout_width="fill_parent" android:id="@+id/footer" android:background="#99000000" android:padding="5px">
+      
+      
+    
+<LinearLayout android:id="@+id/LinearLayout01" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:gravity="center_horizontal|center"><ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/search_img" android:background="@drawable/button_states" android:layout_marginRight="10px" android:layout_marginLeft="10px"></ImageView>
+</LinearLayout>
+<LinearLayout android:id="@+id/LinearLayout02" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:gravity="center_vertical|center"><ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/main_list" android:background="@drawable/list_button_states" android:visibility="invisible" android:layout_marginLeft="10px" android:layout_marginRight="10px"></ImageView>
+</LinearLayout>
+<LinearLayout android:id="@+id/LinearLayout03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:layout_gravity="center_vertical" android:gravity="center"><ImageView android:layout_height="wrap_content" android:background="@drawable/zoomout_button_states" android:layout_gravity="center" android:layout_width="wrap_content" android:layout_marginLeft="10px" android:layout_marginRight="10px" android:id="@+id/zoomout"></ImageView></LinearLayout><LinearLayout android:id="@+id/LinearLayout04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center"><ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/zoomin_button_states" android:layout_marginLeft="10px" android:layout_marginRight="10px" android:id="@+id/zoomin"></ImageView></LinearLayout>
+
+
+
+</LinearLayout>
+
+
 
 </RelativeLayout>

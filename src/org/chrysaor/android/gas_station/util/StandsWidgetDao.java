@@ -7,7 +7,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class StandsDao {
+public class StandsWidgetDao {
 	
 	private static final String TABLE_NAME = "stands";
 	private static final String COLUMN_ID  = "rowid";
@@ -30,7 +30,7 @@ public class StandsDao {
 
 	private SQLiteDatabase db;
 	
-	public StandsDao(SQLiteDatabase db) {
+	public StandsWidgetDao(SQLiteDatabase db) {
 		this.db = db;
 	}
 	
@@ -54,19 +54,16 @@ public class StandsDao {
 	public int delete(int rowid) {
 		return db.delete(TABLE_NAME, "rowid = " + rowid, null);
 	}
+
+	public int deleteAll() {
+		return db.delete(TABLE_NAME, null, null);
+	}
+
 	
-	public ArrayList<GSInfo> findAll(String sortColumn) {
+	public ArrayList<GSInfo> findAll() {
 		ArrayList<GSInfo> gsList = new ArrayList<GSInfo>();
 		
-		if (sortColumn.equals("price")) {
-			sortColumn = COLUMN_PRICE;
-		} else if (sortColumn.equals("distance")) {
-			sortColumn = COLUMN_DISTANCE;
-		} else {
-			sortColumn = COLUMN_ID;
-		}
-		
-		Cursor cursor = db.query(TABLE_NAME, COLUMNS, null, null, null, null, sortColumn);
+		Cursor cursor = db.query(TABLE_NAME, COLUMNS, null, null, null, null, COLUMN_ID);
 		
 		while(cursor.moveToNext()) {
 			GSInfo gsInfo = new GSInfo();
@@ -119,10 +116,5 @@ public class StandsDao {
 	public int deleteByShopCd(String shop_cd) {
 		return db.delete(TABLE_NAME, "shop_cd = " + shop_cd, null);
 	}
-	
-	public int deleteAll() {
-		return db.delete(TABLE_NAME, null, null);
-	}
-
 
 }

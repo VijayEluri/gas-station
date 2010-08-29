@@ -28,4 +28,7 @@ limitations under the License.
   <color name="opaque_shadow">#70000000</color>
   <color name="stat_label_background">#FFF0F0F0</color>
   <color name="stat_label_text">#FF0F0F0F</color>
+  <color name="screenname_color">#000000</color>  
+  <color name="text_color">#202020</color> 
+  
 </resources>

@@ -3,6 +3,7 @@
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">ガススタ!</string>
     <string name="title">サンプル</string>
+    <string name="about_label">about</string>
     <string name="settings_label">設定</string>
     <string name="settings_title">地図の設定</string>
     <string name="settings_search_title">検索条件</string>
@@ -26,6 +27,9 @@
     <string name="settings_kind_dialogtitle">油種</string>
     <string name="settings_member_summary">チェックを外すと現金フリー価格で検索します</string>
     <string name="settings_member_title">会員価格</string>
+    <string name="settings_sort_dialogtitle">並び順</string>
+    <string name="settings_sort_summary">検索結果の並び順を設定します</string>
+    <string name="settings_sort_title">並び順</string>
     
     <string name="dialog_title_err">エラー</string>
 	<string name="dialog_message_out_of_range">データがありません</string>
