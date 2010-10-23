@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.co.nobot.libYieldMaker.libYieldMaker;
+
 import org.chrysaor.android.gas_station.ui.AboutActivity;
 import org.chrysaor.android.gas_station.ui.ListActivity;
 import org.chrysaor.android.gas_station.ui.SettingsActivity;
@@ -174,11 +176,17 @@ public class MainActivity extends MapActivity implements Runnable {
         });
 
         if (donate == false) {
+        	/*
             AdView adView = new AdView(this); 
             adView.setVisibility(android.view.View.VISIBLE); 
             adView.requestFreshAd(); 
             adView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             mMapView.addView(adView);
+            */
+            libYieldMaker mv = (libYieldMaker)findViewById(R.id.admakerview);
+            mv.setActivity(this);
+            mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
+            mv.startView();
         } else {
             View header = (View) findViewById(R.id.header);
         	header.setVisibility(View.VISIBLE);
@@ -687,26 +695,12 @@ public class MainActivity extends MapActivity implements Runnable {
 			//マップ中心の周辺にあるガソリンスタンド情報を取得する
 			stand = new StandController(handler, this, MainActivity.this, gsInfo.get(index));
 
-	        //プログレスダイアログを表示
-            resource = getResources();
-            dialog = new ProgressDialog(MainActivity.this);
-	        dialog.setIndeterminate(true);
-	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
-	        dialog.show();
-
 			// マップの中心座標を、タップされたアイテムに合わせる
 			// mapControlerは、パッケージスコープで宣言
 			mMapController.animateTo(this.getItem(index).getPoint());
 
-	        stand.start();
-			return true;
-		}
-		
-		@Override
-		public void run() {
-			//プログレスダイアログを閉じる
-			dialog.dismiss();
-
+			stand.setDispGASStand();
+			
 	    	AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 	        alertDialogBuilder.setView(stand.getView());
 	        
@@ -755,6 +749,7 @@ public class MainActivity extends MapActivity implements Runnable {
                 }
 */
             }
+
         	// アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックを登録します
         	alertDialogBuilder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
         	    @Override
@@ -765,6 +760,15 @@ public class MainActivity extends MapActivity implements Runnable {
         	alertDialogBuilder.setCancelable(true);
 
 	        alertDialogBuilder.show();
+
+//	        stand.start();
+			return true;
+		}
+		
+		@Override
+		public void run() {
+			//プログレスダイアログを閉じる
+			dialog.dismiss();
 		}		
 		
 		@Override

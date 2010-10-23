@@ -116,26 +116,21 @@
     android:background="@color/black"/>
 </TableRow>
 </TableLayout>
-
-
-
-<ImageView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/shop_image" android:padding="5px" android:layout_marginLeft="5px" android:layout_marginRight="10px"></ImageView></LinearLayout>
-
-
-
-
-
-
-
-
-
-
+    <ProgressBar 
+        android:id="@+id/ProgressBar01" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="5dip"
+        style="?android:attr/progressBarStyle"> 
+    </ProgressBar>
+<ImageView
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:id="@+id/shop_image"
+  android:padding="5px"
+  android:layout_marginLeft="5px"
+  android:layout_marginRight="10px" />
+  </LinearLayout>
 </ScrollView>
-
-
-
-
-
-
 </LinearLayout>
-

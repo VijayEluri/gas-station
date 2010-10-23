@@ -3,6 +3,7 @@ package org.chrysaor.android.gas_station.util;
 import org.chrysaor.android.gas_station.R;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.Html;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ public class StandController extends Thread {
     private Context context;
     private GSInfo info;
 	private LayoutInflater inflater;
+    private Handler mHandler = new Handler();
     
 	public StandController(Handler handler, Runnable listener, Context context, GSInfo info) {
 		this.handler   = handler;
@@ -44,7 +47,7 @@ public class StandController extends Thread {
     
     public void setDispGASStand() {
     	
-        View view = inflater.inflate(R.layout.gsinfo, null);
+        final View view = inflater.inflate(R.layout.gsinfo, null);
 
 		if (info != null) {
 	        ImageView imgBrand = (ImageView) view.findViewById(R.id.brand_image);
@@ -130,18 +133,30 @@ public class StandController extends Thread {
 	        
 	        link.setText(spanned);
 	        
-			//画像
-			Bitmap imgBitmap;
-			ImageView imgView = (ImageView) view.findViewById(R.id.shop_image);
-			String url = "http://gogo.gs/images/rally/" + info.ShopCode + "-" + info.Photo + ".jpg";
-//            Log.d(LOG_TAG, "url = " + url);
+			new Thread(new Runnable() {
+				public void run() {
+					//画像
+					final Bitmap imgBitmap;
+					final ImageView imgView = (ImageView) view.findViewById(R.id.shop_image);
+					final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.ProgressBar01);
+					String url = "http://gogo.gs/images/rally/" + info.ShopCode + "-" + info.Photo + ".jpg";
 
-			imgBitmap = WebApi.getImageBitmapOnWeb(url);
+					imgBitmap = WebApi.getImageBitmapOnWeb(url);
 
-			if(imgBitmap != null) {
-				imgView.setImageBitmap(imgBitmap);
-				imgView.setMaxWidth(view.getWidth() - 40);
-			}
+			    	mHandler.post(new Runnable() {
+			    		public void run() {
+							progressBar.setVisibility(View.GONE);
+
+							if(imgBitmap != null) {
+								imgView.setVisibility(View.VISIBLE);
+								imgView.setImageBitmap(imgBitmap);
+								imgView.setMaxWidth(view.getWidth() - 40);
+							}
+			    		}
+			    	});
+
+				}
+			}).start();
 		}
         
 		scroll = view;

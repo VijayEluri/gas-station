@@ -11,7 +11,37 @@
    android:layout_height="fill_parent"
    android:enabled="true"
    android:clickable="true"
-   android:apiKey="04KLh3UZFDQH7a0NVEnmf0GCUEcmAux6y2atFoA"/><LinearLayout android:layout_height="wrap_content" android:id="@+id/header" android:layout_alignParentTop="true" android:layout_width="fill_parent" android:gravity="right|center" android:background="#99000000" android:padding="5px" android:visibility="invisible"><LinearLayout android:id="@+id/LinearLayout05" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginRight="2dip"><TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="現在地" android:textSize="14dip" android:shadowColor="#000000" android:textColor="#FFFFFF" android:shadowDx="1.2" android:shadowDy="1.2" android:shadowRadius="1.2"></TextView><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14dip" android:id="@+id/trace_mylocation_label" android:layout_gravity="center" android:text="追跡" android:shadowDx="1.2" android:shadowColor="#000000" android:shadowDy="1.2" android:shadowRadius="1.2" android:textColor="#FFFFFF"></TextView></LinearLayout><ToggleButton android:text="@+id/ToggleButton01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/trace_mylocation"></ToggleButton>
+   android:apiKey="04KLh3UZFDQH7a0NVEnmf0GCUEcmAux6y2atFoA"/>
+   <LinearLayout android:layout_height="wrap_content" 
+     android:id="@+id/header_ad"
+     android:layout_alignParentTop="true"
+     android:layout_width="fill_parent"
+     android:gravity="center"
+     android:visibility="visible">
+   <jp.co.nobot.libYieldMaker.libYieldMaker
+     android:id="@+id/admakerview"
+     android:layout_width="fill_parent"
+     android:layout_weight="0"
+     android:layout_height="70px"
+        />
+   </LinearLayout>
+   <LinearLayout android:layout_height="wrap_content" 
+     android:id="@+id/header"
+     android:layout_alignParentTop="true"
+     android:layout_width="fill_parent"
+     android:gravity="right|center"
+     android:background="#99000000"
+     android:padding="5px"
+     android:visibility="invisible">
+     <LinearLayout
+       android:id="@+id/LinearLayout05"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:gravity="center"
+       android:layout_marginRight="2dip">
+       <TextView android:id="@+id/TextView01"
+         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="現在地" android:textSize="14dip" android:shadowColor="#000000" android:textColor="#FFFFFF" android:shadowDx="1.2" android:shadowDy="1.2" android:shadowRadius="1.2"></TextView><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14dip" android:id="@+id/trace_mylocation_label" android:layout_gravity="center" android:text="追跡" android:shadowDx="1.2" android:shadowColor="#000000" android:shadowDy="1.2" android:shadowRadius="1.2" android:textColor="#FFFFFF"></TextView></LinearLayout><ToggleButton android:text="@+id/ToggleButton01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/trace_mylocation"></ToggleButton>
 
 
 
