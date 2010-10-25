@@ -4,6 +4,7 @@ package org.chrysaor.android.gas_station;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import jp.co.nobot.libYieldMaker.libYieldMaker;
 
@@ -14,6 +15,7 @@ import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.InfoController;
 import org.chrysaor.android.gas_station.util.LocationOverlay;
+import org.chrysaor.android.gas_station.util.SeekBarPreference;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandController;
 
@@ -36,11 +38,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.app.AlertDialog;
@@ -50,7 +49,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
@@ -104,7 +102,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.main);
         String num = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_dist", "60");
-        Log.d(LOG_TAG, LOG_TAG + num);
+//        Log.d(LOG_TAG, LOG_TAG + num);
 
         // 操作パネルの透過率設定
         setPenetration();
@@ -176,22 +174,94 @@ public class MainActivity extends MapActivity implements Runnable {
         });
 
         if (donate == false) {
-        	/*
-            AdView adView = new AdView(this); 
-            adView.setVisibility(android.view.View.VISIBLE); 
-            adView.requestFreshAd(); 
-            adView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-            mMapView.addView(adView);
-            */
-            libYieldMaker mv = (libYieldMaker)findViewById(R.id.admakerview);
-            mv.setActivity(this);
-            mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
-            mv.startView();
+        	Random rnd = new Random();
+            int rand = rnd.nextInt(2);
+            
+            switch (rand) {
+            case 0:
+                AdView adView = new AdView(this); 
+                adView.setVisibility(View.VISIBLE); 
+                adView.requestFreshAd(); 
+                adView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                mMapView.addView(adView);
+            	break;
+            case 1:
+            	LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
+                head.setVisibility(View.VISIBLE);
+                libYieldMaker mv = (libYieldMaker)findViewById(R.id.admakerview);
+                mv.setActivity(this);
+                mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
+                mv.startView();
+            	break;
+            }
+
         } else {
             View header = (View) findViewById(R.id.header);
         	header.setVisibility(View.VISIBLE);
         }
 
+		images[0] = getResources().getDrawable(R.drawable.p100);
+		images[1] = getResources().getDrawable(R.drawable.p101);
+		images[2] = getResources().getDrawable(R.drawable.p102);
+		images[3] = getResources().getDrawable(R.drawable.p103);
+		images[4] = getResources().getDrawable(R.drawable.p104);
+		images[5] = getResources().getDrawable(R.drawable.p105);
+		images[6] = getResources().getDrawable(R.drawable.p106);
+		images[7] = getResources().getDrawable(R.drawable.p107);
+		images[8] = getResources().getDrawable(R.drawable.p108);
+		images[9] = getResources().getDrawable(R.drawable.p109);
+		images[10] = getResources().getDrawable(R.drawable.p110);
+		images[11] = getResources().getDrawable(R.drawable.p111);
+		images[12] = getResources().getDrawable(R.drawable.p112);
+		images[13] = getResources().getDrawable(R.drawable.p113);
+		images[14] = getResources().getDrawable(R.drawable.p114);
+		images[15] = getResources().getDrawable(R.drawable.p115);
+		images[16] = getResources().getDrawable(R.drawable.p116);
+		images[17] = getResources().getDrawable(R.drawable.p117);
+		images[18] = getResources().getDrawable(R.drawable.p118);
+		images[19] = getResources().getDrawable(R.drawable.p119);
+		images[20] = getResources().getDrawable(R.drawable.p120);
+		images[21] = getResources().getDrawable(R.drawable.p121);
+		images[22] = getResources().getDrawable(R.drawable.p122);
+		images[23] = getResources().getDrawable(R.drawable.p123);
+		images[24] = getResources().getDrawable(R.drawable.p124);
+		images[25] = getResources().getDrawable(R.drawable.p125);
+		images[26] = getResources().getDrawable(R.drawable.p126);
+		images[27] = getResources().getDrawable(R.drawable.p127);
+		images[28] = getResources().getDrawable(R.drawable.p128);
+		images[29] = getResources().getDrawable(R.drawable.p129);
+		images[30] = getResources().getDrawable(R.drawable.p130);
+		images[31] = getResources().getDrawable(R.drawable.p131);
+		images[32] = getResources().getDrawable(R.drawable.p132);
+		images[33] = getResources().getDrawable(R.drawable.p133);
+		images[34] = getResources().getDrawable(R.drawable.p134);
+		images[35] = getResources().getDrawable(R.drawable.p135);
+		images[36] = getResources().getDrawable(R.drawable.p136);
+		images[37] = getResources().getDrawable(R.drawable.p137);
+		images[38] = getResources().getDrawable(R.drawable.p138);
+		images[39] = getResources().getDrawable(R.drawable.p139);
+		images[40] = getResources().getDrawable(R.drawable.p140);
+		images[41] = getResources().getDrawable(R.drawable.p141);
+		images[42] = getResources().getDrawable(R.drawable.p142);
+		images[43] = getResources().getDrawable(R.drawable.p143);
+		images[44] = getResources().getDrawable(R.drawable.p144);
+		images[45] = getResources().getDrawable(R.drawable.p145);
+		images[46] = getResources().getDrawable(R.drawable.p146);
+		images[47] = getResources().getDrawable(R.drawable.p147);
+		images[48] = getResources().getDrawable(R.drawable.p148);
+		images[49] = getResources().getDrawable(R.drawable.p149);
+		images[50] = getResources().getDrawable(R.drawable.p150);
+		images[51] = getResources().getDrawable(R.drawable.p151);
+		images[52] = getResources().getDrawable(R.drawable.p152);
+		images[53] = getResources().getDrawable(R.drawable.p153);
+		images[54] = getResources().getDrawable(R.drawable.p154);
+		images[55] = getResources().getDrawable(R.drawable.p155);
+		images[56] = getResources().getDrawable(R.drawable.p156);
+		images[57] = getResources().getDrawable(R.drawable.p157);
+		images[58] = getResources().getDrawable(R.drawable.p158);
+		images[59] = getResources().getDrawable(R.drawable.p159);
+		images[60] = getResources().getDrawable(R.drawable.p160);
+		
         mMapView.invalidate();
 	    /*
         // 位置情報の取得を開始
@@ -267,6 +337,7 @@ public class MainActivity extends MapActivity implements Runnable {
     	
     	StandsDao standsDao = new StandsDao(db);
     	standsDao.deleteAll();
+    	db.close();
     	
     	super.onDestroy();
     }
@@ -302,7 +373,7 @@ public class MainActivity extends MapActivity implements Runnable {
     }
     
     protected void setPenetration() {
-        int penetration = PreferenceManager.getDefaultSharedPreferences(this).getInt("settings_penetration", 40);
+        int penetration = PreferenceManager.getDefaultSharedPreferences(this).getInt("settings_penetration", SeekBarPreference.OPT_SEEKBAR_DEF);
         View header = (View) findViewById(R.id.header);
         header.setBackgroundColor(Color.argb((int)((100 - penetration) * 2.55), 0, 0, 0));
 
@@ -451,68 +522,6 @@ public class MainActivity extends MapActivity implements Runnable {
 			Drawable brand99 = getResources().getDrawable(R.drawable.icon_maker99);
 
 			Drawable speech  = getResources().getDrawable(R.drawable.speech);
-			images[0] = getResources().getDrawable(R.drawable.p100);
-			images[1] = getResources().getDrawable(R.drawable.p101);
-			images[2] = getResources().getDrawable(R.drawable.p102);
-			images[3] = getResources().getDrawable(R.drawable.p103);
-			images[4] = getResources().getDrawable(R.drawable.p104);
-			images[5] = getResources().getDrawable(R.drawable.p105);
-			images[6] = getResources().getDrawable(R.drawable.p106);
-			images[7] = getResources().getDrawable(R.drawable.p107);
-			images[8] = getResources().getDrawable(R.drawable.p108);
-			images[9] = getResources().getDrawable(R.drawable.p109);
-			images[10] = getResources().getDrawable(R.drawable.p110);
-			images[11] = getResources().getDrawable(R.drawable.p111);
-			images[12] = getResources().getDrawable(R.drawable.p112);
-			images[13] = getResources().getDrawable(R.drawable.p113);
-			images[14] = getResources().getDrawable(R.drawable.p114);
-			images[15] = getResources().getDrawable(R.drawable.p115);
-			images[16] = getResources().getDrawable(R.drawable.p116);
-			images[17] = getResources().getDrawable(R.drawable.p117);
-			images[18] = getResources().getDrawable(R.drawable.p118);
-			images[19] = getResources().getDrawable(R.drawable.p119);
-			images[20] = getResources().getDrawable(R.drawable.p120);
-			images[21] = getResources().getDrawable(R.drawable.p121);
-			images[22] = getResources().getDrawable(R.drawable.p122);
-			images[23] = getResources().getDrawable(R.drawable.p123);
-			images[24] = getResources().getDrawable(R.drawable.p124);
-			images[25] = getResources().getDrawable(R.drawable.p125);
-			images[26] = getResources().getDrawable(R.drawable.p126);
-			images[27] = getResources().getDrawable(R.drawable.p127);
-			images[28] = getResources().getDrawable(R.drawable.p128);
-			images[29] = getResources().getDrawable(R.drawable.p129);
-			images[30] = getResources().getDrawable(R.drawable.p130);
-			images[31] = getResources().getDrawable(R.drawable.p131);
-			images[32] = getResources().getDrawable(R.drawable.p132);
-			images[33] = getResources().getDrawable(R.drawable.p133);
-			images[34] = getResources().getDrawable(R.drawable.p134);
-			images[35] = getResources().getDrawable(R.drawable.p135);
-			images[36] = getResources().getDrawable(R.drawable.p136);
-			images[37] = getResources().getDrawable(R.drawable.p137);
-			images[38] = getResources().getDrawable(R.drawable.p138);
-			images[39] = getResources().getDrawable(R.drawable.p139);
-			images[40] = getResources().getDrawable(R.drawable.p140);
-			images[41] = getResources().getDrawable(R.drawable.p141);
-			images[42] = getResources().getDrawable(R.drawable.p142);
-			images[43] = getResources().getDrawable(R.drawable.p143);
-			images[44] = getResources().getDrawable(R.drawable.p144);
-			images[45] = getResources().getDrawable(R.drawable.p145);
-			images[46] = getResources().getDrawable(R.drawable.p146);
-			images[47] = getResources().getDrawable(R.drawable.p147);
-			images[48] = getResources().getDrawable(R.drawable.p148);
-			images[49] = getResources().getDrawable(R.drawable.p149);
-			images[50] = getResources().getDrawable(R.drawable.p150);
-			images[51] = getResources().getDrawable(R.drawable.p151);
-			images[52] = getResources().getDrawable(R.drawable.p152);
-			images[53] = getResources().getDrawable(R.drawable.p153);
-			images[54] = getResources().getDrawable(R.drawable.p154);
-			images[55] = getResources().getDrawable(R.drawable.p155);
-			images[56] = getResources().getDrawable(R.drawable.p156);
-			images[57] = getResources().getDrawable(R.drawable.p157);
-			images[58] = getResources().getDrawable(R.drawable.p158);
-			images[59] = getResources().getDrawable(R.drawable.p159);
-			images[60] = getResources().getDrawable(R.drawable.p160);
-//			Drawable speech  = getResources().getDrawable(R.drawable.speech);
 
 			PinItemizedOverlay brand01Overlay = new PinItemizedOverlay(brand01);
 	        PinItemizedOverlay brand02Overlay = new PinItemizedOverlay(brand02);
@@ -532,16 +541,13 @@ public class MainActivity extends MapActivity implements Runnable {
 	        PinItemizedOverlay speechOverlay  = new PinItemizedOverlay(speech);
 	        
             String pin_type = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price");
-	    	
+        	ArrayList<PinItemizedOverlay> pins = new ArrayList<PinItemizedOverlay>();;
+
             int size = list.size();
             for (int i=0;i<size;i++) {
 
             	GSInfo info = list.get(i);
     	    	standsDao.insert(info);
-//            	Log.d(LOG_TAG, "i:" + i);
-//                Log.d(LOG_TAG, "lat:" + info.getLatitude().toString());
-//                Log.d(LOG_TAG, info.getLongitude());
-//                Log.d(LOG_TAG, info.Brand);
                 
                 if (pin_type.compareTo("price") == 0) {
                 	int price = Integer.parseInt(info.Price);
@@ -591,17 +597,15 @@ public class MainActivity extends MapActivity implements Runnable {
 	            pinOverlay.setPrice(info.Price);
 	            pinOverlay.setPinType(PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price"));
    	            pinOverlay.setGSInfo(info);
-  	            mMapView.getOverlays().add(pinOverlay);
+//  	            mMapView.getOverlays().add(pinOverlay);
+   	            pins.add(pinOverlay);
+
 
             }
-            
-            /*
-	        LocationOverlay location = new LocationOverlay(this);
-	        location.setMyLocation(myLocation);
-	        mMapView.getOverlays().add(location);
-*/
+			mMapView.getOverlays().addAll(pins);
             mMapView.invalidate();            
         }
+    	db.close();
 	}
 
     /**

@@ -48,6 +48,7 @@ public class StandController extends Thread {
     public void setDispGASStand() {
     	
         final View view = inflater.inflate(R.layout.gsinfo, null);
+        
 
 		if (info != null) {
 	        ImageView imgBrand = (ImageView) view.findViewById(R.id.brand_image);
@@ -81,7 +82,6 @@ public class StandController extends Thread {
             } else {
 				imgBrand.setImageResource(R.drawable.icon_maker99);
             }
-
 
 			// 価格
             TextView textPrice = (TextView) view.findViewById(R.id.price);
@@ -138,6 +138,7 @@ public class StandController extends Thread {
 					//画像
 					final Bitmap imgBitmap;
 					final ImageView imgView = (ImageView) view.findViewById(R.id.shop_image);
+
 					final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.ProgressBar01);
 					String url = "http://gogo.gs/images/rally/" + info.ShopCode + "-" + info.Photo + ".jpg";
 
@@ -145,13 +146,18 @@ public class StandController extends Thread {
 
 			    	mHandler.post(new Runnable() {
 			    		public void run() {
-							progressBar.setVisibility(View.GONE);
-
+			    			
+Log.d("oge", "i:" + String.valueOf(view.getWidth() - 40));
 							if(imgBitmap != null) {
-								imgView.setVisibility(View.VISIBLE);
-								imgView.setImageBitmap(imgBitmap);
 								imgView.setMaxWidth(view.getWidth() - 40);
+								imgView.setVisibility(View.VISIBLE);
+								imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+								imgView.setImageBitmap(imgBitmap);
+								
 							}
+							Log.d("oge", "i:" + String.valueOf(view.getWidth() - 40));
+
+							progressBar.setVisibility(View.GONE);
 			    		}
 			    	});
 

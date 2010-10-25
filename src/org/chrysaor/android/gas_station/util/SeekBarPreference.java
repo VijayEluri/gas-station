@@ -16,7 +16,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     private Context mContext;
     private static SharedPreferences sp;
     private static final String OPT_SEEKBAR_KEY = "settings_penetration";
-    private static final int OPT_SEEKBAR_DEF = 40;
+    public static final int OPT_SEEKBAR_DEF = 80;
     private static final int LAYOUT_PADDING = 10;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
@@ -60,6 +60,13 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
             setValue(bar.getProgress());
         }
     }
+    
+    @Override
+    public void setSummary(CharSequence summary) {
+    	super.setSummary(summary);
+    	
+    }
+    
 
     private void setValue(int value) {
         Editor ed = sp.edit();
@@ -67,7 +74,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
         ed.commit();
     }
 
-    private int getValue() {
+    public int getValue() {
         return sp.getInt(OPT_SEEKBAR_KEY, OPT_SEEKBAR_DEF);
     }
 }

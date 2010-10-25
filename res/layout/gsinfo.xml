@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent" android:layout_margin="10px" android:background="@color/black">
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_margin="10dip"
+  android:background="@color/black">
 <ScrollView
     android:id="@+id/ScrollView01"
     android:layout_height="wrap_content" android:layout_width="fill_parent">
@@ -49,7 +53,7 @@
    android:layout_height="wrap_content"
    android:orientation="vertical"
    android:layout_width="fill_parent"
-   android:padding="5px" android:layout_marginLeft="5px" android:layout_marginRight="10px" android:shrinkColumns="1" android:stretchColumns="1">
+   android:layout_marginLeft="5px" android:layout_marginRight="10px" android:shrinkColumns="1" android:stretchColumns="1" android:padding="5dip">
    <TableRow android:id="@+id/TableRow01"
      android:layout_width="fill_parent"
      android:layout_height="wrap_content"
@@ -125,12 +129,12 @@
         style="?android:attr/progressBarStyle"> 
     </ProgressBar>
 <ImageView
-  android:layout_width="fill_parent"
+  android:layout_width="wrap_content"
   android:layout_height="wrap_content"
+  android:layout_gravity="center"
   android:id="@+id/shop_image"
-  android:padding="5px"
-  android:layout_marginLeft="5px"
-  android:layout_marginRight="10px" />
+  android:adjustViewBounds="true"
+  android:visibility="invisible" />
   </LinearLayout>
 </ScrollView>
 </LinearLayout>

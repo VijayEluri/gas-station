@@ -19,10 +19,10 @@
     <string name="settings_dist_title">中心からの距離</string>
     <string name="settings_dist_summary">指定された半径にあるガソリンスタンドを検索します</string>
     <string name="settings_dist_dialogtitle">中心からの距離</string>
-    <string name="settings_num_title">件数</string>
+    <string name="settings_num_title">最大取得件数</string>
     <string name="settings_num_summary">表示されるガソリンスタンドの件数を設定します</string>
     <string name="settings_num_dialogtitle">件数</string>
-    <string name="settings_span_title">期間</string>
+    <string name="settings_span_title">最終更新日</string>
     <string name="settings_span_summary">指定された期間に登録された情報を検索します</string>
     <string name="settings_span_dialogtitle">期間</string>
     <string name="settings_kind_title">油種</string>
