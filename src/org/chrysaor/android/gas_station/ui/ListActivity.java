@@ -2,28 +2,22 @@ package org.chrysaor.android.gas_station.ui;
 
 import java.util.ArrayList;
 
-import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.DatabaseHelper;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandsDao;
 
-import com.google.android.maps.GeoPoint;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ListActivity extends Activity {
@@ -45,6 +39,7 @@ public class ListActivity extends Activity {
     	
     	standsDao = new StandsDao(db);
         list = standsDao.findAll(mode);
+        db.close();
         init();
 
 	    RadioButton priceButton = (RadioButton) findViewById(R.id.sort_price);
@@ -53,9 +48,11 @@ public class ListActivity extends Activity {
  
         	@Override
             public void onClick(View v) {
+            	db = dbHelper.getWritableDatabase();
     	    	standsDao = new StandsDao(db);
     	    	mode = "price";
     	        list = standsDao.findAll(mode);
+    	        db.close();
     	        init();
             }
         });
@@ -66,9 +63,11 @@ public class ListActivity extends Activity {
  
         	@Override
             public void onClick(View v) {
+            	db = dbHelper.getWritableDatabase();
     	    	standsDao = new StandsDao(db);
     	    	mode = "distance";
     	        list = standsDao.findAll(mode);
+    	        db.close();
     	        init();
             }
         });

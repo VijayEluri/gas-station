@@ -1,8 +1,18 @@
 package org.chrysaor.android.gas_station.util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.util.Log;
 
@@ -13,9 +23,9 @@ public class GSInfo {
 	public String ShopName = null;
 	public Double Latitude = null;
 	public String Longitude = null;
-	public String Distance = null;
+	public String Distance = "0";
 	public String Address = null;
-	public String Price = null;
+	public String Price = "0";
 	public String Photo = null;
 	public String Date = null;
 	public String Rtc = null;
@@ -24,7 +34,7 @@ public class GSInfo {
 	//URL由来のストリーム
     protected InputStream is;
     
-    protected ArrayList<GSInfo> list;
+    protected ArrayList<GSInfo> list = new ArrayList<GSInfo>();
     
     //ストリームを閉じる処理を共通メソッドとして定義
 	public void close() {
@@ -41,10 +51,16 @@ public class GSInfo {
 	// ガソリンスタンド情報を取得・設定する
 	public void setGSInfoList(String url) {
 
-        is = WebApi.accessURL(url);
-              
+//        is = WebApi.accessURL(url);
+		byte[] byteArray = Utils.getByteArrayFromURL(url);
+		if (byteArray == null) {
+			Log.i("getXmlTags", "URLの取得に失敗");
+//			return result;
+		}
+		String data = new String(byteArray);
+		
         XmlParserFromUrl xml = new XmlParserFromUrl();
-        this.list = xml.getGSInfoFromXML(is);
+        this.list.addAll(xml.getGSInfoFromXML(data));
 
 		close();
 	}
@@ -93,5 +109,36 @@ public class GSInfo {
 	public String getLongitude() {
 		return this.Longitude;
 	}
+	
+	public String getData(String sUrl) {
+		DefaultHttpClient objHttp = new DefaultHttpClient();
+		objHttp.getCredentialsProvider().setCredentials(
+		          AuthScope.ANY, new UsernamePasswordCredentials("test", "kdlkdl"));
+
+	    HttpParams params = objHttp.getParams();  
+	    HttpConnectionParams.setConnectionTimeout(params, 1000); //接続のタイムアウト  
+	    HttpConnectionParams.setSoTimeout(params, 1000); //データ取得のタイムアウト  
+	    String sReturn = "";  
+	    try {  
+	        HttpGet objGet = new HttpGet(sUrl);
+	        
+	        HttpResponse objResponse = objHttp.execute(objGet);  
+	        if (objResponse.getStatusLine().getStatusCode() < 400){  
+	            InputStream objStream = objResponse.getEntity().getContent();  
+	            InputStreamReader objReader = new InputStreamReader(objStream);  
+	            BufferedReader objBuf = new BufferedReader(objReader);  
+	            StringBuilder objJson = new StringBuilder();  
+	            String sLine;  
+	            while((sLine = objBuf.readLine()) != null){  
+	                objJson.append(sLine);  
+	            }  
+	            sReturn = objJson.toString();  
+	            objStream.close();  
+	        }  
+	    } catch (IOException e) {  
+	        return null;  
+	    }     
+	    return sReturn;  
+	}  
 }
 

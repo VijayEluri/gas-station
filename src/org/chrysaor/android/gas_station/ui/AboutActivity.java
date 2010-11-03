@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.util.ErrorReporter;
 
 public class AboutActivity extends Activity {
 	
@@ -17,6 +18,9 @@ public class AboutActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.about);
+	    
+	    ErrorReporter.setup(this);
+	    ErrorReporter.bugreport(AboutActivity.this);
 	    
         Button btn = (Button) this.findViewById(R.id.close);  
         

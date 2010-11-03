@@ -3,20 +3,18 @@ package org.chrysaor.android.gas_station.util;
 import org.chrysaor.android.gas_station.R;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class StandController extends Thread {
@@ -49,52 +47,29 @@ public class StandController extends Thread {
     	
         final View view = inflater.inflate(R.layout.gsinfo, null);
         
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display disp = wm.getDefaultDisplay();
+        view.setMinimumWidth(disp.getWidth() - 20);
+//        int width = disp.getWidth();
+//        int height = disp.getHeight();
 
 		if (info != null) {
 	        ImageView imgBrand = (ImageView) view.findViewById(R.id.brand_image);
-
-        	if (info.Brand.compareTo("JOMO") == 0) {
-				imgBrand.setImageResource(R.drawable.jomo);
-            } else if (info.Brand.compareTo("ESSO") == 0) {
-				imgBrand.setImageResource(R.drawable.esso);
-            } else if (info.Brand.compareTo("ENEOS") == 0) {
-				imgBrand.setImageResource(R.drawable.eneos);
-            } else if (info.Brand.compareTo("KYGNUS") == 0) {
-				imgBrand.setImageResource(R.drawable.kygnus);
-            } else if (info.Brand.compareTo("COSMO") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker6);
-            } else if (info.Brand.compareTo("SHELL") == 0) {
-				imgBrand.setImageResource(R.drawable.shell);
-            } else if (info.Brand.compareTo("IDEMITSU") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker8);
-            } else if (info.Brand.compareTo("IDEMITSU") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker9);
-            } else if (info.Brand.compareTo("MOBIL") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker10);
-            } else if (info.Brand.compareTo("SOLATO") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker11);
-            } else if (info.Brand.compareTo("JA-SS") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker12);
-            } else if (info.Brand.compareTo("GENERAL") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker13);
-            } else if (info.Brand.compareTo("ITOCHU") == 0) {
-				imgBrand.setImageResource(R.drawable.icon_maker14);
-            } else {
-				imgBrand.setImageResource(R.drawable.icon_maker99);
-            }
+            StandsHelper helper = StandsHelper.getInstance();
+            imgBrand.setImageResource(helper.getBrandImage(info.Brand, Integer.valueOf(info.Price)));
 
 			// 価格
             TextView textPrice = (TextView) view.findViewById(R.id.price);
 			textPrice.setText("価格" + info.Price + "円");
 
 			// セルフ
-			if (info.Self.compareTo("SELF") != 0) {
+			if (info.Self != null && info.Self.compareTo("SELF") != 0) {
 				ImageView imgSelf = (ImageView) view.findViewById(R.id.self);
 				imgSelf.setVisibility(View.INVISIBLE);
 			}
 
 			// 24時間営業
-			if (info.Rtc.compareTo("24H") != 0) {
+			if (info.Rtc != null && info.Rtc.compareTo("24H") != 0) {
 				ImageView imgRtc = (ImageView) view.findViewById(R.id.rtc);
 				imgRtc.setVisibility(View.INVISIBLE);
 			}				
@@ -147,7 +122,6 @@ public class StandController extends Thread {
 			    	mHandler.post(new Runnable() {
 			    		public void run() {
 			    			
-Log.d("oge", "i:" + String.valueOf(view.getWidth() - 40));
 							if(imgBitmap != null) {
 								imgView.setMaxWidth(view.getWidth() - 40);
 								imgView.setVisibility(View.VISIBLE);
@@ -155,7 +129,6 @@ Log.d("oge", "i:" + String.valueOf(view.getWidth() - 40));
 								imgView.setImageBitmap(imgBitmap);
 								
 							}
-							Log.d("oge", "i:" + String.valueOf(view.getWidth() - 40));
 
 							progressBar.setVisibility(View.GONE);
 			    		}

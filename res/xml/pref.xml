@@ -32,7 +32,7 @@
       android:dialogTitle="@string/settings_num_dialogtitle"
       android:entries="@array/settings_list_num"
       android:entryValues="@array/settings_list_numvalues"
-      android:defaultValue="25" />
+      android:defaultValue="50" />
     <ListPreference
       android:key="settings_span"
       android:title="@string/settings_span_title"

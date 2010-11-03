@@ -38,4 +38,9 @@
 	<string name="dialog_message_out_of_range">データがありません</string>
     <string name="dialog_message_getting_data">データ取得中</string>
     
+    <string name="bug_report">バグを報告</string>
+    <string name="bug_report_message">申し訳ありません。未知のエラーにより前回は強制終了しました。よろしければ、今後の修正のために開発者に今回のエラーを送信してください。</string>
+    <string name="bug_report_positive_button">送信内容を確認</string>
+    <string name="bug_report_negative_button">送信しない</string>
+    
 </resources>

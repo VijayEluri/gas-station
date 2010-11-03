@@ -1,6 +1,8 @@
 package org.chrysaor.android.gas_station.ui;
 
+import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.util.ErrorReporter;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
 
 import android.content.SharedPreferences;
@@ -20,6 +22,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.pref);
+		
+	    ErrorReporter.setup(this);
+	    ErrorReporter.bugreport(SettingsActivity.this);
 		
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 		

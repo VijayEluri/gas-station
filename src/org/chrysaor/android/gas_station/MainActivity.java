@@ -18,6 +18,8 @@ import org.chrysaor.android.gas_station.util.LocationOverlay;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandController;
+import org.chrysaor.android.gas_station.util.ErrorReporter;
+import org.chrysaor.android.gas_station.util.StandsHelper;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -42,6 +44,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -101,13 +104,17 @@ public class MainActivity extends MapActivity implements Runnable {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.main);
+	    
+	    ErrorReporter.setup(this);
+	    ErrorReporter.bugreport(MainActivity.this);
+	    
         String num = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_dist", "60");
 //        Log.d(LOG_TAG, LOG_TAG + num);
 
         // 操作パネルの透過率設定
         setPenetration();
-		
-       	// Donateの確認
+
+        // Donateの確認
         checkDonate();
         	 
         mMapView = (MapView) findViewById(R.id.main_map);
@@ -502,108 +509,55 @@ public class MainActivity extends MapActivity implements Runnable {
 	    	btn.setVisibility(View.INVISIBLE);
     		Toast.makeText(this, resource.getText(R.string.dialog_message_out_of_range), Toast.LENGTH_LONG).show();
 		} else {
-	    	btn.setVisibility(View.VISIBLE);
-    		Toast.makeText(this, list.size() + "件のスタンドが見つかりました", Toast.LENGTH_LONG).show();
-
-	    	// MapView上に表示したいビットマップ情報を、リソースから取得
-			Drawable brand01 = getResources().getDrawable(R.drawable.jomo);
-			Drawable brand02 = getResources().getDrawable(R.drawable.esso);
-			Drawable brand03 = getResources().getDrawable(R.drawable.eneos);
-			Drawable brand04 = getResources().getDrawable(R.drawable.kygnus);
-			Drawable brand06 = getResources().getDrawable(R.drawable.icon_maker6);
-			Drawable brand07 = getResources().getDrawable(R.drawable.shell);
-			Drawable brand08 = getResources().getDrawable(R.drawable.icon_maker8);
-			Drawable brand09 = getResources().getDrawable(R.drawable.icon_maker9);
-			Drawable brand10 = getResources().getDrawable(R.drawable.icon_maker10);
-			Drawable brand11 = getResources().getDrawable(R.drawable.icon_maker11);
-			Drawable brand12 = getResources().getDrawable(R.drawable.icon_maker12);
-			Drawable brand13 = getResources().getDrawable(R.drawable.icon_maker13);
-			Drawable brand14 = getResources().getDrawable(R.drawable.icon_maker14);
-			Drawable brand99 = getResources().getDrawable(R.drawable.icon_maker99);
 
 			Drawable speech  = getResources().getDrawable(R.drawable.speech);
-
-			PinItemizedOverlay brand01Overlay = new PinItemizedOverlay(brand01);
-	        PinItemizedOverlay brand02Overlay = new PinItemizedOverlay(brand02);
-	        PinItemizedOverlay brand03Overlay = new PinItemizedOverlay(brand03);
-	        PinItemizedOverlay brand04Overlay = new PinItemizedOverlay(brand04);
-	        PinItemizedOverlay brand06Overlay = new PinItemizedOverlay(brand06);
-	        PinItemizedOverlay brand07Overlay = new PinItemizedOverlay(brand07);
-	        PinItemizedOverlay brand08Overlay = new PinItemizedOverlay(brand08);
-	        PinItemizedOverlay brand09Overlay = new PinItemizedOverlay(brand09);
-	        PinItemizedOverlay brand10Overlay = new PinItemizedOverlay(brand10);
-	        PinItemizedOverlay brand11Overlay = new PinItemizedOverlay(brand11);
-	        PinItemizedOverlay brand12Overlay = new PinItemizedOverlay(brand12);
-	        PinItemizedOverlay brand13Overlay = new PinItemizedOverlay(brand13);
-	        PinItemizedOverlay brand14Overlay = new PinItemizedOverlay(brand14);
-	        PinItemizedOverlay brand99Overlay = new PinItemizedOverlay(brand99);
-
-	        PinItemizedOverlay speechOverlay  = new PinItemizedOverlay(speech);
 	        
             String pin_type = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price");
         	ArrayList<PinItemizedOverlay> pins = new ArrayList<PinItemizedOverlay>();;
 
-            int size = list.size();
-            for (int i=0;i<size;i++) {
+            StandsHelper helper = StandsHelper.getInstance();
 
-            	GSInfo info = list.get(i);
-    	    	standsDao.insert(info);
-                
-                if (pin_type.compareTo("price") == 0) {
-                	int price = Integer.parseInt(info.Price);
-                	if (MIN_IMAGE <= price && price <= MAX_IMAGE) {
-                	    pinOverlay = new PinItemizedOverlay(images[price - MIN_IMAGE]);
-                	} else {
-                    	pinOverlay = speechOverlay;
-                	}
-                } else {
-                	if (info.Brand.compareTo("JOMO") == 0) {
-                		pinOverlay = brand01Overlay;
-	                } else if (info.Brand.compareTo("ESSO") == 0) {
-	                	pinOverlay = brand02Overlay;
-	                } else if (info.Brand.compareTo("ENEOS") == 0) {
-	                	pinOverlay = brand03Overlay;
-	                } else if (info.Brand.compareTo("KYGNUS") == 0) {
-	                	pinOverlay = brand04Overlay;
-	                } else if (info.Brand.compareTo("COSMO") == 0) {
-	                	pinOverlay = brand06Overlay;
-	                } else if (info.Brand.compareTo("SHELL") == 0) {
-	                    pinOverlay = brand07Overlay;
-	                } else if (info.Brand.compareTo("IDEMITSU") == 0) {
-	                	pinOverlay = brand08Overlay;
-	                } else if (info.Brand.compareTo("IDEMITSU") == 0) {
-	                	pinOverlay = brand09Overlay;
-	                } else if (info.Brand.compareTo("MOBIL") == 0) {
-	                	pinOverlay = brand10Overlay;
-	                } else if (info.Brand.compareTo("SOLATO") == 0) {
-	                	pinOverlay = brand11Overlay;
-	                } else if (info.Brand.compareTo("JA-SS") == 0) {
-	                	pinOverlay = brand12Overlay;
-	                } else if (info.Brand.compareTo("GENERAL") == 0) {
-	                	pinOverlay = brand13Overlay;
-	                } else if (info.Brand.compareTo("ITOCHU") == 0) {
-	                	pinOverlay = brand14Overlay;
-	                } else {
-	                	pinOverlay = brand99Overlay;
-	                }
+            db.beginTransaction();
+            try {
+                int size = list.size();
+                for (int i=0;i<size;i++) {
+
+                	GSInfo info = list.get(i);
+        	    	standsDao.insert(info);
+                    
+                    if (pin_type.compareTo("price") == 0) {
+                    	int price = Integer.parseInt(info.Price);
+                    	if (MIN_IMAGE <= price && price <= MAX_IMAGE) {
+                    	    pinOverlay = new PinItemizedOverlay(images[price - MIN_IMAGE]);
+                    	} else {
+                    		pinOverlay = new PinItemizedOverlay(speech);
+                    	}
+                    } else {
+                		pinOverlay = new PinItemizedOverlay(getResources().getDrawable(helper.getBrandImage(info.Brand, Integer.valueOf(info.Price))));
+                    }
+                    
+                    GeoPoint point = new GeoPoint(
+                            (int) ((double) info.getLatitude() * E6),
+                            (int) (Double.parseDouble(info.getLongitude()) * E6));
+                    
+    	            pinOverlay.addPoint(point);
+    	            pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n" + info.Address + "\n" + info.Price + "円");
+    	            pinOverlay.setPrice(info.Price);
+    	            pinOverlay.setPinType(pin_type);
+       	            pinOverlay.setGSInfo(info);
+//      	            mMapView.getOverlays().add(pinOverlay);
+       	            pins.add(pinOverlay);
+
                 }
-                
-                GeoPoint point = new GeoPoint(
-                        (int) ((double) info.getLatitude() * E6),
-                        (int) (Double.parseDouble(info.getLongitude()) * E6));
-                
-	            pinOverlay.addPoint(point);
-	            pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n" + info.Address + "\n" + info.Price + "円");
-	            pinOverlay.setPrice(info.Price);
-	            pinOverlay.setPinType(PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price"));
-   	            pinOverlay.setGSInfo(info);
-//  	            mMapView.getOverlays().add(pinOverlay);
-   	            pins.add(pinOverlay);
-
-
+                db.setTransactionSuccessful();
+            } finally {
+            	db.endTransaction();
             }
 			mMapView.getOverlays().addAll(pins);
-            mMapView.invalidate();            
+            mMapView.invalidate();
+            
+            btn.setVisibility(View.VISIBLE);
+    		Toast.makeText(this, list.size() + "件のスタンドが見つかりました", Toast.LENGTH_LONG).show();
         }
     	db.close();
 	}
@@ -777,18 +731,16 @@ public class MainActivity extends MapActivity implements Runnable {
 		
 		@Override
 		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-		    super.draw(canvas, mapView, shadow);
-		    
 		    if (shadow) {
 		    	return;
 		    }
 		    
+		    super.draw(canvas, mapView, shadow);
 		    
 		    int size = prices.size();
-            for (int i=0;i<size;i++) {
+		    for (int i=0;i<size;i++) {
 
             	String price = prices.get(i);
-            	GeoPoint locate = points.get(i);
             	String pin = pin_types.get(i);
                 
             	if (pin.compareTo("brand") == 0) {
@@ -798,7 +750,9 @@ public class MainActivity extends MapActivity implements Runnable {
             	if (MIN_IMAGE <= Integer.parseInt(price) && Integer.parseInt(price) <= MAX_IMAGE) {
             	    continue;
             	}
-            		
+            	
+            	GeoPoint locate = points.get(i);
+            	
     		    Paint p = new Paint();
     		    int sz = 5;
     		    

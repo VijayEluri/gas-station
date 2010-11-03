@@ -15,7 +15,6 @@ public class XmlParserFromUrl {
     private XmlPullParserFactory factory;
 	private int eventType;
 	
-	//�R���X�g���N�^
 	public XmlParserFromUrl() {
 		try {
 			factory = XmlPullParserFactory.newInstance();
@@ -25,53 +24,17 @@ public class XmlParserFromUrl {
         factory.setNamespaceAware(true);
 	}
 	
-	//XML����p�����[�^�̓s���{���̓V�C�񋟒n����擾
 	public ArrayList<GSInfo> getGSInfoListFromXML(InputStream is) {
 		
 		ArrayList<GSInfo> list = new ArrayList<GSInfo>();
         String tag;
         boolean prefFlag = false;
-        /*
-		if (is == null)
-			return null;
-        try {
-        	initXmlPullParser(is);
-			while (eventType != XmlPullParser.END_DOCUMENT) {
-				tag = xpp.getName();
-				if (eventType == XmlPullParser.START_TAG) {
-					//�s���{��
-					if(tag.compareTo(CityInfo.TAG_PREF) == 0) {
-				        String title;
-				        title = xpp.getAttributeValue(null, CityInfo.ATTR_TITLE);
-				        //�p�����[�^�̓s���{������������
-				        if(todohuken.compareTo(title) == 0) {
-							prefFlag = true;
-				        }
-				    //�s���{�����̓V�C�񋟒n��
-					} else if((tag.compareTo(CityInfo.TAG_CITY) == 0) && prefFlag) {
-						CityInfo tempCity = new CityInfo();
-						tempCity.city_id = xpp.getAttributeValue(null, CityInfo.ATTR_ID);
-						tempCity.city_name = xpp.getAttributeValue(null, CityInfo.ATTR_TITLE);
-						list.add(tempCity);
-					}
-				} else if (eventType == XmlPullParser.END_TAG) {
-					//�p�����[�^�̓s���{���̓ǂݍ��ݏI���𔻒f
-					if((tag.compareTo(CityInfo.TAG_PREF) == 0) && prefFlag) {
-						break;
-					}
-				}
-				eventType = xpp.next();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
+
         return list;
         
 	}
 
-	//XML����V����擾
-	public ArrayList<GSInfo> getGSInfoFromXML(InputStream is) {
+	public ArrayList<GSInfo> getGSInfoFromXML(String is) {
 		GSInfo ret = new GSInfo();
         String tag;
         boolean imageFlag = false;
@@ -93,30 +56,37 @@ public class XmlParserFromUrl {
         try {
         	initXmlPullParser(is);
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                if(eventType == XmlPullParser.START_DOCUMENT) {
-                    alert += "Start document\n";
-                } else if(eventType == XmlPullParser.END_DOCUMENT) {
-               	    alert += "End document\n";
-                } else if(eventType == XmlPullParser.START_TAG) {
+//            	Log.i("hoge", String.valueOf(eventType));
+            	switch (eventType) {
+            	case XmlPullParser.START_DOCUMENT:
+//                    alert += "Start document\n";
+                    break;
+            	case XmlPullParser.END_DOCUMENT:
+//               	    alert += "End document\n";
+               	    break;
+            	case XmlPullParser.START_TAG:
                	    if (xpp.getName().compareTo("Item") == 0) {
                		    flag = 1;
                		    ret = new GSInfo();
                	    }
                 	tmpName = xpp.getName();
-               	    alert += "Start tag "+xpp.getName() + "\n";
-                } else if(eventType == XmlPullParser.END_TAG) {
-               	    alert += "End tag "+xpp.getName() + "\n";
+//               	    alert += "Start tag "+xpp.getName() + "\n";
+            		break;
+            	case XmlPullParser.END_TAG:
+//               	    alert += "End tag "+xpp.getName() + "\n";
                	    if (xpp.getName().compareTo("Item") == 0) {
                		    flag = 0;
                		    list.add(ret);
                	    } else if (flag == 1) {
                    	    ret.setData(tmpName, value);
                	    }
-                } else if(eventType == XmlPullParser.TEXT) {
-               	    alert += "Text "+xpp.getText() + "\n";
+               	    break;
+            	case XmlPullParser.TEXT:
+//               	    alert += "Text "+xpp.getText() + "\n";
                	    value = xpp.getText();
-                }
-                
+               	    break;
+            	}
+            	
                 eventType = xpp.next();   
             }
 		} catch (Exception e) {
@@ -126,7 +96,6 @@ public class XmlParserFromUrl {
 		return list;
 	}
 	
-	//�^�O����e�L�X�g��ǂݍ��ނ��߂̕⏕���\�b�h
 	private String getText() throws XmlPullParserException, IOException {
 		if (eventType != XmlPullParser.START_TAG) {
 			eventType = xpp.next();
@@ -140,12 +109,13 @@ public class XmlParserFromUrl {
 		return xpp.getText();
 	}
 	
-	//XmlPullParser�̋��ʏ����\�b�h
-	private void initXmlPullParser(InputStream is) {
+	private void initXmlPullParser(String is) {
         try {
+        	
 			xpp = factory.newPullParser();
-	        xpp.setInput(is, "UTF-8");
-	        
+//	        xpp.setInput(is, "UTF-8");
+	        xpp.setInput(new StringReader(is));
+	        	        
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
 		}
