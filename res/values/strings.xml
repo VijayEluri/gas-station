@@ -7,6 +7,7 @@
     <string name="settings_label">設定</string>
     <string name="settings_title">地図の設定</string>
     <string name="settings_search_title">検索条件</string>
+    <string name="settings_etc_title">その他</string>
  	<string name="settings_pin_type_key">settings_pin_type</string>
     <string name="settings_pin_type_title">ピンの種類</string>
     <string name="settings_pin_type_summary">地図上に表示するピンの種類を設定します</string>
@@ -33,6 +34,14 @@
     <string name="settings_sort_dialogtitle">並び順</string>
     <string name="settings_sort_summary">検索結果の並び順を設定します</string>
     <string name="settings_sort_title">並び順</string>
+    <string name="settings_sort_default">price</string>
+    <string name="settings_no_postdata_title">価格情報の無いスタンド</string>
+    <string name="settings_no_postdata_summary">km圏内の価格情報の無いスタンドを表示します</string>
+    <string name="settings_no_postdata_default">false</string>
+    <string name="settings_sharemsg_dialogtitle">共有メッセージ</string>
+    <string name="settings_sharemsg_summary">共有メッセージを設定します</string>
+    <string name="settings_sharemsg_title">共有メッセージ</string>
+    <string name="settings_sharemsg_default">#kind : #price (#shop_name)</string>
     
     <string name="dialog_title_err">エラー</string>
 	<string name="dialog_message_out_of_range">データがありません</string>

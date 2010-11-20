@@ -8,7 +8,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "gas_station";
 	
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 6;
 	
 	private static final String CREATE_PLACES_TABLE_SQL = "create table stands " +
 			"(rowid integer primary key autoincrement, " +
@@ -17,13 +17,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			"shop_name text not null, " +
 			"latitude text not null, " +
 			"longitude text not null, " +
-			"distance text not null," +
+			"distance integer not null," +
 			"address text not null," +
-			"price text not null," +
-			"date text not null," +
+			"price text null," +
+			"date text null," +
 			"photo text null," +
 			"rtc text null," +
-			"self text null)";
+			"self text null," +
+			"member text not null)";
 	
 	private static final String DROP_PLACES_TABLE_SQL = "drop table if exists stands";
 	

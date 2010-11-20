@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/settings_title">
+  <PreferenceCategory android:title="@string/settings_title">
     <ListPreference
       android:key="settings_pin_type"
       android:title="@string/settings_pin_type_title"
@@ -60,6 +60,19 @@
       android:dialogTitle="@string/settings_sort_dialogtitle"
       android:entries="@array/settings_sort_kind"
       android:entryValues="@array/settings_sort_kindvalues"
-      android:defaultValue="price" />
+      android:defaultValue="@string/settings_sort_default" />
+    <CheckBoxPreference
+      android:key="settings_no_postdata"
+      android:title="@string/settings_no_postdata_title"
+      android:summary="@string/settings_no_postdata_summary" />
   </PreferenceCategory>
+  <PreferenceCategory android:title="@string/settings_etc_title">
+    <EditTextPreference
+      android:key="settings_sharemsg"
+      android:title="@string/settings_sharemsg_title"
+      android:summary="@string/settings_sharemsg_summary"
+      android:dialogTitle="@string/settings_sharemsg_dialogtitle"
+      android:defaultValue="@string/settings_sharemsg_default" />
+  </PreferenceCategory>  
+
 </PreferenceScreen>

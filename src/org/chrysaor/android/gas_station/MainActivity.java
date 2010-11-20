@@ -9,6 +9,7 @@ import java.util.Random;
 import jp.co.nobot.libYieldMaker.libYieldMaker;
 
 import org.chrysaor.android.gas_station.ui.AboutActivity;
+import org.chrysaor.android.gas_station.ui.DetailActivity;
 import org.chrysaor.android.gas_station.ui.ListActivity;
 import org.chrysaor.android.gas_station.ui.SettingsActivity;
 import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
@@ -20,6 +21,7 @@ import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandController;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
 import org.chrysaor.android.gas_station.util.StandsHelper;
+import org.chrysaor.android.gas_station.util.Utils;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -50,6 +52,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -93,7 +96,8 @@ public class MainActivity extends MapActivity implements Runnable {
 	public static final String DONATE_PACKAGE = "org.chrysaor.android.gas_station.plus";
 	public static final String ACTION_FAVORITE = "org.chrysaor.android.intent.receive.FAVORITE";
 	private Drawable[] images = new Drawable[61];
-    private StandAdapter adapter = null;  
+    private StandAdapter adapter = null;
+    private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
 
 	//天候情報生成クラス
 	private InfoController infoController;
@@ -148,60 +152,68 @@ public class MainActivity extends MapActivity implements Runnable {
 		
 		// 検索ボタンのonClick設定
 		ImageView search_img = (ImageView) findViewById(R.id.search_img);
-        search_img.setOnClickListener(new OnClickListener() {
-        	public void onClick(View v) {
-    	    	MainActivity.this.searchAction();
-        	}
-        });
-        
-        
+		search_img.setOnTouchListener(new View.OnTouchListener() {
+    		public boolean onTouch(View v, MotionEvent event) {
+    			if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+    				v.setBackgroundColor(pressed_color);
+    			} else if(event.getAction() == MotionEvent.ACTION_UP) {
+    				v.setBackgroundColor(Color.TRANSPARENT);
+    				MainActivity.this.searchAction();
+    			}
+    			return true;
+    		}	
+    	});
+
 		// リストボタンのonClick設定
 		ImageView list = (ImageView) findViewById(R.id.main_list);
-        list.setOnClickListener(new OnClickListener() {
-        	public void onClick(View v) {
-    	        Intent intent = new Intent(MainActivity.this, ListActivity.class);
-    	        startActivityForResult(intent, 0);  
-        	}
-        });
+        list.setOnTouchListener(new View.OnTouchListener() {
+    		public boolean onTouch(View v, MotionEvent event) {
+    			if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+    				v.setBackgroundColor(pressed_color);
+    			} else if(event.getAction() == MotionEvent.ACTION_UP) {
+    				v.setBackgroundColor(Color.TRANSPARENT);
+        	        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+        	        startActivityForResult(intent, 0);  
+    			}
+    			return true;
+    		}	
+    	});
         
 		// ズームアウトボタンのonClick設定
         ImageView zoomout_img = (ImageView) findViewById(R.id.zoomout);
-		zoomout_img.setOnClickListener(new OnClickListener() {
-        	public void onClick(View v) {
-        		mMapController.zoomOut();
-        	}
-        });
+        zoomout_img.setOnTouchListener(new View.OnTouchListener() {
+    		public boolean onTouch(View v, MotionEvent event) {
+    			if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+    				v.setBackgroundColor(pressed_color);
+    			} else if(event.getAction() == MotionEvent.ACTION_UP) {
+    				v.setBackgroundColor(Color.TRANSPARENT);
+            		mMapController.zoomOut();
+    			}
+    			return true;
+    		}	
+    	});
 		
 		// ズームインボタンのonClick設定
 		ImageView zoomin_img = (ImageView) findViewById(R.id.zoomin);
-		zoomin_img.setOnClickListener(new OnClickListener() {
-        	public void onClick(View v) {
-        		mMapController.zoomIn();
-        	}
-        });
+		zoomin_img.setOnTouchListener(new View.OnTouchListener() {
+    		public boolean onTouch(View v, MotionEvent event) {
+    			if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+    				v.setBackgroundColor(pressed_color);
+    			} else if(event.getAction() == MotionEvent.ACTION_UP) {
+    				v.setBackgroundColor(Color.TRANSPARENT);
+            		mMapController.zoomIn();
+    			}
+    			return true;
+    		}	
+    	});
 
         if (donate == false) {
-        	Random rnd = new Random();
-            int rand = rnd.nextInt(2);
-            
-            switch (rand) {
-            case 0:
-                AdView adView = new AdView(this); 
-                adView.setVisibility(View.VISIBLE); 
-                adView.requestFreshAd(); 
-                adView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-                mMapView.addView(adView);
-            	break;
-            case 1:
-            	LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
-                head.setVisibility(View.VISIBLE);
-                libYieldMaker mv = (libYieldMaker)findViewById(R.id.admakerview);
-                mv.setActivity(this);
-                mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
-                mv.startView();
-            	break;
-            }
-
+        	LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
+            head.setVisibility(View.VISIBLE);
+            libYieldMaker mv = (libYieldMaker)findViewById(R.id.admakerview);
+            mv.setActivity(this);
+            mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
+            mv.startView();
         } else {
             View header = (View) findViewById(R.id.header);
         	header.setVisibility(View.VISIBLE);
@@ -317,7 +329,7 @@ public class MainActivity extends MapActivity implements Runnable {
         // 操作パネルの透過率設定
         setPenetration();
 
-        Log.d(LOG_TAG, "donate:" + donate.toString());
+//        Log.d(LOG_TAG, "donate:" + donate.toString());
         
         super.onResume();
 
@@ -353,14 +365,12 @@ public class MainActivity extends MapActivity implements Runnable {
     public boolean onTouchEvent(MotionEvent event) {
       switch (event.getAction()) {
       case MotionEvent.ACTION_DOWN:
-          break;
       case MotionEvent.ACTION_UP:
+      case MotionEvent.ACTION_CANCEL:
           break;
       case MotionEvent.ACTION_MOVE:
           CenterCircleOverlay location = new CenterCircleOverlay(this);
           mMapView.getOverlays().add(location);
-          break;
-      case MotionEvent.ACTION_CANCEL:
           break;
       }
   	  return true;
@@ -441,34 +451,58 @@ public class MainActivity extends MapActivity implements Runnable {
 	
 	public Boolean searchAction() {
         try{
+        	SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            String dist = pref.getString("settings_dist", "10");
+            resource = getResources();
+
             String url_string = "http://api.gogo.gs/v1.2/?apid=gsearcho0o0";
-            url_string = url_string + "&dist=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_dist", "10");
-            url_string = url_string + "&num=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_num", "60");
-            url_string = url_string + "&span=" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_span", "");
-            Boolean member = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("settings_member", false);
+            url_string = url_string + "&dist=" + dist;
+            url_string = url_string + "&num=" + pref.getString("settings_num", "60");
+            url_string = url_string + "&span=" + pref.getString("settings_span", "");
+            Boolean member = pref.getBoolean("settings_member", false);
             if (member == true) {
             	url_string = url_string + "&member=1";
             }
-            url_string = url_string + "&kind=" +  PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_kind", "0");
+            url_string = url_string + "&kind=" + pref.getString("settings_kind", "0");
 
             // 地図の中心位置を取得
             GeoPoint center = mMapView.getMapCenter();
             url_string = url_string + "&lat=" +  (double) center.getLatitudeE6() / E6;
             url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
 
-            String sort = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("settings_sort", "dist");
+            String sort = pref.getString("settings_sort", "dist");
             if (sort.equals("dist")) {
             	url_string = url_string + "&sort=d";
             }
 
             String url = url_string;
-            Log.d(LOG_TAG, "url = " + url.toString());
+            Utils.logging("url = " + url.toString());
+            
+            Double lat = (double) center.getLatitudeE6() / E6;
+            Double lon = (double) center.getLongitudeE6() / E6;
+            
+            String url4all = "";
+            
+            if (pref.getBoolean("settings_no_postdata", Boolean.valueOf(resource.getText(R.string.settings_no_postdata_default).toString()))) {
+            	int no_dist = Integer.valueOf(dist);
+            	if (no_dist > 10) {
+            		no_dist = 10;
+            	}
+	            url4all = "http://api.gogo.gs/ap/gsst/ssLatLonFull.php?" +
+	            		"lat_min=" + (double) (lat - 0.0083 * no_dist) +
+	            		"&lat_max=" + (double) (lat + 0.0083 * no_dist) +
+	            		"&lon_min=" + (double) (lon - 0.0125 * no_dist) +
+	            		"&lon_max=" + (double) (lon + 0.0125 * no_dist) +
+	            		"&pm=" + pref.getString("settings_kind", "0") +
+	            		"&n=100";
+            }
+            
+            Utils.logging(url4all);
             
 			//マップ中心の周辺にあるガソリンスタンド情報を取得する
-			infoController = new InfoController(handler, this, url);
+			infoController = new InfoController(handler, this, url, url4all);
 
 	        //プログレスダイアログを表示
-            resource = getResources();
             dialog = new ProgressDialog(this);
 	        dialog.setIndeterminate(true);
 	        dialog.setMessage(resource.getText(R.string.dialog_message_getting_data));
@@ -483,7 +517,7 @@ public class MainActivity extends MapActivity implements Runnable {
 
 	        infoController.start();
         }catch(Exception e){
-            Log.d(LOG_TAG, e.getMessage());
+        	Utils.logging(e.getMessage());
         }
     	return true;
 	}
@@ -510,7 +544,8 @@ public class MainActivity extends MapActivity implements Runnable {
     		Toast.makeText(this, resource.getText(R.string.dialog_message_out_of_range), Toast.LENGTH_LONG).show();
 		} else {
 
-			Drawable speech  = getResources().getDrawable(R.drawable.speech);
+			Drawable speech  = getResources().getDrawable(R.drawable.pbase);
+			Drawable nodata  = getResources().getDrawable(R.drawable.pnodata);
 	        
             String pin_type = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_pin_type", "price");
         	ArrayList<PinItemizedOverlay> pins = new ArrayList<PinItemizedOverlay>();;
@@ -529,6 +564,8 @@ public class MainActivity extends MapActivity implements Runnable {
                     	int price = Integer.parseInt(info.Price);
                     	if (MIN_IMAGE <= price && price <= MAX_IMAGE) {
                     	    pinOverlay = new PinItemizedOverlay(images[price - MIN_IMAGE]);
+                    	} else if (price == 9999) {
+                    		pinOverlay = new PinItemizedOverlay(nodata);                    		
                     	} else {
                     		pinOverlay = new PinItemizedOverlay(speech);
                     	}
@@ -585,8 +622,8 @@ public class MainActivity extends MapActivity implements Runnable {
 
         public void onLocationChanged(Location location) {
             
-            Log.d(LOG_TAG, "longitude = " + location.getLongitude());
-            Log.d(LOG_TAG, "latitude = " + location.getLatitude());
+            Utils.logging("longitude = " + location.getLongitude());
+            Utils.logging("latitude = " + location.getLatitude());
 
             MainActivity.myLocation = location;     
         }
@@ -607,8 +644,6 @@ public class MainActivity extends MapActivity implements Runnable {
 
 	    @Override
 	    protected PinOverlayItem createItem(int i) {
-//            Log.d(LOG_TAG, "index = " + this.size());
-
 	    	GeoPoint point = points.get(i);
 	    	return new PinOverlayItem(point);
 	    }
@@ -650,6 +685,11 @@ public class MainActivity extends MapActivity implements Runnable {
 		@Override
 		protected boolean onTap(int index) {
 			
+			GSInfo info = gsInfo.get(index);
+	        Intent intent1 = new Intent(MainActivity.this, DetailActivity.class);
+            intent1.putExtra("shopcode", info.ShopCode);
+	        startActivity(intent1);
+/*
 			//マップ中心の周辺にあるガソリンスタンド情報を取得する
 			stand = new StandController(handler, this, MainActivity.this, gsInfo.get(index));
 
@@ -706,6 +746,7 @@ public class MainActivity extends MapActivity implements Runnable {
                         }});
                 }
 */
+	        /*
             }
 
         	// アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックを登録します
@@ -720,6 +761,8 @@ public class MainActivity extends MapActivity implements Runnable {
 	        alertDialogBuilder.show();
 
 //	        stand.start();
+
+ */
 			return true;
 		}
 		
@@ -747,12 +790,12 @@ public class MainActivity extends MapActivity implements Runnable {
             		continue;
             	}
             	
-            	if (MIN_IMAGE <= Integer.parseInt(price) && Integer.parseInt(price) <= MAX_IMAGE) {
+            	if ((MIN_IMAGE <= Integer.parseInt(price) && Integer.parseInt(price) <= MAX_IMAGE)
+            		|| price.equals("9999")) {
             	    continue;
             	}
             	
             	GeoPoint locate = points.get(i);
-            	
     		    Paint p = new Paint();
     		    int sz = 5;
     		    

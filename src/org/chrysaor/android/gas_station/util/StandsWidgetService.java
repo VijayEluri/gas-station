@@ -41,7 +41,8 @@ public class StandsWidgetService extends Service {
      		//Toast.makeText(this, url, Toast.LENGTH_LONG).show();
 
             GSInfo gsInfo = new GSInfo();
-	    	gsInfo.setGSInfoList(url);
+            String urls[] = {url};
+	    	gsInfo.setGSInfoList(urls);
 
 //	    	DatabaseHelper dbHelper = new DatabaseHelper(this);
 //        	db = dbHelper.getWritableDatabase();

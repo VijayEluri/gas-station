@@ -2,6 +2,7 @@ package org.chrysaor.android.gas_station.util;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.xmlpull.v1.*;
@@ -14,6 +15,8 @@ public class XmlParserFromUrl {
 	private XmlPullParser xpp;
     private XmlPullParserFactory factory;
 	private int eventType;
+	private String[] shop_codes = new String[200];
+	private int iterator = 0;
 	
 	public XmlParserFromUrl() {
 		try {
@@ -27,21 +30,13 @@ public class XmlParserFromUrl {
 	public ArrayList<GSInfo> getGSInfoListFromXML(InputStream is) {
 		
 		ArrayList<GSInfo> list = new ArrayList<GSInfo>();
-        String tag;
-        boolean prefFlag = false;
-
         return list;
         
 	}
 
-	public ArrayList<GSInfo> getGSInfoFromXML(String is) {
+	public ArrayList<GSInfo> getGSInfoFromXML(String is, String member) {
 		GSInfo ret = new GSInfo();
-        String tag;
-        boolean imageFlag = false;
-        boolean copyRightFlag = false;
-        boolean tempMaxFlag = false;
-        boolean tempMinFlag = false;
-        String alert = null;
+		ret.setData("Member", member);
    	    String tmpName = null;
    	    int flag = 0;
         ArrayList<GSInfo> list = new ArrayList<GSInfo>();
@@ -49,7 +44,6 @@ public class XmlParserFromUrl {
 
 		if (is == null) {
             Log.d(LOG_TAG, "null!!");
-
 			return null;			
 		}
 
@@ -68,6 +62,7 @@ public class XmlParserFromUrl {
                	    if (xpp.getName().compareTo("Item") == 0) {
                		    flag = 1;
                		    ret = new GSInfo();
+               			ret.setData("Member", member);
                	    }
                 	tmpName = xpp.getName();
 //               	    alert += "Start tag "+xpp.getName() + "\n";
@@ -76,7 +71,13 @@ public class XmlParserFromUrl {
 //               	    alert += "End tag "+xpp.getName() + "\n";
                	    if (xpp.getName().compareTo("Item") == 0) {
                		    flag = 0;
-               		    list.add(ret);
+//               		    Log.i("hoge", ret.ShopCode + ":" + Arrays.asList(shop_codes).get(0) +":"+Arrays.asList(shop_codes).contains(ret.ShopCode));
+               		    if (Arrays.asList(shop_codes).contains(ret.ShopCode) == false) {
+	               		    shop_codes[iterator] = ret.ShopCode;
+	               		    list.add(ret);
+	               		    iterator++;
+	               		    
+               		    }
                	    } else if (flag == 1) {
                    	    ret.setData(tmpName, value);
                	    }

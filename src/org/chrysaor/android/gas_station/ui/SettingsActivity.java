@@ -56,24 +56,42 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	
 	private void setSummaryAll(String key) {
 		
-		Log.d("hoge", key);
 		String class_name = getPreferenceScreen().findPreference(key).getClass().toString();
-Log.d("hoge", class_name);
+
 		if (class_name.indexOf("ListPreference") != -1) {
 			ListPreference pref = (ListPreference) getPreferenceScreen().findPreference(key);
 			pref.setSummary(pref.getEntry());
+			
+			if (key.equals("settings_dist")) {
+				setNoPostDataSummary();
+			}
 		} else if (class_name.indexOf("SeekBarPreference") != -1) {
 			SeekBarPreference pref = (SeekBarPreference) getPreferenceScreen().findPreference(key);
 			pref.setSummary(String.valueOf(pref.getValue()) + "%");
 		} else if (class_name.indexOf("CheckBoxPreference") != -1) {
 			CheckBoxPreference pref = (CheckBoxPreference)getPreferenceScreen().findPreference(key);
-			if (pref.isChecked()) {
-				pref.setSummary("会員価格");
-			} else {
-				pref.setSummary("現金フリー");
+			if (key.equals("settings_member")) {
+				if (pref.isChecked()) {
+					pref.setSummary("会員価格");
+				} else {
+					pref.setSummary("現金フリー");
+				}
+			} else if (key.equals("settings_no_postdata")) {
+				setNoPostDataSummary();
 			}
 		}
-//		Log.d("hoge", "i:" + getPreferenceScreen().findPreference(key).getClass());
+	}
+	
+	private void setNoPostDataSummary() {
+		ListPreference dist_pref = (ListPreference) getPreferenceScreen().findPreference("settings_dist");
+		CheckBoxPreference pref = (CheckBoxPreference)getPreferenceScreen().findPreference("settings_no_postdata");
+		
+		int dist = Integer.valueOf(dist_pref.getValue());
+		if (dist > 10) {
+			dist = 10;
+		}
+		String msg = dist + "km圏内の価格が無いスタンドを表示します";
+		pref.setSummary(msg);
 	}
 	
     @Override

@@ -1,10 +1,12 @@
 package org.chrysaor.android.gas_station.util;
 
+import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
@@ -58,9 +60,24 @@ public class StandController extends Thread {
             StandsHelper helper = StandsHelper.getInstance();
             imgBrand.setImageResource(helper.getBrandImage(info.Brand, Integer.valueOf(info.Price)));
 
+			// 油種
+            TextView textKind = (TextView) view.findViewById(R.id.txt_kind);
+            String[] kinds = this.context.getResources().getStringArray(R.array.settings_list_kind);
+            textKind.setText(kinds[Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this.context).getString("settings_kind", "0"))]);
+
+			// 価格
+            TextView textMember = (TextView) view.findViewById(R.id.txt_member);
+            Utils.logging(String.valueOf(info.Member));
+            if (info.Member == true) {
+            	textMember.setText("会員価格");
+            } else {
+            	textMember.setText("現金フリー");            	
+            }
+
 			// 価格
             TextView textPrice = (TextView) view.findViewById(R.id.price);
-			textPrice.setText("価格" + info.Price + "円");
+			textPrice.setText(info.getDispPrice());
+			textPrice.setTextColor(info.getDispPriceColor());
 
 			// セルフ
 			if (info.Self != null && info.Self.compareTo("SELF") != 0) {
@@ -90,23 +107,6 @@ public class StandController extends Thread {
 			// 更新日
 			TextView textDate = (TextView) view.findViewById(R.id.date_text);
 			textDate.setText(info.Date);
-
-            TextView link = (TextView)view.findViewById(R.id.link_text);  
-
-			// LinkMovementMethod のインスタンスを取得します
-	        MovementMethod movementmethod = LinkMovementMethod.getInstance();
-	        
-	        // TextView に LinkMovementMethod を登録します
-	        link.setMovementMethod(movementmethod);
-	        
-	        // <a>タグを含めたテキストを用意します
-	        String html = "<a href=\"http://gogo.gs/shop/" + info.ShopCode + ".html\">PCサイト</a> " +
-	                      "<a href=\"http://m.gogo.gs/shop/?code=" + info.ShopCode + "\">携帯サイト</a>";
-	        
-	        // URLSpan をテキストにを組み込みます
-	        CharSequence spanned = Html.fromHtml(html);
-	        
-	        link.setText(spanned);
 	        
 			new Thread(new Runnable() {
 				public void run() {
@@ -126,8 +126,7 @@ public class StandController extends Thread {
 								imgView.setMaxWidth(view.getWidth() - 40);
 								imgView.setVisibility(View.VISIBLE);
 								imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-								imgView.setImageBitmap(imgBitmap);
-								
+								imgView.setImageBitmap(imgBitmap);								
 							}
 
 							progressBar.setVisibility(View.GONE);

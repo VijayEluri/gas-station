@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import android.graphics.Color;
 import android.util.Log;
 
 public class GSInfo {
@@ -25,11 +26,12 @@ public class GSInfo {
 	public String Longitude = null;
 	public String Distance = "0";
 	public String Address = null;
-	public String Price = "0";
+	public String Price = "9999";
 	public String Photo = null;
 	public String Date = null;
 	public String Rtc = null;
 	public String Self = null;
+	public boolean Member = false;
 	
 	//URL由来のストリーム
     protected InputStream is;
@@ -49,18 +51,25 @@ public class GSInfo {
 	}
 	
 	// ガソリンスタンド情報を取得・設定する
-	public void setGSInfoList(String url) {
+	public void setGSInfoList(String[] urls) {
 
-//        is = WebApi.accessURL(url);
-		byte[] byteArray = Utils.getByteArrayFromURL(url);
-		if (byteArray == null) {
-			Log.i("getXmlTags", "URLの取得に失敗");
-//			return result;
-		}
-		String data = new String(byteArray);
-		
         XmlParserFromUrl xml = new XmlParserFromUrl();
-        this.list.addAll(xml.getGSInfoFromXML(data));
+
+		for (int i=0; i<urls.length;i++) {
+			byte[] byteArray = Utils.getByteArrayFromURL(urls[i]);
+			if (byteArray == null) {
+				Utils.logging("URLの取得に失敗");
+				continue;
+	//			return result;
+			}
+			String data = new String(byteArray);
+			
+			if (urls[i].contains("member=1") == true) {
+				this.list.addAll(xml.getGSInfoFromXML(data, "true"));
+			} else {
+				this.list.addAll(xml.getGSInfoFromXML(data, "false"));				
+			}
+		}
 
 		close();
 	}
@@ -70,7 +79,6 @@ public class GSInfo {
 	}
 
 	public void setData(String key, String value) {
-//        Log.d(LOG_TAG, "key:" + key + ", value" + value);
 
 		if (key.compareTo("ShopCode") == 0) {
 			this.ShopCode = value;
@@ -79,8 +87,7 @@ public class GSInfo {
 		} else if (key.compareTo("ShopName") == 0) {
 			this.ShopName = value;
 		} else if (key.compareTo("Latitude") == 0) {
-            Log.d(LOG_TAG, "lat = " + value);
-
+			Utils.logging(value);
 			this.Latitude = Double.parseDouble(value);
 		} else if (key.compareTo("Longitude") == 0) {
 			this.Longitude = value;
@@ -89,7 +96,10 @@ public class GSInfo {
 		} else if (key.compareTo("Address") == 0) {
 			this.Address = value;
 		} else if (key.compareTo("Price") == 0) {
-			this.Price = value;
+	        try {
+	            Double.parseDouble(value);
+				this.Price = value;
+	        } catch(NumberFormatException e) {}
 		} else if (key.compareTo("Date") == 0) {
 			this.Date = value;
 		} else if (key.compareTo("Photo") == 0) {
@@ -98,6 +108,9 @@ public class GSInfo {
 			this.Rtc = value;
 		} else if (key.compareTo("Self") == 0) {
 			this.Self = value;
+		} else if (key.compareTo("Member") == 0) {
+			Utils.logging(value);
+			this.Member = Boolean.valueOf(value);
 		}
 		
 	}
@@ -110,6 +123,14 @@ public class GSInfo {
 		return this.Longitude;
 	}
 	
+	public String getDispPrice() {
+		return (Price.equals("9999")? "no data": Price);
+	}
+
+	public int getDispPriceColor() {
+		return (Price.equals("9999")? Color.rgb(204, 0, 0): Color.rgb(0, 0, 255));
+	}
+
 	public String getData(String sUrl) {
 		DefaultHttpClient objHttp = new DefaultHttpClient();
 		objHttp.getCredentialsProvider().setCredentials(

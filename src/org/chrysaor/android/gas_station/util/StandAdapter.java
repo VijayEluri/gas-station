@@ -57,9 +57,15 @@ public class StandAdapter extends ArrayAdapter {
 	            }
 
 	            TextView price = (TextView)view.findViewById(R.id.price);  
-	            // テキストをビューにセット  
-	            if (price != null) {  
-	                price.setText(item.Price + "円");  
+	            // テキストをビューにセット
+	            if (price != null) {
+	            	Utils.logging(item.Price);
+	            	if (item.Price.equals("9999")) {
+	            		price.setText("no data");
+	            	} else {
+	            		price.setText(item.Price + "円");
+	            	}
+	            	price.setTextColor(item.getDispPriceColor());
 	            }
 
 	            TextView dist = (TextView)view.findViewById(R.id.distance);  

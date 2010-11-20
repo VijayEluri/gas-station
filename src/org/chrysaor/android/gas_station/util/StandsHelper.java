@@ -52,7 +52,7 @@ public class StandsHelper {
 		int res = 0;
 		
 		switch (price) {
-		case 0:
+		case 9999:
 	       	if (brand_name.compareTo("JOMO") == 0) {
 	    		res = noprice_images[0];
 	        } else if (brand_name.compareTo("ESSO") == 0) {

@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class StandsDao {
 	
@@ -23,10 +24,11 @@ public class StandsDao {
 	private static final String COLUMN_PHOTO  = "photo";
 	private static final String COLUMN_RTC  = "rtc";
 	private static final String COLUMN_SELF  = "self";
+	private static final String COLUMN_MEMBER  = "member";
 	
 	private static final String[] COLUMNS = 
 	     {COLUMN_ID, COLUMN_SHOP_CD, COLUMN_BRAND, COLUMN_SHOP_NAME, COLUMN_LATITUDE, COLUMN_LONGITUDE, 
-          COLUMN_DISTANCE, COLUMN_ADDRESS, COLUMN_PRICE, COLUMN_DATE, COLUMN_PHOTO, COLUMN_RTC, COLUMN_SELF};
+          COLUMN_DISTANCE, COLUMN_ADDRESS, COLUMN_PRICE, COLUMN_DATE, COLUMN_PHOTO, COLUMN_RTC, COLUMN_SELF, COLUMN_MEMBER};
 
 	private SQLiteDatabase db;
 	
@@ -48,6 +50,7 @@ public class StandsDao {
 		values.put(COLUMN_PHOTO,     info.Photo);
 		values.put(COLUMN_RTC,       info.Rtc);
 		values.put(COLUMN_SELF,      info.Self);
+		values.put(COLUMN_MEMBER,    info.Member);
 		return db.insert(TABLE_NAME, null, values);
 	}
 	
@@ -60,7 +63,7 @@ public class StandsDao {
 		
 		if (sortColumn.equals("price")) {
 			sortColumn = COLUMN_PRICE;
-		} else if (sortColumn.equals("distance")) {
+		} else if (sortColumn.equals("dist")) {
 			sortColumn = COLUMN_DISTANCE;
 		} else {
 			sortColumn = COLUMN_ID;
@@ -70,7 +73,6 @@ public class StandsDao {
 		
 		while(cursor.moveToNext()) {
 			GSInfo gsInfo = new GSInfo();
-			
 //			gsInfo.RowId = Integer.parseInt(cursor.getString(0));
 			gsInfo.ShopCode  = cursor.getString(1);
 			gsInfo.Brand     = cursor.getString(2);
@@ -84,6 +86,7 @@ public class StandsDao {
 			gsInfo.Photo     = cursor.getString(10);
 			gsInfo.Rtc       = cursor.getString(11);
 			gsInfo.Self      = cursor.getString(12);
+			gsInfo.Member    = (cursor.getString(13).equals("1") ? true: false);
 			gsList.add(gsInfo);
 		}
 		
@@ -91,12 +94,13 @@ public class StandsDao {
 	}
 	
 	public GSInfo findByShopCd(String shop_cd) {
-        String selection = "shop_cd = " + shop_cd;		
+        String selection = "shop_cd = '" + shop_cd +"'";		
 		Cursor cursor = db.query(TABLE_NAME, COLUMNS, selection, null, null, null, null);
 		
 		while(cursor.moveToNext()) {
 			GSInfo gsInfo = new GSInfo();
-			
+			Utils.logging(cursor.getString(13));
+
 //			gsInfo.RowId = Integer.parseInt(cursor.getString(0));
 			gsInfo.ShopCode  = cursor.getString(1);
 			gsInfo.Brand     = cursor.getString(2);
@@ -110,6 +114,7 @@ public class StandsDao {
 			gsInfo.Photo     = cursor.getString(10);
 			gsInfo.Rtc       = cursor.getString(11);
 			gsInfo.Self      = cursor.getString(12);
+			gsInfo.Member    = (cursor.getString(13).equals("1") ? true: false);
 			return gsInfo;
 		}
 		
@@ -117,7 +122,7 @@ public class StandsDao {
 	}
 	
 	public int deleteByShopCd(String shop_cd) {
-		return db.delete(TABLE_NAME, "shop_cd = " + shop_cd, null);
+		return db.delete(TABLE_NAME, "shop_cd =  = '" + shop_cd +"'", null);
 	}
 	
 	public int deleteAll() {

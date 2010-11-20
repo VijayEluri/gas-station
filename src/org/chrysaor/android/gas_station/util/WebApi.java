@@ -29,10 +29,14 @@ public class WebApi {
 	
 	public static Bitmap getImageBitmapOnWeb(String url) {
 		Bitmap bm = null;
+		BitmapFactory.Options bfo = new BitmapFactory.Options(); 
 		InputStream in = null;
 		try {
+			bfo.inPurgeable = true;
+			bfo.inPreferredConfig = Bitmap.Config.RGB_565; 
+			
 			in = getHttpInputStream(url);
-			bm = BitmapFactory.decodeStream(in);
+			bm = BitmapFactory.decodeStream(in, null, bfo);
 			in.close();
 			return bm;
 		} catch (Exception e) {

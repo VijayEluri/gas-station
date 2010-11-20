@@ -1,9 +1,6 @@
 package org.chrysaor.android.gas_station.ui;
 
-import org.chrysaor.android.gas_station.MainActivity;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,20 +18,14 @@ public class AboutActivity extends Activity {
 	    
 	    ErrorReporter.setup(this);
 	    ErrorReporter.bugreport(AboutActivity.this);
-	    
-        Button btn = (Button) this.findViewById(R.id.close);  
-        
-        btn.setOnClickListener(new OnClickListener(){
 
-			@Override
-			public void onClick(View v) {
-                Button01_OnClick();  
-				
-			} 
+	    Button backButton = (Button) findViewById(R.id.btn_back);
+	    backButton.setOnClickListener(new OnClickListener() {
+ 
+        	@Override
+            public void onClick(View v) {
+                finish();	
+            }
         });
     }
-	
-	private void Button01_OnClick() {
-		finish();
-	}
 }
