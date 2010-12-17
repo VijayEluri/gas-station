@@ -56,7 +56,7 @@ public class GSInfo {
         XmlParserFromUrl xml = new XmlParserFromUrl();
 
 		for (int i=0; i<urls.length;i++) {
-			byte[] byteArray = Utils.getByteArrayFromURL(urls[i]);
+			byte[] byteArray = Utils.getByteArrayFromURL(urls[i], "GET");
 			if (byteArray == null) {
 				Utils.logging("URLの取得に失敗");
 				continue;

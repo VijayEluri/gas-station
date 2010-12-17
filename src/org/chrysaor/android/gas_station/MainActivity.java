@@ -33,6 +33,7 @@ import org.chrysaor.android.gas_station.util.DatabaseHelper;
 import org.chrysaor.android.gas_station.util.StandsDao;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -66,6 +67,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.admob.android.ads.AdView;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
@@ -98,6 +100,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	private Drawable[] images = new Drawable[61];
     private StandAdapter adapter = null;
     private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
+    GoogleAnalyticsTracker tracker;
 
 	//天候情報生成クラス
 	private InfoController infoController;
@@ -112,6 +115,12 @@ public class MainActivity extends MapActivity implements Runnable {
 	    ErrorReporter.setup(this);
 	    ErrorReporter.bugreport(MainActivity.this);
 	    
+	    tracker = GoogleAnalyticsTracker.getInstance();
+	    
+	    // Start the tracker in manual dispatch mode...
+	    tracker.start("UA-20090562-2", 20, this);
+	    tracker.trackPageView("/MainActivity");
+
         String num = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_dist", "60");
 //        Log.d(LOG_TAG, LOG_TAG + num);
 
@@ -140,10 +149,13 @@ public class MainActivity extends MapActivity implements Runnable {
 		// GPS取得が可能な状態になり、GPS初取得時の動作を決定（らしい）
 		overlay.runOnFirstFix(new Runnable(){
 			public void run() {
-				// TODO 自動生成されたメソッド・スタブ
-				// animateTo(GeoPoint)で指定GeoPoint位置に移動
-				// この場合、画面中央がGPS取得による現在位置になる
-				mMapView.getController().animateTo(overlay.getMyLocation());
+				try {
+					// animateTo(GeoPoint)で指定GeoPoint位置に移動
+					// この場合、画面中央がGPS取得による現在位置になる
+					mMapView.getController().animateTo(overlay.getMyLocation());
+				} catch (Exception e) {
+					
+				}
 			}
 		});
 
@@ -172,6 +184,13 @@ public class MainActivity extends MapActivity implements Runnable {
     				v.setBackgroundColor(pressed_color);
     			} else if(event.getAction() == MotionEvent.ACTION_UP) {
     				v.setBackgroundColor(Color.TRANSPARENT);
+    		        // イベントトラック（リスト）
+    		        tracker.trackEvent(
+    		            "Main",     // Category
+    		            "List",     // Action
+    		            null,       // Label
+    		            0);
+    		        
         	        Intent intent = new Intent(MainActivity.this, ListActivity.class);
         	        startActivityForResult(intent, 0);  
     			}
@@ -213,6 +232,13 @@ public class MainActivity extends MapActivity implements Runnable {
             libYieldMaker mv = (libYieldMaker)findViewById(R.id.admakerview);
             mv.setActivity(this);
             mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
+            // IS03の場合、高さを100pxに変更
+            if (Build.MODEL.equals("IS03")) {
+            	mv.setMinimumHeight(100);
+            	mv.setLayoutParams(new LinearLayout.LayoutParams(
+            			LinearLayout.LayoutParams.WRAP_CONTENT,
+            			100));
+            }
             mv.startView();
         } else {
             View header = (View) findViewById(R.id.header);
@@ -358,6 +384,9 @@ public class MainActivity extends MapActivity implements Runnable {
     	standsDao.deleteAll();
     	db.close();
     	
+    	// Stop the tracker when it is no longer needed.
+        tracker.stop();
+        
     	super.onDestroy();
     }
     
@@ -423,12 +452,25 @@ public class MainActivity extends MapActivity implements Runnable {
 	public boolean onOptionsItemSelected(MenuItem item){
 
 	    switch(item.getItemId()){  
-	    case 0:  
+	    case 0:
+	        // イベントトラック（設定）
+	        tracker.trackEvent(
+	            "Main",      // Category
+	            "Settings",  // Action
+	            null,        // Label
+	            0);
+	        
 	        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
 	        startActivity(intent);  
 	        return true;
 	    case 1:
-	    	
+	        // イベントトラック（現在地）
+	        tracker.trackEvent(
+	            "Main",      // Category
+	            "Location",  // Action
+	            null,        // Label
+	            0);
+	        
 //	    	overlay.setMyLocationFlag(true);
     		GeoPoint l = overlay.getMyLocation();
     		
@@ -442,6 +484,13 @@ public class MainActivity extends MapActivity implements Runnable {
 	    case 2:
 	    	return searchAction();
 	    case 3:
+	        // イベントトラック（about）
+	        tracker.trackEvent(
+	            "Main",      // Category
+	            "About",     // Action
+	            null,        // Label
+	            0);
+	        
 	        Intent intent2 = new Intent(MainActivity.this, AboutActivity.class);
 	        startActivity(intent2);  
 	        return true;
@@ -465,16 +514,23 @@ public class MainActivity extends MapActivity implements Runnable {
             }
             url_string = url_string + "&kind=" + pref.getString("settings_kind", "0");
 
-            // 地図の中心位置を取得
-            GeoPoint center = mMapView.getMapCenter();
-            url_string = url_string + "&lat=" +  (double) center.getLatitudeE6() / E6;
-            url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
-
             String sort = pref.getString("settings_sort", "dist");
             if (sort.equals("dist")) {
             	url_string = url_string + "&sort=d";
             }
 
+	        // イベントトラック（検索）
+	        tracker.trackEvent(
+	            "Main",      // Category
+	            "Search",    // Action
+	            url_string,      // Label
+	            0);
+	        
+            // 地図の中心位置を取得
+            GeoPoint center = mMapView.getMapCenter();
+            url_string = url_string + "&lat=" +  (double) center.getLatitudeE6() / E6;
+            url_string = url_string + "&lon=" +  (double) center.getLongitudeE6() / E6;
+	        
             String url = url_string;
             Utils.logging("url = " + url.toString());
             
@@ -514,7 +570,7 @@ public class MainActivity extends MapActivity implements Runnable {
 	        
 			// Overlayとして登録
 			mMapView.getOverlays().add(overlay);
-
+	        
 	        infoController.start();
         }catch(Exception e){
         	Utils.logging(e.getMessage());
@@ -684,8 +740,16 @@ public class MainActivity extends MapActivity implements Runnable {
 		 */
 		@Override
 		protected boolean onTap(int index) {
-			
+				        
 			GSInfo info = gsInfo.get(index);
+			
+	        // イベントトラック（GSタップ）
+	        tracker.trackEvent(
+	            "Main",      // Category
+	            "Stand",     // Action
+	            info.ShopCode,   // Label
+	            0);
+
 	        Intent intent1 = new Intent(MainActivity.this, DetailActivity.class);
             intent1.putExtra("shopcode", info.ShopCode);
 	        startActivity(intent1);

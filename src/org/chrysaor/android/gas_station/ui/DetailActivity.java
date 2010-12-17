@@ -12,6 +12,7 @@ import org.chrysaor.android.gas_station.util.StandController;
 import org.chrysaor.android.gas_station.util.StandsDao;
 import org.chrysaor.android.gas_station.util.Utils;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.maps.GeoPoint;
 
 import android.app.Activity;
@@ -44,6 +45,7 @@ public class DetailActivity extends Activity implements Runnable {
     private StandController stand;
     private GSInfo info = null;
     private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
+    GoogleAnalyticsTracker tracker;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,12 @@ public class DetailActivity extends Activity implements Runnable {
 	    
 	    ErrorReporter.setup(this);
 	    ErrorReporter.bugreport(DetailActivity.this);
+
+	    tracker = GoogleAnalyticsTracker.getInstance();
+	    
+	    // Start the tracker in manual dispatch mode...
+	    tracker.start("UA-20090562-2", 20, this);
+	    tracker.trackPageView("/DetailActivity");
 
 	    Bundle extras=getIntent().getExtras();
         if (extras!=null) {
@@ -79,6 +87,13 @@ public class DetailActivity extends Activity implements Runnable {
 	    			} else if(event.getAction() == MotionEvent.ACTION_UP) {
 	    				v.setBackgroundColor(Color.TRANSPARENT);
 	    				
+	    		        // イベントトラック（ルート検索）
+	    		        tracker.trackEvent(
+	    		            "Detail",      // Category
+	    		            "RouteSearch",     // Action
+	    		            info.ShopCode, // Label
+	    		            0);
+	    		        
 	    			    if (Utils.isDonate(DetailActivity.this)) {
 			            	Intent intent = new Intent(); 
 			                intent.setAction(Intent.ACTION_VIEW); 
@@ -101,6 +116,16 @@ public class DetailActivity extends Activity implements Runnable {
 	    				v.setBackgroundColor(pressed_color);
 	    			} else if(event.getAction() == MotionEvent.ACTION_UP) {
 	    				v.setBackgroundColor(Color.TRANSPARENT);
+	    				
+	    		        // イベントトラック（価格投稿）
+	    		        tracker.trackEvent(
+	    		            "Detail",      // Category
+	    		            "Post",        // Action
+	    		            info.ShopCode, // Label
+	    		            0);
+				        Intent intent = new Intent(DetailActivity.this, PostActivity.class);
+		                intent.putExtra("shopcode", info.ShopCode);
+				        startActivity(intent);
 	    			}
 	    			return true;
 	    		}	
@@ -113,6 +138,14 @@ public class DetailActivity extends Activity implements Runnable {
 	    				v.setBackgroundColor(pressed_color);
 	    			} else if(event.getAction() == MotionEvent.ACTION_UP) {
 	    				v.setBackgroundColor(Color.TRANSPARENT);
+	    				
+	    		        // イベントトラック（ブラウザ）
+	    		        tracker.trackEvent(
+	    		            "Detail",      // Category
+	    		            "Browser",     // Action
+	    		            info.ShopCode, // Label
+	    		            0);
+	    		        
 	    	        	Intent intent = new Intent(); 
 	    	            intent.setAction(Intent.ACTION_VIEW); 
 	    	            intent.setData(Uri.parse("http://gogo.gs/shop/" + info.ShopCode + ".html")); 
@@ -146,10 +179,17 @@ public class DetailActivity extends Activity implements Runnable {
 //	    MenuItem item0 = menu.add( 0, 0, 0, "ブラウザ" );
 	    MenuItem item1 = menu.add( 0, 1, 0, "共有" );
 	    MenuItem item2 = menu.add( 0, 2, 0, "設定" );
+
 	    // 追加したメニューアイテムのアイコンを設定
 //	    item0.setIcon( android.R.drawable.ic_menu_view);
 	    item1.setIcon( android.R.drawable.ic_menu_share);
 	    item2.setIcon( android.R.drawable.ic_menu_preferences);
+	    
+	    if (Utils.isDonate(this) == false) {
+	        MenuItem item3 = menu.add( 0, 3, 0, "有料版購入" );
+	        item3.setIcon( R.drawable.cart);
+	    }
+
 	    return true;
 	}
 	
@@ -158,6 +198,14 @@ public class DetailActivity extends Activity implements Runnable {
 
 	    switch(item.getItemId()){
 	    case 0:
+	    	
+	        // イベントトラック（ブラウザ）
+	        tracker.trackEvent(
+	            "Detail",      // Category
+	            "Browser",     // Action
+	            info.ShopCode, // Label
+	            0);
+	        
         	Intent intent = new Intent(); 
             intent.setAction(Intent.ACTION_VIEW); 
             intent.setData(Uri.parse("http://gogo.gs/shop/" + info.ShopCode + ".html")); 
@@ -181,6 +229,13 @@ public class DetailActivity extends Activity implements Runnable {
                 }
                 msg = msg.replaceAll("#shop_name", info.ShopName).replaceAll("#kind", kind);
 
+    	        // イベントトラック（共有）
+    	        tracker.trackEvent(
+    	            "Detail",      // Category
+    	            "Share",       // Action
+    	            info.ShopCode, // Label
+    	            0);
+    	        
             	Intent intent2 = new Intent();
             	intent2.setAction(Intent.ACTION_SEND);
             	intent2.setType("text/plain");
@@ -191,12 +246,39 @@ public class DetailActivity extends Activity implements Runnable {
             }
 	        break;
 	    case 2:
+	    	
+	        // イベントトラック（設定）
+	        tracker.trackEvent(
+	            "Detail",   // Category
+	            "Settings", // Action
+	            "",         // Label
+	            0);
+
 	        Intent intent3 = new Intent(DetailActivity.this, SettingsActivity.class);
 	        startActivity(intent3);  
 	        break;
+	    case 3:
+	        // イベントトラック（Donate）
+	        tracker.trackEvent(
+	            "Detail",      // Category
+	            "Donate",      // Action
+	            "",            // Label
+	            0);
+	        
+        	Intent intent4 = new Intent(); 
+            intent4.setAction(Intent.ACTION_VIEW); 
+            intent4.setData(Uri.parse("market://details?id=org.chrysaor.android.gas_station.plus")); 
+            startActivity(intent4);
+	        break;
+
 	    }
 	    return false;  
 	}
-
-
+	
+    @Override
+    protected void onDestroy() {
+      super.onDestroy();
+      // Stop the tracker when it is no longer needed.
+      tracker.stop();
+    }
 }

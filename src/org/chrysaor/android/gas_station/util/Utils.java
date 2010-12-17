@@ -2,8 +2,11 @@ package org.chrysaor.android.gas_station.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -14,7 +17,7 @@ import android.util.Log;
 public class Utils {
 	public static final String DONATE_PACKAGE = "org.chrysaor.android.gas_station.plus";
 
-	public static byte[] getByteArrayFromURL(String strUrl) {
+	public static byte[] getByteArrayFromURL(String strUrl, String method) {
 		byte[] line = new byte[1024];
 		byte[] result = null;
 		HttpURLConnection con = null;
@@ -25,7 +28,7 @@ public class Utils {
 			// HTTP接続のオープン
 			URL url = new URL(strUrl);
 			con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
+			con.setRequestMethod(method);
 			con.connect();
 			in = con.getInputStream();
 
@@ -70,6 +73,24 @@ public class Utils {
     }
     
 	public static void logging(String msg) {
-//		Log.i("GasSta!", msg);
+		Log.i("GasSta!", msg);
+	}
+	
+	public static String md5(String input) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] digest = md.digest(input.getBytes());
+			BigInteger number = new BigInteger(1, digest);
+			
+			String md5 = number.toString(16);
+			while (md5.length() < 32) {
+				md5 = "0" + md5;
+			}
+			
+			return md5;
+		} catch (NoSuchAlgorithmException e) {
+			logging(e.getMessage());
+			return null;
+		}
 	}
 }

@@ -3,11 +3,13 @@ package org.chrysaor.android.gas_station.util;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.xmlpull.v1.*;
 
 import android.util.Log;
+import android.widget.Spinner;
 
 
 public class XmlParserFromUrl {
@@ -123,4 +125,152 @@ public class XmlParserFromUrl {
 
 		eventType = 0;
 	}
+	
+	public boolean checkAuthResponce(String is) {
+		
+		if (is == null) {
+            Log.d(LOG_TAG, "null!!");
+			return false;			
+		}
+
+        try {
+        	String key = null;
+        	String value = null;
+        	HashMap<String,String> map = new HashMap<String,String>();
+        	
+        	initXmlPullParser(is);
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+            	switch (eventType) {
+            	case XmlPullParser.START_DOCUMENT:
+            	case XmlPullParser.END_DOCUMENT:
+            		break;
+            	case XmlPullParser.END_TAG:
+            		if (key != null && value != null) {
+            			Utils.logging("key:" + key);
+            			Utils.logging("value:" + value);
+            			map.put(key, value);
+            			key = null;
+            			value = null;
+            		}
+               	    break;
+            	case XmlPullParser.START_TAG:
+                	key = xpp.getName();
+                	break;
+            	case XmlPullParser.TEXT:
+            		value = xpp.getText();
+               	    break;
+            	}
+            	
+                eventType = xpp.next();   
+            }
+                        
+            if (map.get("Result").equals("1")) {
+            	return true;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+	
+	public HashMap<String,String> convertHashMap(String is) {
+		
+    	String key = null;
+    	String value = null;
+    	HashMap<String,String> map = new HashMap<String,String>();
+
+    	try {	
+        	initXmlPullParser(is);
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+            	switch (eventType) {
+            	case XmlPullParser.START_DOCUMENT:
+            	case XmlPullParser.END_DOCUMENT:
+            		break;
+            	case XmlPullParser.END_TAG:
+            		if (key != null && value != null) {
+            			Utils.logging("key:" + key);
+            			Utils.logging("value:" + value);
+            			map.put(key, value);
+            			key = null;
+            			value = null;
+            		}
+               	    break;
+            	case XmlPullParser.START_TAG:
+                	key = xpp.getName();
+                	break;
+            	case XmlPullParser.TEXT:
+            		value = xpp.getText();
+               	    break;
+            	}
+            	
+                eventType = xpp.next();   
+            }
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return map;
+	}
+
+	public HashMap<String,String> convertHashMapPrice(String is) {
+		
+    	String key = null;
+    	String value = null;
+    	String mode = null;
+    	HashMap<String,String> map = new HashMap<String,String>();
+
+    	try {	
+        	initXmlPullParser(is);
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+            	switch (eventType) {
+            	case XmlPullParser.START_DOCUMENT:
+            	case XmlPullParser.END_DOCUMENT:
+            		break;
+            	case XmlPullParser.END_TAG:
+                	if (key != null && key.equals("mode")) {
+                		switch(Integer.parseInt(value)) {
+                		case 0:
+                			mode = "regular";
+                			break;
+                		case 1:
+                		    mode = "highoc";
+                		    break;
+                		case 2:
+                		    mode = "diesel";
+                		    break;
+                		case 3:
+                		    mode = "lamp";
+                			break;
+                		}
+                		
+                	} else if (key != null && (key.equals("min") || key.equals("max")) && value != null) {
+            			
+            			Utils.logging("key:" + mode + "_" + key);
+            			Utils.logging("value:" + value);
+            			map.put(mode + "_" + key, value);
+            			key = null;
+            			value = null;
+
+            		}
+               	    break;
+            	case XmlPullParser.START_TAG:
+                	key = xpp.getName();
+                	break;
+            	case XmlPullParser.TEXT:
+            		value = xpp.getText();
+               	    break;
+            	}
+            	
+                eventType = xpp.next();   
+            }
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return map;
+	}
+
 }

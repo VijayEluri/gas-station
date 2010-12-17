@@ -15,6 +15,7 @@ import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandsDao;
 import org.chrysaor.android.gas_station.util.Utils;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.maps.GeoPoint;
 
 import android.app.Activity;
@@ -24,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -47,12 +49,19 @@ public class ListActivity extends Activity {
     private StandsDao standsDao = null;
     private static String mode = "none";
     private SharedPreferences pref = null;
+    GoogleAnalyticsTracker tracker;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.list);
 	    
+	    tracker = GoogleAnalyticsTracker.getInstance();
+	    
+	    // Start the tracker in manual dispatch mode...
+	    tracker.start("UA-20090562-2", 20, this);
+	    tracker.trackPageView("/ListActivity");
+
 	    // 初期化
 	    pref = PreferenceManager.getDefaultSharedPreferences(ListActivity.this);
 	    mode = pref.getString("settings_sort", getResources().getString(R.string.settings_sort_default));
@@ -76,6 +85,13 @@ public class ListActivity extends Activity {
     	        list = standsDao.findAll(mode);
     	        db.close();
     	        init();
+    	        
+    	        // イベントトラック（並び順）
+    	        tracker.trackEvent(
+    	            "List",       // Category
+    	            "Sort",       // Action
+    	            "price",      // Label
+    	            0);
             }
         });
 
@@ -91,6 +107,14 @@ public class ListActivity extends Activity {
     	        list = standsDao.findAll(mode);
     	        db.close();
     	        init();
+    	        
+    	        // イベントトラック（並び順）
+    	        tracker.trackEvent(
+    	            "List",       // Category
+    	            "Sort",       // Action
+    	            "dist",       // Label
+    	            0);
+
             }
         });
 	    
@@ -108,6 +132,14 @@ public class ListActivity extends Activity {
 	        libYieldMaker mv = (libYieldMaker)findViewById(R.id.admakerview);
 	        mv.setActivity(this);
 	        mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
+            // IS03の場合、高さを100pxに変更
+            if (Build.MODEL.equals("IS03")) {
+            	mv.setMinimumHeight(100);
+            	mv.setLayoutParams(new LinearLayout.LayoutParams(
+            			LinearLayout.LayoutParams.WRAP_CONTENT,
+            			100));
+            }
+
 	        mv.startView();
 	    }
         
@@ -134,12 +166,27 @@ public class ListActivity extends Activity {
 	                    View view, int position, long id) {
 	    	        final GSInfo item = list.get(position);
 	    	        
+	    	        // イベントトラック（GSタップ）
+	    	        tracker.trackEvent(
+	    	            "List",         // Category
+	    	            "Stand",        // Action
+	    	            item.ShopCode,  // Label
+	    	            0);
+
 	    	        ActionItem item1 = new ActionItem();
 	    	        item1.setTitle("地図");
 	    	        item1.setIcon(getResources().getDrawable(R.drawable.map_blue));
 	    	        item1.setOnClickListener(new OnClickListener() {
 	    	        	@Override
 	    	        	public void onClick(View v) {
+	    	        		
+	    	                // イベントトラック（地図）
+	    	                tracker.trackEvent(
+	    	                    "List",         // Category
+	    	                    "Map",          // Action
+	    	                    item.ShopCode,  // Label
+	    	                    0);
+	    	                
 							Intent intent =new Intent();
 							intent.putExtra("lat", item.Latitude);
 							intent.putExtra("lon", item.Longitude);
@@ -155,6 +202,14 @@ public class ListActivity extends Activity {
 	    	        item2.setOnClickListener(new OnClickListener() {
 	    	        	@Override
 	    	        	public void onClick(View v) {
+	    	        		
+	    	                // イベントトラック（詳細）
+	    	                tracker.trackEvent(
+	    	                    "List",         // Category
+	    	                    "Detail",          // Action
+	    	                    item.ShopCode,  // Label
+	    	                    0);
+	    	                
 					        Intent intent1 = new Intent(ListActivity.this, DetailActivity.class);
 			                intent1.putExtra("shopcode", item.ShopCode);
 					        startActivity(intent1);  
@@ -167,6 +222,14 @@ public class ListActivity extends Activity {
 	    	        item3.setOnClickListener(new OnClickListener() {
 	    	        	@Override
 	    	        	public void onClick(View v) {
+	    	        		
+	    	                // イベントトラック（ルート検索）
+	    	                tracker.trackEvent(
+	    	                    "List",         // Category
+	    	                    "RouteSearch",  // Action
+	    	                    item.ShopCode,  // Label
+	    	                    0);
+	    	                
 			            	Intent intent = new Intent(); 
 			                intent.setAction(Intent.ACTION_VIEW); 
 			                intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
@@ -181,7 +244,17 @@ public class ListActivity extends Activity {
 	    	        item4.setOnClickListener(new OnClickListener() {
 	    	        	@Override
 	    	        	public void onClick(View v) {
-	    	        		//TODO
+	    	        		
+	    	                // イベントトラック（価格投稿）
+	    	                tracker.trackEvent(
+	    	                    "List",         // Category
+	    	                    "Post",         // Action
+	    	                    item.ShopCode,  // Label
+	    	                    0);
+	    	                
+					        Intent intent = new Intent(ListActivity.this, PostActivity.class);
+			                intent.putExtra("shopcode", item.ShopCode);
+					        startActivity(intent);
 	    	        	}
 	    	        });
 	    	        
@@ -193,7 +266,7 @@ public class ListActivity extends Activity {
     	            if (Utils.isDonate(ListActivity.this)) {
     	            	qa.addActionItem(item3);
     	            }
-//    	            qa.addActionItem(item4);
+    	            qa.addActionItem(item4);
     	            //アニメーションを設定する
     	            qa.setAnimStyle(QuickAction.ANIM_AUTO);
     	            qa.show();
@@ -240,4 +313,11 @@ public class ListActivity extends Activity {
 	        });
         }	
 	}
+	
+    @Override
+    protected void onDestroy() {
+      super.onDestroy();
+      // Stop the tracker when it is no longer needed.
+      tracker.stop();
+    }
 }

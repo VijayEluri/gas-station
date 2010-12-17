@@ -66,6 +66,18 @@
       android:title="@string/settings_no_postdata_title"
       android:summary="@string/settings_no_postdata_summary" />
   </PreferenceCategory>
+  <PreferenceCategory android:title="@string/settings_user_title">
+    <EditTextPreference
+      android:key="settings_user_id"
+      android:title="@string/settings_user_id_title"
+      android:summary="@string/settings_user_id_summary"
+      android:dialogTitle="@string/settings_user_id_dialogtitle" />
+    <EditTextPreference
+      android:key="settings_passwd"
+      android:title="@string/settings_passwd_title"
+      android:summary="@string/settings_passwd_summary"
+      android:dialogTitle="@string/settings_passwd_dialogtitle" />
+  </PreferenceCategory>  
   <PreferenceCategory android:title="@string/settings_etc_title">
     <EditTextPreference
       android:key="settings_sharemsg"
@@ -74,5 +86,4 @@
       android:dialogTitle="@string/settings_sharemsg_dialogtitle"
       android:defaultValue="@string/settings_sharemsg_default" />
   </PreferenceCategory>  
-
 </PreferenceScreen>

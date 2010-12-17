@@ -56,6 +56,7 @@ public class StandController extends Thread {
 //        int height = disp.getHeight();
 
 		if (info != null) {
+			// ブランド
 	        ImageView imgBrand = (ImageView) view.findViewById(R.id.brand_image);
             StandsHelper helper = StandsHelper.getInstance();
             imgBrand.setImageResource(helper.getBrandImage(info.Brand, Integer.valueOf(info.Price)));

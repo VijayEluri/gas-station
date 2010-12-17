@@ -74,4 +74,17 @@
     <item>dist</item>
     <item>price</item>
   </string-array>
+  <string-array name="post_check_kind">
+    <item>店頭看板</item>
+    <item>実給油</item>
+  </string-array>
+  <string-array name="post_price_kind">
+    <item>表記なし</item>
+    <item>現金フリー</item>
+    <item>現金会員</item>
+    <item>一般クレジット</item>
+    <item>元売り系クレジット</item>
+    <item>プリカ</item>
+    <item>割引チケット</item>
+  </string-array>
 </resources>
