@@ -14,7 +14,7 @@ import android.graphics.BitmapFactory;
 
 public class WebApi {
 
-	private static InputStream getHttpInputStream(String url)
+	public static InputStream getHttpInputStream(String url)
 			throws ClientProtocolException, IOException {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet getMethod = new HttpGet(url);
@@ -27,16 +27,18 @@ public class WebApi {
 		}
 	}
 	
-	public static Bitmap getImageBitmapOnWeb(String url) {
-		Bitmap bm = null;
+	public static Bitmap getImageBitmapOnWeb(String url, Bitmap bm) {
+		
 		BitmapFactory.Options bfo = new BitmapFactory.Options(); 
 		InputStream in = null;
 		try {
 			bfo.inPurgeable = true;
-			bfo.inPreferredConfig = Bitmap.Config.RGB_565; 
+			bfo.inPreferredConfig = Bitmap.Config.RGB_565;
+//			bfo.inSampleSize = 2;
 			
 			in = getHttpInputStream(url);
 			bm = BitmapFactory.decodeStream(in, null, bfo);
+			Utils.logging(String.valueOf(bm.getRowBytes()));
 			in.close();
 			return bm;
 		} catch (Exception e) {

@@ -1,10 +1,15 @@
 package org.chrysaor.android.gas_station.util;
 
+import java.io.InputStream;
+
 import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -28,6 +33,7 @@ public class StandController extends Thread {
     private GSInfo info;
 	private LayoutInflater inflater;
     private Handler mHandler = new Handler();
+//    private Bitmap imgBitmap;
     
 	public StandController(Handler handler, Runnable listener, Context context, GSInfo info) {
 		this.handler   = handler;
@@ -112,28 +118,44 @@ public class StandController extends Thread {
 			new Thread(new Runnable() {
 				public void run() {
 					//画像
-					final Bitmap imgBitmap;
+//					Bitmap imgBitmap;
 					final ImageView imgView = (ImageView) view.findViewById(R.id.shop_image);
 
 					final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.ProgressBar01);
-					String url = "http://gogo.gs/images/rally/" + info.ShopCode + "-" + info.Photo + ".jpg";
+					final String url = "http://gogo.gs/images/rally/" + info.ShopCode + "-" + info.Photo + ".jpg";
 
-					imgBitmap = WebApi.getImageBitmapOnWeb(url);
+					BitmapFactory.Options bfo = new BitmapFactory.Options(); 
+					InputStream in = null;
+					try {
+						bfo.inPurgeable = true;
+						bfo.inPreferredConfig = Bitmap.Config.ARGB_4444;
+//						bfo.inSampleSize = 2;
+						
+						in = WebApi.getHttpInputStream(url);
+//						imgBitmap = BitmapFactory.decodeStream(in, null, bfo);
+						ImageCache.setImage(url, BitmapFactory.decodeStream(in, null, bfo));
+						in.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+//					imgBitmap = WebApi.getImageBitmapOnWeb(url, imgBitmap);
 
 			    	mHandler.post(new Runnable() {
 			    		public void run() {
 			    			
+			    			Bitmap imgBitmap = ImageCache.getImage(url);
 							if(imgBitmap != null) {
 								imgView.setMaxWidth(view.getWidth() - 40);
 								imgView.setVisibility(View.VISIBLE);
 								imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-								imgView.setImageBitmap(imgBitmap);								
+								imgView.setImageBitmap(imgBitmap);
 							}
 
 							progressBar.setVisibility(View.GONE);
 			    		}
 			    	});
-
+			    	
 				}
 			}).start();
 		}

@@ -25,7 +25,7 @@ public class ErrorReporter implements UncaughtExceptionHandler {
     private static ActivityManager.MemoryInfo sMemoryInfo = new ActivityManager.MemoryInfo();
 
     private static final String BUG_FILE = "BUG";
-    private static final String MAIL_TO  = "mailto:s.paintail@gmail.com";
+    private static final String MAIL_TO  = "mailto:info@pinetail.jp";
     private static final UncaughtExceptionHandler sDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
 
     public static void setup(Context context) {
