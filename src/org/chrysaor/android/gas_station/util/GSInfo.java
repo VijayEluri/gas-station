@@ -17,6 +17,8 @@ import org.apache.http.params.HttpParams;
 import android.graphics.Color;
 
 public class GSInfo {
+	
+	public Integer RowId = null;
     public String ShopCode = null;
     public String Brand = null;
     public String ShopName = null;
@@ -30,6 +32,8 @@ public class GSInfo {
     public String Rtc = null;
     public String Self = null;
     public boolean Member = false;
+    public String UpdateDate = null;
+    public String CreateDate = null;
     
     //URL由来のストリーム
     protected InputStream is;

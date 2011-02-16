@@ -9,9 +9,12 @@
 <TextView android:id="@+id/TextView05" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="会員価格、プリペイド価格は最安値のみ投稿してください。" android:textColor="@color/white"></TextView>
 <TextView android:id="@+id/TextView04" android:layout_height="wrap_content" android:text="投稿禁止" android:paddingBottom="3dip" android:paddingTop="3dip" android:layout_width="fill_parent" android:paddingLeft="10dip" android:layout_marginBottom="5dip" android:layout_marginTop="5dip" android:background="@drawable/border_post_help" android:textColor="@color/black"></TextView>
 <TextView android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="クレジット「請求時△円引」価格。" android:textColor="@color/white"></TextView>
-<TextView android:paddingTop="3dip" android:layout_marginBottom="5dip" android:layout_width="fill_parent" android:layout_marginTop="5dip" android:layout_height="wrap_content" android:paddingLeft="10dip" android:textColor="@color/black" android:paddingBottom="3dip" android:background="@drawable/border_post_help" android:id="@+id/TextView07" android:text="投稿データの記憶"></TextView>
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/white" android:id="@+id/TextView08" android:text="「確認方法、価格区分を記憶する」をチェックすると次回投稿時に前回の設定が反映されます。設定は店舗単位で記録されます。"></TextView>
-</LinearLayout></ScrollView>
+<TextView android:paddingTop="3dip" android:layout_marginBottom="5dip" android:layout_width="fill_parent" android:layout_marginTop="5dip" android:layout_height="wrap_content" android:paddingLeft="10dip" android:textColor="@color/black" android:paddingBottom="3dip" android:background="@drawable/border_post_help" android:id="@+id/TextView07" android:text="投稿データの反映"></TextView>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/white" android:id="@+id/TextView08" android:text="投稿された価格は反映されるまで最大6時間のタイムラグがあります。"></TextView>
+<TextView android:background="@drawable/border_post_help" android:paddingBottom="3dip" android:text="投稿データの記憶" android:paddingLeft="10dip" android:paddingTop="3dip" android:layout_marginBottom="5dip" android:textColor="@color/black" android:id="@+id/TextView10" android:layout_height="wrap_content" android:layout_marginTop="5dip" android:layout_width="fill_parent"></TextView>
+<TextView android:text="「確認方法、価格区分を記憶する」をチェックすると次回投稿時に前回の設定が反映されます。設定は店舗単位で記録されます。" android:textColor="@color/white" android:id="@+id/TextView09" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+</LinearLayout>
+</ScrollView>
 
 
 

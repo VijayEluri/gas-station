@@ -1,0 +1,341 @@
+package org.chrysaor.android.gas_station.ui;
+
+import java.util.ArrayList;
+
+import jp.co.nobot.libYieldMaker.libYieldMaker;
+import net.londatiga.android.ActionItem;
+import net.londatiga.android.QuickAction;
+
+import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.util.DatabaseHelper;
+import org.chrysaor.android.gas_station.util.FavoritesDao;
+import org.chrysaor.android.gas_station.util.GSInfo;
+import org.chrysaor.android.gas_station.util.StandAdapter;
+import org.chrysaor.android.gas_station.util.StandsDao;
+import org.chrysaor.android.gas_station.util.Utils;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.AdapterView.OnItemClickListener;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
+public class FavoriteListActivity extends Activity {
+    private ArrayList<GSInfo> list = null;
+    private StandAdapter adapter = null;
+    private DatabaseHelper dbHelper = null;
+    private SQLiteDatabase db = null;
+    private FavoritesDao favoritesDao = null;
+    private static String mode = "none";
+    private SharedPreferences pref = null;
+    GoogleAnalyticsTracker tracker;
+    public QuickAction qa;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.favorite_list);
+        
+        tracker = GoogleAnalyticsTracker.getInstance();
+        
+        // Start the tracker in manual dispatch mode...
+        tracker.start("UA-20090562-2", 20, this);
+        tracker.trackPageView("/FavoriteListActivity");
+
+        // 初期化
+        pref = PreferenceManager.getDefaultSharedPreferences(FavoriteListActivity.this);
+        mode = pref.getString("settings_favorite_sort", getResources().getString(R.string.settings_favorite_sort_default));
+        dbHelper = new DatabaseHelper(this);
+        db = dbHelper.getReadableDatabase();
+        Utils.logging(mode);
+        favoritesDao = new FavoritesDao(db);
+        list = favoritesDao.findAll(mode);
+        db.close();
+        init();
+
+        // 登録順
+        RadioButton createDateButton = (RadioButton) findViewById(R.id.sort_create_date);
+        createDateButton.setOnClickListener(new OnClickListener() {
+ 
+            @Override
+            public void onClick(View v) {
+                db = dbHelper.getReadableDatabase();
+                favoritesDao = new FavoritesDao(db);
+                mode = "create_date";
+                list = favoritesDao.findAll(mode);
+                db.close();
+                init();
+                
+                // イベントトラック（並び順）
+                tracker.trackEvent(
+                    "FavoriteList",       // Category
+                    "Sort",       // Action
+                    "CreateData",      // Label
+                    0);
+            }
+        });
+
+        // 名前順
+        RadioButton shopNameButton = (RadioButton) findViewById(R.id.sort_shop_name);
+        shopNameButton.setOnClickListener(new OnClickListener() {
+ 
+            @Override
+            public void onClick(View v) {
+                db = dbHelper.getReadableDatabase();
+                favoritesDao = new FavoritesDao(db);
+                mode = "shop_name";
+                list = favoritesDao.findAll(mode);
+                db.close();
+                init();
+                
+                // イベントトラック（並び順）
+                tracker.trackEvent(
+                    "FavoriteList",       // Category
+                    "Sort",       // Action
+                    "ShopName",   // Label
+                    0);
+
+            }
+        });
+        
+        if (mode.equals("create_date")) {
+            createDateButton.setChecked(true);
+        } else {
+            shopNameButton.setChecked(true);
+        }
+
+        if (Utils.isDonate(this)) {
+            LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
+            head.setVisibility(View.GONE);
+        }
+        
+        Button backButton = (Button) findViewById(R.id.btn_back);
+        backButton.setOnClickListener(new OnClickListener() {
+ 
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+    
+    private void init() {
+        if (list.size() > 0) {
+            ListView savedList = (ListView) findViewById(R.id.savedList);
+            adapter = new StandAdapter(this, R.layout.list, list);
+            savedList.setAdapter(adapter);
+        
+            savedList.setOnItemClickListener(new OnItemClickListener() {
+     
+                @Override
+                public void onItemClick(AdapterView<?> adapter,
+                        View view, int position, long id) {
+                    final GSInfo item = list.get(position);
+                    
+                    // イベントトラック（GSタップ）
+                    tracker.trackEvent(
+                        "List",         // Category
+                        "Stand",        // Action
+                        item.ShopCode,  // Label
+                        0);
+
+                    ActionItem item1 = new ActionItem();
+                    item1.setTitle("地図");
+                    item1.setIcon(getResources().getDrawable(R.drawable.map_blue));
+                    item1.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            
+                            // イベントトラック（地図）
+                            tracker.trackEvent(
+                                "List",         // Category
+                                "Map",          // Action
+                                item.ShopCode,  // Label
+                                0);
+                            
+                            Intent intent =new Intent();
+                            intent.putExtra("lat", item.Latitude);
+                            intent.putExtra("lon", item.Longitude);
+                            setResult(Activity.RESULT_OK,intent);
+                            //アクティビティの終了
+                            finish();
+                        }
+                    });
+                    
+                    ActionItem item2 = new ActionItem();
+                    item2.setTitle("詳細");
+                    item2.setIcon(getResources().getDrawable(R.drawable.info));
+                    item2.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            
+                            // イベントトラック（詳細）
+                            tracker.trackEvent(
+                                "List",         // Category
+                                "Detail",          // Action
+                                item.ShopCode,  // Label
+                                0);
+                            
+                            Intent intent1 = new Intent(FavoriteListActivity.this, DetailActivity.class);
+                            intent1.putExtra("shopcode", item.ShopCode);
+                            intent1.putExtra("from", "FavoriteListActivity");
+                            startActivityForResult(intent1, 0);
+                        }
+                    });
+                    
+                    ActionItem item3 = new ActionItem();
+                    item3.setTitle("ルート検索");
+                    item3.setIcon(getResources().getDrawable(R.drawable.green_flag));
+                    item3.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            
+                            // イベントトラック（ルート検索）
+                            tracker.trackEvent(
+                                "List",         // Category
+                                "RouteSearch",  // Action
+                                item.ShopCode,  // Label
+                                0);
+                            
+                            Intent intent = new Intent(); 
+                            intent.setAction(Intent.ACTION_VIEW); 
+                            intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+                            intent.setData(Uri.parse("http://maps.google.com/maps?myl=saddr&daddr=" + item.Address + "&dirflg=d")); 
+                            startActivity(intent);
+                        }
+                    });
+                    
+                    ActionItem item4 = new ActionItem();
+                    item4.setTitle("価格投稿");
+                    item4.setIcon(getResources().getDrawable(R.drawable.yen_currency_sign));
+                    item4.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            
+                            // イベントトラック（価格投稿）
+                            tracker.trackEvent(
+                                "List",         // Category
+                                "Post",         // Action
+                                item.ShopCode,  // Label
+                                0);
+                            
+                            Intent intent = new Intent(FavoriteListActivity.this, PostActivity.class);
+                            intent.putExtra("shopcode", item.ShopCode);
+                            intent.putExtra("from", "FavoriteListActivity");
+                            startActivityForResult(intent, 0);
+                        }
+                    });
+                    ActionItem item5 = new ActionItem();
+                    item5.setTitle("給油記録");
+                    item5.setIcon(getResources().getDrawable(R.drawable.pencil));
+                    item5.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            
+                            // イベントトラック（給油記録）
+                            tracker.trackEvent(
+                                "Detail",      // Category
+                                "Charge",      // Action
+                                item.ShopCode, // Label
+                                0);
+                            
+                            if (Utils.installedGasLogFree(FavoriteListActivity.this) || Utils.installedGasLogPayment(FavoriteListActivity.this)) {
+                                Intent intent = new Intent();
+                                if (Utils.installedGasLogPayment(FavoriteListActivity.this)) {
+                                    intent.setClassName("jp.pinetail.android.gas_log.payment", "jp.pinetail.android.gas_log.core.FuelPostActivity");
+                                } else {
+                                    intent.setClassName("jp.pinetail.android.gas_log.free", "jp.pinetail.android.gas_log.core.FuelPostActivity");
+                                }
+                                intent.putExtra("ssid",       item.ShopCode);
+                                intent.putExtra("shop_name",  item.ShopName);
+                                intent.putExtra("shop_brand", item.Brand);
+                                intent.putExtra("lat",        item.Latitude.toString());
+                                intent.putExtra("lon",        item.Longitude);
+                                startActivity(intent);
+                            } else {
+                                new AlertDialog.Builder(FavoriteListActivity.this)
+                                .setTitle("ガスログ！インストール")
+                                .setMessage("給油記録にはガスログ！が必要です。インストールしますか？")
+                                .setNeutralButton("インストール", new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(); 
+                                        intent.setAction(Intent.ACTION_VIEW); 
+                                        intent.setData(Uri.parse("market://details?id=jp.pinetail.android.gas_log.free")); 
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
+                                    
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        
+                                    }
+                                })
+                                .create()
+                                .show();
+
+                            }
+                        }
+                    });
+
+                    qa = new QuickAction(view);
+                    //onCreate()の中で作ったActionItemをセットする
+                    qa.addActionItem(item1);
+                    qa.addActionItem(item2);
+                    if (Utils.isDonate(FavoriteListActivity.this)) {
+                        qa.addActionItem(item3);
+                    }
+                    qa.addActionItem(item4);
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.DONUT) {
+                        qa.addActionItem(item5);
+                    }
+                    //アニメーションを設定する
+                    qa.setAnimStyle(QuickAction.ANIM_AUTO);
+                    qa.show();
+                }
+            });
+        }    
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Stop the tracker when it is no longer needed.
+        tracker.stop();
+    }
+    
+    protected void onActivityResult(int requestCode,
+            int resultCode,Intent intent) {
+    	
+    	if (qa != null) {
+            qa.dismiss();
+    	}
+    	
+    	Utils.logging("result");
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            // お気に入り一覧描画
+            db = dbHelper.getReadableDatabase();
+            Utils.logging(mode);
+            favoritesDao = new FavoritesDao(db);
+            list = favoritesDao.findAll(mode);
+            db.close();
+            init();
+        }
+    }
+}

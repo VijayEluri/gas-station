@@ -8,7 +8,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     private static final String DATABASE_NAME = "gas_station";
     
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 13;
     
     private static final String CREATE_PLACES_TABLE_SQL = "create table stands " +
             "(rowid integer primary key autoincrement, " +
@@ -45,6 +45,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     private static final String DROP_POST_HISTORIES_TABLE_SQL = "drop table if exists post_histories";
     
+    private static final String CREATE_FAVORITES_TABLE_SQL = "create table if not exists favorites " +
+    "(rowid integer primary key autoincrement, " +
+    "shop_cd text not null, " +
+    "brand text not null, " +
+    "shop_name text not null, " +
+    "latitude text not null, " +
+    "longitude text not null, " +
+    "distance integer null," +
+    "address text not null," +
+    "price text null," +
+    "date text null," +
+    "photo text null," +
+    "rtc text null," +
+    "self text null," +
+    "member text not null," +
+    "update_date text not null," +
+    "create_date text not null)";
+
+    private static final String DROP_FAVORITES_TABLE_SQL = "drop table if exists favorites";
+
     private static final String CREATE_STANDS_WIDGET_TABLE_SQL = "create table stands_widget " +
             "(rowid integer primary key autoincrement, " +
             "shop_cd text not null, " +
@@ -71,6 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PLACES_TABLE_SQL);
         db.execSQL(CREATE_STANDS_WIDGET_TABLE_SQL);
         db.execSQL(CREATE_POST_HISTORIES_TABLE_SQL);
+        db.execSQL(CREATE_FAVORITES_TABLE_SQL);
     }
     
     @Override
@@ -78,6 +99,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_PLACES_TABLE_SQL);
         db.execSQL(DROP_STANDS_WIDGET_TABLE_SQL);
 //        db.execSQL(DROP_POST_HISTORIES_TABLE_SQL);
+//        db.execSQL(DROP_FAVORITES_TABLE_SQL);
         onCreate(db);
     }
 

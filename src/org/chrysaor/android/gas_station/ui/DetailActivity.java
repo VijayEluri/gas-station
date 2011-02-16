@@ -3,6 +3,7 @@ package org.chrysaor.android.gas_station.ui;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.DatabaseHelper;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
+import org.chrysaor.android.gas_station.util.FavoritesDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.StandController;
 import org.chrysaor.android.gas_station.util.StandsDao;
@@ -35,15 +36,17 @@ import android.widget.Toast;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class DetailActivity extends Activity implements Runnable {
-	
+    
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
     private StandsDao standsDao = null;
-	private final Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private StandController stand;
     private GSInfo info = null;
     private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
     GoogleAnalyticsTracker tracker;
+    private Integer favState = 0;
+    private ImageButton favButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,17 +61,27 @@ public class DetailActivity extends Activity implements Runnable {
         // Start the tracker in manual dispatch mode...
         tracker.start("UA-20090562-2", 20, this);
         tracker.trackPageView("/DetailActivity");
-
+        dbHelper = new DatabaseHelper(this);
+        
         Bundle extras=getIntent().getExtras();
-        if (extras!=null) {
+        if (extras != null) {
             String index = extras.getString("shopcode");
             
-            dbHelper = new DatabaseHelper(this);
             db = dbHelper.getReadableDatabase();
             
-            standsDao = new StandsDao(db);
-            info = standsDao.findByShopCd(index);
+            if (extras.containsKey("from") && extras.getString("from").equals("FavoriteListActivity")) {
+                FavoritesDao favoritesDao = new FavoritesDao(db);
+                info = favoritesDao.findByShopCd(index);
+            } else {
+                standsDao = new StandsDao(db);
+                info = standsDao.findByShopCd(index);
+            }
             db.close();
+            
+            if (info == null) {
+            	Toast.makeText(this, "スタンド情報が取得できません", Toast.LENGTH_SHORT).show();
+            	finish();
+            }
             
             //マップ中心の周辺にあるガソリンスタンド情報を取得する
             stand = new StandController(handler, (Runnable) this, this, info);
@@ -77,8 +90,18 @@ public class DetailActivity extends Activity implements Runnable {
             
             setContentView(stand.getView());
             
+            favButton = (ImageButton) findViewById(R.id.btn_favorite);
+
+            db = dbHelper.getReadableDatabase();
+            
+            FavoritesDao favoritesDao = new FavoritesDao(db);
+            if (favoritesDao.findByShopCd(index) != null) {
+                setFavState(1);
+            }
+            db.close();
+            
             LinearLayout route = (LinearLayout) findViewById(R.id.layout_route);
-            route.setOnTouchListener(new View.OnTouchListener()    {
+            route.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
                         v.setBackgroundColor(pressed_color);
@@ -88,7 +111,7 @@ public class DetailActivity extends Activity implements Runnable {
                         // イベントトラック（ルート検索）
                         tracker.trackEvent(
                             "Detail",      // Category
-                            "RouteSearch",     // Action
+                            "RouteSearch", // Action
                             info.ShopCode, // Label
                             0);
                         
@@ -101,14 +124,13 @@ public class DetailActivity extends Activity implements Runnable {
                         } else {
                             Toast.makeText(DetailActivity.this, "無料版では使用できません", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                     return true;
-                }    
+                }
             });
             
             LinearLayout post = (LinearLayout) findViewById(R.id.layout_post);
-            post.setOnTouchListener(new View.OnTouchListener()    {
+            post.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
                         v.setBackgroundColor(pressed_color);
@@ -126,7 +148,7 @@ public class DetailActivity extends Activity implements Runnable {
                         startActivity(intent);
                     }
                     return true;
-                }    
+                }
             });
 
             // 給油記録
@@ -168,7 +190,7 @@ public class DetailActivity extends Activity implements Runnable {
 
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent(); 
-                                        intent.setAction(Intent.ACTION_VIEW); 
+                                        intent.setAction(Intent.ACTION_VIEW);
                                         intent.setData(Uri.parse("market://details?id=jp.pinetail.android.gas_log.free")); 
                                         startActivity(intent);
                                     }
@@ -177,7 +199,6 @@ public class DetailActivity extends Activity implements Runnable {
                                     
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        
                                     }
                                 })
                                 .create()
@@ -192,6 +213,7 @@ public class DetailActivity extends Activity implements Runnable {
                 charge.setVisibility(View.GONE);
             }
 
+            // ブラウザ
             LinearLayout browser = (LinearLayout) findViewById(R.id.layout_browser);
             browser.setOnTouchListener(new View.OnTouchListener()    {
                 public boolean onTouch(View v, MotionEvent event) {
@@ -215,22 +237,69 @@ public class DetailActivity extends Activity implements Runnable {
                     return true;
                 }    
             });
-
         }
         
+        // 戻るボタン
         Button backButton = (Button) findViewById(R.id.btn_back);
         backButton.setOnClickListener(new OnClickListener() {
  
             @Override
             public void onClick(View v) {
-                finish();    
+                Intent intent = new Intent();
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
         });
+        
+        // お気に入りボタン
+        favButton.setOnClickListener(new OnClickListener() {
+ 
+            @Override
+            public void onClick(View v) {
+            	if (info == null) {
+            		return;
+            	}
+                db = dbHelper.getReadableDatabase();
+                
+                FavoritesDao favoritesDao = new FavoritesDao(db);
+
+                switch (favState) {
+                case 0:
+                    // 登録件数の確認
+                    if (favoritesDao.findAll("create_date").size() >= 20) {
+                        Toast.makeText(DetailActivity.this, "お気に入りは20件までしか登録出来ません。", Toast.LENGTH_SHORT).show();
+                    } else {
+                        favoritesDao.insert(info);
+                        setFavState(1);
+                        Toast.makeText(DetailActivity.this, "お気に入りに登録しました", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case 1:
+                    favoritesDao.deleteByShopCd(info.ShopCode);
+                    setFavState(0);
+                    Toast.makeText(DetailActivity.this, "お気に入りを解除しました", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                db.close();
+            }
+        });
+    }
+    
+    private void setFavState(Integer state) {
+        
+        favState = state;
+        switch (favState) {
+        case 0:
+            favButton.setImageDrawable(getResources().getDrawable(R.drawable.star_empty));
+            break;
+        case 1:
+            favButton.setImageDrawable(getResources().getDrawable(R.drawable.star_full));
+            break;
+        }
     }
 
     @Override
     public void run() {
-        // TODO 自動生成されたメソッド・スタブ
     }
     
     @Override
@@ -283,7 +352,7 @@ public class DetailActivity extends Activity implements Runnable {
                     msg = msg.replaceAll("#price", info.getDispPrice());
                 } else {                    
                     if (kind.equals("灯油")) {
-                        msg = msg.replaceAll("#price", info.getDispPrice() + "円/18L");                        
+                        msg = msg.replaceAll("#price", info.getDispPrice() + "円/18L");
                     } else {
                         msg = msg.replaceAll("#price", info.getDispPrice() + "円/L");
                     }

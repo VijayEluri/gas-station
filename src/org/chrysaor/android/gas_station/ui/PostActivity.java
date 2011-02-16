@@ -11,6 +11,7 @@ import org.apache.http.params.HttpParams;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.DatabaseHelper;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
+import org.chrysaor.android.gas_station.util.FavoritesDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.PostHistoriesDao;
 import org.chrysaor.android.gas_station.util.PostItem;
@@ -103,6 +104,12 @@ public class PostActivity extends Activity {
         // 画面初期化
         init();
         
+        if (info == null) {
+            Toast.makeText(this, "スタンド情報が取得できません", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        
         // ユーザID・パスワードの登録チェック
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(PostActivity.this);
 
@@ -165,7 +172,7 @@ public class PostActivity extends Activity {
     }
     
     private View getLoginView() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);  
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         
         View view = inflater.inflate(R.layout.login, null);
                 
@@ -222,11 +229,11 @@ public class PostActivity extends Activity {
                 db.close();
                 
                 if (item != null) {
-                	price_kind.setSelection(Integer.parseInt(item.kubun));
-                	check.setSelection(Integer.parseInt(item.kakunin));
+                    price_kind.setSelection(Integer.parseInt(item.kubun));
+                    check.setSelection(Integer.parseInt(item.kakunin));
                 } else {
-                	price_kind.setSelection(0);
-                	check.setSelection(0);
+                    price_kind.setSelection(0);
+                    check.setSelection(0);
                 }
             } else {
                 chkSaveSelectItem.setChecked(false);
@@ -234,9 +241,18 @@ public class PostActivity extends Activity {
             
             db = dbHelper.getReadableDatabase();
             
-            standsDao = new StandsDao(db);
-            info = standsDao.findByShopCd(ss_id);
+            if (extras.containsKey("from") && extras.getString("from").equals("FavoriteListActivity")) {
+                FavoritesDao favoritesDao = new FavoritesDao(db);
+                info = favoritesDao.findByShopCd(ss_id);
+            } else {
+                standsDao = new StandsDao(db);
+                info = standsDao.findByShopCd(ss_id);
+            }
             db.close();
+            
+            if (info == null) {
+                return;
+            }
             
             // ブランド
             ImageView imgBrand = (ImageView) findViewById(R.id.brand_image);
@@ -288,7 +304,7 @@ public class PostActivity extends Activity {
         adapter4.add("");
         for (int i = MinLampPrice; i<= MaxLampPrice; i++) {
             if (i % 18 == 0) {
-                adapter4.add(String.valueOf(i) + "(" + i/18 + "円/L)");                
+                adapter4.add(String.valueOf(i) + "(" + i/18 + "円/L)");
             } else {
                 adapter4.add(String.valueOf(i));
             }
@@ -302,7 +318,7 @@ public class PostActivity extends Activity {
  
             @Override
             public void onClick(View v) {
-                finish();    
+                finish();
             }
         });
 
@@ -322,7 +338,6 @@ public class PostActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         
                     }
-                    
                 })
                 .setView(inflater.inflate(R.layout.post_help, null))
                 .create()
@@ -391,7 +406,7 @@ public class PostActivity extends Activity {
                             // アラートダイアログのキャンセルが可能かどうかを設定します
                             alertDialogBuilder.setCancelable(true);
 
-                            alertDialogBuilder.show();    
+                            alertDialogBuilder.show();
                         }
                     });
 

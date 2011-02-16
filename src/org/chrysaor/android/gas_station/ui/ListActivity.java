@@ -8,6 +8,7 @@ import net.londatiga.android.QuickAction;
 
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.DatabaseHelper;
+import org.chrysaor.android.gas_station.util.FavoritesDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandsDao;
@@ -149,7 +150,7 @@ public class ListActivity extends Activity {
     private void init() {
         if (list.size() > 0) {
             ListView savedList = (ListView) findViewById(R.id.savedList);
-            adapter = new StandAdapter(this, R.layout.list, list);  
+            adapter = new StandAdapter(this, R.layout.list, list);
             savedList.setAdapter(adapter);  
         
             savedList.setOnItemClickListener(new OnItemClickListener() {

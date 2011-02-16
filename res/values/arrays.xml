@@ -78,6 +78,18 @@
     <item>店頭看板</item>
     <item>実給油</item>
   </string-array>
+  <string-array name="settings_favorite_interval_kind">
+    <item>同期しない</item>
+    <item>1日間隔</item>
+    <item>3日間隔</item>
+    <item>7日間隔</item>
+  </string-array>
+  <string-array name="settings_favorite_interval_kindvalues">
+    <item>0</item>
+    <item>1</item>
+    <item>3</item>
+    <item>7</item>
+  </string-array>
   <string-array name="post_price_kind">
     <item>表記なし</item>
     <item>現金フリー</item>
@@ -87,4 +99,13 @@
     <item>プリカ</item>
     <item>割引チケット</item>
   </string-array>
+  <string-array name="settings_favorite_sort_kind">
+    <item>登録順</item>
+    <item>名前順</item>
+  </string-array>
+  <string-array name="settings_favorite_sort_kindvalues">
+    <item>create_date</item>
+    <item>shop_name</item>
+  </string-array>
+
 </resources>

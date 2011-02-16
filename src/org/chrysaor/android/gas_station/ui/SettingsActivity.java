@@ -3,8 +3,10 @@ package org.chrysaor.android.gas_station.ui;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
+import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -84,6 +86,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         setSummaryAll(key);
+        
+        // 油種 or 会員価格が変更された場合、お気に入りを更新する
+        if (key.equals("settings_member") || key.equals("settings_kind")) {
+            Intent service = new Intent(this, UpdateFavoritesService.class);
+            service.setAction(UpdateFavoritesService.START_ACTION);
+            service.putExtra("mode", "all");
+            startService(service);
+        }
     }
     
     private void setSummaryAll(String key) {
@@ -142,7 +152,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             EditTextPreference pref = (EditTextPreference) getPreferenceScreen().findPreference(key);
             
             if (key.equals("settings_user_id") || key.equals("settings_sharemsg")) {
-                pref.setSummary(pref.getText());                
+                pref.setSummary(pref.getText());
             }
             
             // イベントトラック

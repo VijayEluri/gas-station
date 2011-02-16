@@ -9,6 +9,7 @@ import jp.co.nobot.libYieldMaker.libYieldMaker;
 
 import org.chrysaor.android.gas_station.ui.AboutActivity;
 import org.chrysaor.android.gas_station.ui.DetailActivity;
+import org.chrysaor.android.gas_station.ui.FavoriteListActivity;
 import org.chrysaor.android.gas_station.ui.ListActivity;
 import org.chrysaor.android.gas_station.ui.SettingsActivity;
 import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
@@ -21,6 +22,7 @@ import org.chrysaor.android.gas_station.util.SeekBarPreference;
 import org.chrysaor.android.gas_station.util.StandController;
 import org.chrysaor.android.gas_station.util.StandsDao;
 import org.chrysaor.android.gas_station.util.StandsHelper;
+import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
 
 import android.app.ProgressDialog;
@@ -160,7 +162,7 @@ public class MainActivity extends MapActivity implements Runnable {
                     MainActivity.this.searchAction();
                 }
                 return true;
-            }    
+            }
         });
 
         // リストボタンのonClick設定
@@ -179,10 +181,32 @@ public class MainActivity extends MapActivity implements Runnable {
                         0);
                     
                     Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                    startActivityForResult(intent, 0);  
+                    startActivityForResult(intent, 0);
                 }
                 return true;
-            }    
+            }
+        });
+        
+        // リストボタンのonClick設定
+        ImageView favList = (ImageView) findViewById(R.id.favorite);
+        favList.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+                    v.setBackgroundColor(pressed_color);
+                } else if(event.getAction() == MotionEvent.ACTION_UP) {
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                    // イベントトラック（リスト）
+                    tracker.trackEvent(
+                        "Main",     // Category
+                        "FavoriteList",     // Action
+                        null,       // Label
+                        0);
+                    
+                    Intent intent = new Intent(MainActivity.this, FavoriteListActivity.class);
+                    startActivityForResult(intent, 0);
+                }
+                return true;
+            }
         });
         
         // ズームアウトボタンのonClick設定
@@ -301,6 +325,11 @@ public class MainActivity extends MapActivity implements Runnable {
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME,
                 LOCATION_MIN_DISTANCE, mListener);
                 */
+        
+        Intent service = new Intent(this, UpdateFavoritesService.class);
+        service.setAction(UpdateFavoritesService.START_ACTION);
+        startService(service);
+
     }
     
        //アクティビティ呼び出し結果の取得

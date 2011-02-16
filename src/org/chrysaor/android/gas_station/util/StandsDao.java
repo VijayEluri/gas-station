@@ -92,7 +92,7 @@ public class StandsDao {
     }
     
     public GSInfo findByShopCd(String shop_cd) {
-        String selection = "shop_cd = '" + shop_cd +"'";        
+        String selection = "shop_cd = '" + shop_cd +"'";
         Cursor cursor = db.query(TABLE_NAME, COLUMNS, selection, null, null, null, null);
         
         while(cursor.moveToNext()) {
@@ -120,7 +120,7 @@ public class StandsDao {
     }
     
     public int deleteByShopCd(String shop_cd) {
-        return db.delete(TABLE_NAME, "shop_cd =  = '" + shop_cd +"'", null);
+        return db.delete(TABLE_NAME, "shop_cd = '" + shop_cd +"'", null);
     }
     
     public int deleteAll() {

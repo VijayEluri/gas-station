@@ -38,7 +38,7 @@ public class PostHistoriesDao {
     public long insert(PostItem item) {
         long currentTimeMillis = System.currentTimeMillis();
         Date date = new Date(currentTimeMillis);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         item.date = simpleDateFormat.format(date);
 

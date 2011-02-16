@@ -49,7 +49,17 @@
     <string name="settings_passwd_dialogtitle">パスワード</string>
     <string name="settings_passwd_summary"></string>
     <string name="settings_passwd_title">パスワード</string>
-    
+    <string name="settings_favorite_title">お気に入り設定</string>
+    <string name="settings_favorite_interval_dialogtitle">同期間隔</string>
+    <string name="settings_favorite_interval_summary">お気に入りの同期間隔を設定します</string>
+    <string name="settings_favorite_interval_title">同期間隔</string>
+    <string name="settings_favorite_interval_default">0</string>
+    <string name="settings_favorite_notification_summary">同期完了時に通知します</string>
+    <string name="settings_favorite_notification_title">同期完了通知</string>
+    <string name="settings_favorite_sort_dialogtitle">並び順</string>
+    <string name="settings_favorite_sort_summary">検索結果の並び順を設定します</string>
+    <string name="settings_favorite_sort_title">並び順</string>
+    <string name="settings_favorite_sort_default">create_date</string>
     
     <string name="dialog_title_err">エラー</string>
 	<string name="dialog_message_out_of_range">データがありません</string>

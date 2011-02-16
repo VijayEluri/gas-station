@@ -131,8 +131,7 @@ public class XmlParserFromUrl {
     public boolean checkAuthResponce(String is) {
         
         if (is == null) {
-            Log.d(LOG_TAG, "null!!");
-            return false;            
+            return false;
         }
 
         try {
@@ -274,5 +273,78 @@ public class XmlParserFromUrl {
 
         return map;
     }
+    
+    /**
+     * 店舗情報取得
+     * 
+     * @param is
+     * @return
+     */
+    public HashMap<String,HashMap<String,String>> getShopInfo(String is) {
+        
+        String key = null;
+        String value = null;
+        String price = null;
+        String date  = null;
+        String shopCode = null;
+        
+        HashMap<String,HashMap<String,String>> list = new HashMap<String,HashMap<String,String>>();
+        HashMap<String,String> map = new HashMap<String,String>();
+
+        try {
+            initXmlPullParser(is);
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                case XmlPullParser.START_DOCUMENT:
+                case XmlPullParser.END_DOCUMENT:
+                    break;
+                case XmlPullParser.END_TAG:
+//                	Utils.logging("END_TAG:" + xpp.getName());
+                	key = null;
+
+                    if (xpp.getName().equals("Item")) {
+                        map.put("price", price);
+                        map.put("date",  date);
+                        list.put(shopCode, map);
+                        Utils.logging(shopCode);
+                    }
+                    break;
+                case XmlPullParser.START_TAG:
+                    key = xpp.getName();
+//                	Utils.logging("START_TAG:" + key);
+
+                    if (key.equals("Item")) {
+                        map = new HashMap<String,String>();
+                        price   = null;
+                        date    = null;
+                        shopCode = null;
+                    }
+                    break;
+                case XmlPullParser.TEXT:
+                	if (key != null) {
+	                	Utils.logging(key);
+	                	Utils.logging(xpp.getText());
+	                	if (key.equals("Price")) {
+	                		price = xpp.getText();
+	                	} else if (key.equals("ShopCode")) {
+	                		shopCode = xpp.getText();
+	                	} else if (key.equals("Date")) {
+	                		date = xpp.getText();
+	                	}
+                	}
+                    break;
+                }
+                
+                eventType = xpp.next();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 
 }

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.Log;
 
 public class Utils {
     public static final String DONATE_PACKAGE = "org.chrysaor.android.gas_station.plus";

@@ -78,6 +78,28 @@
       android:summary="@string/settings_passwd_summary"
       android:dialogTitle="@string/settings_passwd_dialogtitle" />
   </PreferenceCategory>  
+  <PreferenceCategory android:title="@string/settings_favorite_title">
+    <ListPreference
+      android:key="settings_favorite_interval"
+      android:title="@string/settings_favorite_interval_title"
+      android:summary="@string/settings_favorite_interval_summary"
+      android:dialogTitle="@string/settings_favorite_interval_dialogtitle"
+      android:entries="@array/settings_favorite_interval_kind"
+      android:entryValues="@array/settings_favorite_interval_kindvalues"
+      android:defaultValue="@string/settings_favorite_interval_default" />
+    <CheckBoxPreference
+      android:key="settings_favorite_notification"
+      android:title="@string/settings_favorite_notification_title"
+      android:summary="@string/settings_favorite_notification_summary" />
+    <ListPreference
+      android:key="settings_favorite_sort"
+      android:title="@string/settings_favorite_sort_title"
+      android:summary="@string/settings_favorite_sort_summary"
+      android:dialogTitle="@string/settings_favorite_sort_dialogtitle"
+      android:entries="@array/settings_favorite_sort_kind"
+      android:entryValues="@array/settings_favorite_sort_kindvalues"
+      android:defaultValue="@string/settings_favorite_sort_default" />
+  </PreferenceCategory>  
   <PreferenceCategory android:title="@string/settings_etc_title">
     <EditTextPreference
       android:key="settings_sharemsg"

@@ -87,8 +87,8 @@ public class StandController extends Thread {
             if (info.Rtc != null && info.Rtc.compareTo("24H") != 0) {
                 ImageView imgRtc = (ImageView) view.findViewById(R.id.rtc);
                 imgRtc.setVisibility(View.INVISIBLE);
-            }                
-
+            }
+            
             // 店名
             TextView textShopName = (TextView) view.findViewById(R.id.shop_text);
             textShopName.setText(info.ShopName);
@@ -99,8 +99,10 @@ public class StandController extends Thread {
 
             // 距離
             TextView textDistance = (TextView) view.findViewById(R.id.distance_text);
-            Float dist = Float.parseFloat(info.Distance) / 1000;
-            textDistance.setText(dist.toString() + "km");
+            if (info.Distance != null) {
+	            Float dist = Float.parseFloat(info.Distance) / 1000;
+	            textDistance.setText(dist.toString() + "km");
+            }
 
             // 更新日
             TextView textDate = (TextView) view.findViewById(R.id.date_text);
