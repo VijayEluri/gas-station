@@ -434,18 +434,6 @@ public class PostActivity extends Activity {
                         }
                     });
                     e.printStackTrace();
-
-                } catch (final Exception e) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            dialog.dismiss();
-                            
-                            // エラーメッセージの表示
-                            Toast.makeText(PostActivity.this, "サーバーに接続できませんでした。時間をおいて再度お試しください。", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    e.printStackTrace();
                 }
                 
             }
@@ -463,58 +451,55 @@ public class PostActivity extends Activity {
 
         Utils.logging(url);
         
-        try {
-            XmlParserFromUrl xml = new XmlParserFromUrl();
+        XmlParserFromUrl xml = new XmlParserFromUrl();
+    
+        byte[] byteArray = Utils.getByteArrayFromURL(url, "GET");
+        if (byteArray == null) {
+        	err_msg.add("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0003]");
+            return err_msg;
+        }
+        String data = new String(byteArray);
         
-            byte[] byteArray = Utils.getByteArrayFromURL(url, "GET");
-            if (byteArray == null) {
-                return err_msg;
+        HashMap<String, String> res = xml.convertHashMapPrice(data);
+        
+        // レギュラー価格チェック
+        if (regular.getSelectedItem() != "") {
+            int regular_price = Integer.parseInt(regular.getSelectedItem().toString());
+            if (   Integer.parseInt(res.get("regular_min")) > regular_price
+                || Integer.parseInt(res.get("regular_max")) < regular_price) {
+                
+                err_msg.add("レギュラー価格は" + res.get("regular_min") + "〜" + res.get("regular_max") + "円の間で選択してください。");
             }
-            String data = new String(byteArray);
-            
-            HashMap<String, String> res = xml.convertHashMapPrice(data);
-            
-            // レギュラー価格チェック
-            if (regular.getSelectedItem() != "") {
-                int regular_price = Integer.parseInt(regular.getSelectedItem().toString());
-                if (   Integer.parseInt(res.get("regular_min")) > regular_price
-                    || Integer.parseInt(res.get("regular_max")) < regular_price) {
-                    
-                    err_msg.add("レギュラー価格は" + res.get("regular_min") + "〜" + res.get("regular_max") + "円の間で選択してください。");
-                }
+        }
+        
+        // ハイオク価格チェック
+        if (highoc.getSelectedItem() != "") {
+            int highoc_price = Integer.parseInt(highoc.getSelectedItem().toString());
+            if (   Integer.parseInt(res.get("highoc_min")) > highoc_price
+                || Integer.parseInt(res.get("highoc_max")) < highoc_price) {
+                
+                err_msg.add("ハイオク価格は" + res.get("highoc_min") + "〜" + res.get("highoc_max") + "円の間で選択してください。");
             }
-            
-            // ハイオク価格チェック
-            if (highoc.getSelectedItem() != "") {
-                int highoc_price = Integer.parseInt(highoc.getSelectedItem().toString());
-                if (   Integer.parseInt(res.get("highoc_min")) > highoc_price
-                    || Integer.parseInt(res.get("highoc_max")) < highoc_price) {
-                    
-                    err_msg.add("ハイオク価格は" + res.get("highoc_min") + "〜" + res.get("highoc_max") + "円の間で選択してください。");
-                }
-            }
+        }
 
-            // 軽油価格チェック
-            if (diesel.getSelectedItem() != "") {
-                int diesel_price = Integer.parseInt(diesel.getSelectedItem().toString());
-                if (   Integer.parseInt(res.get("diesel_min")) > diesel_price
-                    || Integer.parseInt(res.get("diesel_max")) < diesel_price) {
-                    
-                    err_msg.add("軽油価格は" + res.get("diesel_min") + "〜" + res.get("diesel_max") + "円の間で選択してください。");
-                }
+        // 軽油価格チェック
+        if (diesel.getSelectedItem() != "") {
+            int diesel_price = Integer.parseInt(diesel.getSelectedItem().toString());
+            if (   Integer.parseInt(res.get("diesel_min")) > diesel_price
+                || Integer.parseInt(res.get("diesel_max")) < diesel_price) {
+                
+                err_msg.add("軽油価格は" + res.get("diesel_min") + "〜" + res.get("diesel_max") + "円の間で選択してください。");
             }
-            
-            // 灯油価格チェック
-            if (lamp.getSelectedItem() != "") {
-                int lamp_price = Integer.parseInt(lamp.getSelectedItem().toString());
-                if (   Integer.parseInt(res.get("lamp_min")) > lamp_price
-                    || Integer.parseInt(res.get("lamp_max")) < lamp_price) {
-                    
-                    err_msg.add("灯油価格は" + res.get("lamp_min") + "〜" + res.get("lamp_max") + "円の間で選択してください。");
-                }
+        }
+        
+        // 灯油価格チェック
+        if (lamp.getSelectedItem() != "") {
+            int lamp_price = Integer.parseInt(lamp.getSelectedItem().toString().replaceAll("\\(.*\\)", ""));
+            if (   Integer.parseInt(res.get("lamp_min")) > lamp_price
+                || Integer.parseInt(res.get("lamp_max")) < lamp_price) {
+                
+                err_msg.add("灯油価格は" + res.get("lamp_min") + "〜" + res.get("lamp_max") + "円の間で選択してください。");
             }
-
-        } catch (Exception e) {
         }
         
         return err_msg;
@@ -526,7 +511,7 @@ public class PostActivity extends Activity {
      * @return
      * @throws Exception
      */
-    private boolean checkEntryData() throws Exception {
+    private boolean checkEntryData() throws PostException {
         
         ArrayList<String> err_msg = new ArrayList<String>();
         
@@ -569,7 +554,7 @@ public class PostActivity extends Activity {
                     msg += "\n"; 
                 }
             } 
-            throw new Exception(msg);
+            throw new PostException(msg);
         }
         return true;
     }
@@ -580,7 +565,7 @@ public class PostActivity extends Activity {
      * @return
      * @throws Exception
      */
-    private boolean auth() throws AuthException, Exception {
+    private boolean auth() throws AuthException, PostException {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(PostActivity.this);
 
         String url = "http://gogo.gs/api/sp/uauth.php?apid=" + apid + "&" +
@@ -592,7 +577,7 @@ public class PostActivity extends Activity {
 
         byte[] byteArray = Utils.getByteArrayFromURL(url, "GET");
         if (byteArray == null) {
-            throw new Exception("サーバーに接続できませんでした。時間をおいて再度お試しください。");
+            throw new PostException("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0002]");
         }
         String data = new String(byteArray);
         
@@ -611,7 +596,7 @@ public class PostActivity extends Activity {
      * @return
      * @throws Exception
      */
-    private boolean post() throws Exception, PostException {
+    private boolean post() throws PostException {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(PostActivity.this);
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE); 
@@ -642,7 +627,7 @@ public class PostActivity extends Activity {
             postItem.nedan2 = Integer.valueOf(diesel.getSelectedItem().toString());
         }
         if (lamp.getSelectedItem() != "") {
-            postItem.nedan3 = Integer.valueOf(lamp.getSelectedItem().toString());
+            postItem.nedan3 = Integer.valueOf(lamp.getSelectedItem().toString().replaceAll("\\(.*\\)", ""));
         }
         postItem.regdategap  = 0;
         postItem.regdatetime = calendar.get(Calendar.HOUR_OF_DAY);
@@ -671,7 +656,7 @@ public class PostActivity extends Activity {
         }
         
         if (lamp.getSelectedItem() != "") {
-            url += "&nedan3=" + lamp.getSelectedItem();
+            url += "&nedan3=" + lamp.getSelectedItem().toString().replaceAll("\\(.*\\)", "");
         }
 
         Utils.logging(url);
@@ -680,7 +665,7 @@ public class PostActivity extends Activity {
 
         byte[] byteArray = Utils.getByteArrayFromURL(url, "POST");
         if (byteArray == null) {
-            throw new PostException("サーバーに接続できませんでした。時間をおいて再度お試しください。");
+            throw new PostException("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0001]");
         }
         String data = new String(byteArray);
         
@@ -708,9 +693,11 @@ public class PostActivity extends Activity {
             db.close();
 
             return true;
+            
         } else {
-            throw new Exception("登録に失敗しました。\nエラーコード[" + res.get("Message") + "]");
+            throw new PostException("登録に失敗しました。\nエラーコード[" + res.get("Message") + "]");
         }
+        
     }
     
     @Override

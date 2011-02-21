@@ -50,6 +50,9 @@ public class UpdateFavoritesService extends Service {
                         if (pref.getBoolean("settings_favorite_notification", true) && res > 0) {
                             Toast.makeText(UpdateFavoritesService.this, res + "件のお気に入りを更新しました", Toast.LENGTH_LONG).show();
                         }
+                        
+                        Intent service = new Intent(UpdateFavoritesService.this, UpdateFavoritesService.class);
+                        stopService(service);
                     }
                 });
             }

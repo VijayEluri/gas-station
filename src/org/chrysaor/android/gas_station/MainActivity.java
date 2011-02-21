@@ -50,8 +50,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -404,6 +407,12 @@ public class MainActivity extends MapActivity implements Runnable {
         tracker.stop();
         
         super.onDestroy();
+        
+        Intent service = new Intent(this, UpdateFavoritesService.class);
+        service.setAction(UpdateFavoritesService.START_ACTION);
+        stopService(service);
+        
+        cleanupView(findViewById(R.id.screen));
     }
     
     @Override
@@ -828,6 +837,32 @@ public class MainActivity extends MapActivity implements Runnable {
         public PinOverlayItem(GeoPoint point){
             super(point, "", "");
         }
-        
+    }
+    
+    /**
+     * 指定したビュー階層内のドローワブルをクリアする。
+     * （ドローワブルをのコールバックメソッドによるアクティビティのリークを防ぐため）
+     * @param view
+     */
+    public static final void cleanupView(View view) {
+        if(view instanceof ImageButton) {
+            ImageButton ib = (ImageButton)view;
+            ib.setImageDrawable(null);
+        } else if(view instanceof ImageView) {
+            ImageView iv = (ImageView)view;
+            iv.setImageDrawable(null);
+        } else if(view instanceof SeekBar) {
+            SeekBar sb = (SeekBar)view;
+            sb.setProgressDrawable(null);
+            sb.setThumb(null);
+        }
+        view.setBackgroundDrawable(null);
+        if(view instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup)view;
+            int size = vg.getChildCount();
+            for(int i = 0; i < size; i++) {
+                cleanupView(vg.getChildAt(i));
+            }
+        }
     }
 }
