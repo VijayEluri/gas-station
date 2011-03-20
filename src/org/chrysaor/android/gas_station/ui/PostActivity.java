@@ -414,7 +414,9 @@ public class PostActivity extends Activity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            dialog.dismiss();
+                            if (dialog != null) {
+                                dialog.dismiss();
+                            }
                             
                             // エラーメッセージの表示
                             Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -427,7 +429,9 @@ public class PostActivity extends Activity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            dialog.dismiss();
+                            if (dialog != null) {
+                                dialog.dismiss();
+                            }
                             
                             // エラーメッセージの表示
                             Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -583,7 +587,9 @@ public class PostActivity extends Activity {
         
         HashMap<String, String> res = xml.convertHashMap(data);
         
-        if (res.get("Result").equals("1")) {
+        if (res == null || res.containsKey("Result") == false) {
+            throw new PostException("認証に失敗しました。時間をおいて再度お試しください。");
+        } else if (res.get("Result").equals("1")) {
             return true;
         } else {
             throw new AuthException("認証に失敗しました。\nユーザID、パスワードを確認してください。");

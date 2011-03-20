@@ -16,12 +16,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class UpdateFavoritesService extends Service {
 
     public static final String START_ACTION = "start";
+    public static final String INTENT_ACTION = "favorites_update";
 
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
@@ -38,6 +40,8 @@ public class UpdateFavoritesService extends Service {
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         this.intent = intent;
         
+        final Bundle extras = intent.getExtras();
+        
         Thread th = new Thread() {
             public void run() {
                 // お気に入りの更新
@@ -47,12 +51,18 @@ public class UpdateFavoritesService extends Service {
                     
                     @Override
                     public void run() {
-                        if (pref.getBoolean("settings_favorite_notification", true) && res > 0) {
+                        if (extras != null && extras.containsKey("msg") && extras.getBoolean("msg") == true && res > 0) {
+                            Toast.makeText(UpdateFavoritesService.this, res + "件のお気に入りを更新しました", Toast.LENGTH_LONG).show();
+                        } else if (pref.getBoolean("settings_favorite_notification", true) && res > 0) {
                             Toast.makeText(UpdateFavoritesService.this, res + "件のお気に入りを更新しました", Toast.LENGTH_LONG).show();
                         }
                         
                         Intent service = new Intent(UpdateFavoritesService.this, UpdateFavoritesService.class);
                         stopService(service);
+                        
+                        if (extras != null && extras.containsKey("redraw") && extras.getBoolean("redraw") == true) {
+                            sendBroadcast(new Intent(INTENT_ACTION));
+                        }
                     }
                 });
             }
@@ -62,7 +72,6 @@ public class UpdateFavoritesService extends Service {
     
     @Override
     public IBinder onBind(Intent arg0) {
-        // TODO 自動生成されたメソッド・スタブ
         return null;
     }
     

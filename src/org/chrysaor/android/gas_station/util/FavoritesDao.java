@@ -205,14 +205,14 @@ public class FavoritesDao {
         String[] resultList = null;
         
         if (list.size() > 0) {
-        	int size = list.size();
+            int size = list.size();
             resultList = new String[list.size()];
 
-        	for (int i = 0; i < size; i++) {
-        		resultList[i] = list.get(i).ShopCode;
+            for (int i = 0; i < size; i++) {
+                resultList[i] = list.get(i).ShopCode;
             }
-        	
-        	Arrays.sort(resultList);
+            
+            Arrays.sort(resultList);
         }
         
         return resultList;

@@ -569,7 +569,7 @@ public class MainActivity extends MapActivity implements Runnable {
                 if (no_dist > 10) {
                     no_dist = 10;
                 }
-                url4all = "http://api.gogo.gs/ap/gsst/ssLatLonFull.php?" +
+                url4all = "http://api.gogo.gs/ap/gsst/ssLatLonFull110303.php?" +
                         "lat_min=" + (double) (lat - 0.0083 * no_dist) +
                         "&lat_max=" + (double) (lat + 0.0083 * no_dist) +
                         "&lon_min=" + (double) (lon - 0.0125 * no_dist) +

@@ -6,24 +6,31 @@ import jp.co.nobot.libYieldMaker.libYieldMaker;
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
 
+import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.DatabaseHelper;
 import org.chrysaor.android.gas_station.util.FavoritesDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandsDao;
+import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -31,9 +38,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.android.maps.GeoPoint;
 
 public class FavoriteListActivity extends Activity {
     private ArrayList<GSInfo> list = null;
@@ -68,6 +77,11 @@ public class FavoriteListActivity extends Activity {
         db.close();
         init();
 
+        // レシーバを登録
+        UpdateReceiver receiver = new UpdateReceiver();
+        IntentFilter filter = new IntentFilter(UpdateFavoritesService.INTENT_ACTION);
+        registerReceiver(receiver, filter);
+        
         // 登録順
         RadioButton createDateButton = (RadioButton) findViewById(R.id.sort_create_date);
         createDateButton.setOnClickListener(new OnClickListener() {
@@ -338,4 +352,60 @@ public class FavoriteListActivity extends Activity {
             init();
         }
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu ) {
+        super.onCreateOptionsMenu( menu );
+        // メニューアイテムを追加
+        MenuItem item1 = menu.add( 0, 0, 0, "手動更新" );
+        MenuItem item2 = menu.add( 0, 1, 0, "設定" );
+        // 追加したメニューアイテムのアイコンを設定
+        item1.setIcon( android.R.drawable.ic_menu_rotate );
+        item2.setIcon( android.R.drawable.ic_menu_preferences );
+        return true;
+    }
+    
+    @Override  
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch(item.getItemId()){  
+        case 0:
+            Intent service = new Intent(this, UpdateFavoritesService.class);
+            service.setAction(UpdateFavoritesService.START_ACTION);
+            service.putExtra("mode",   "all");
+            service.putExtra("msg",    true);
+            service.putExtra("redraw", true);
+            startService(service);
+            return true;
+        case 1:
+            // イベントトラック（設定）
+            tracker.trackEvent(
+                "FavoriteListActivity",      // Category
+                "Settings",  // Action
+                null,        // Label
+                0);
+            
+            Intent intent = new Intent(FavoriteListActivity.this, SettingsActivity.class);
+            startActivity(intent);  
+            return true;
+        }  
+        return false;  
+    }
+    
+    private class UpdateReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+//			Toast.makeText(FavoriteListActivity.this, "update", Toast.LENGTH_SHORT).show();
+            // お気に入り一覧描画
+            db = dbHelper.getReadableDatabase();
+            Utils.logging(mode);
+            favoritesDao = new FavoritesDao(db);
+            list = favoritesDao.findAll(mode);
+            db.close();
+            init();
+		}
+    	
+    }
+
 }

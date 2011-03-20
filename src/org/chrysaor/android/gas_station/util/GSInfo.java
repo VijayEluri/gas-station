@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -34,6 +37,7 @@ public class GSInfo {
     public boolean Member = false;
     public String UpdateDate = null;
     public String CreateDate = null;
+    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
     
     //URL由来のストリーム
     protected InputStream is;
@@ -103,7 +107,12 @@ public class GSInfo {
                 this.Price = value;
             } catch(NumberFormatException e) {}
         } else if (key.compareTo("Date") == 0) {
-            this.Date = value;
+            if (value.matches("[0-9]+")) {
+                Date date = new Date(TimeUnit.SECONDS.toMillis(Long.valueOf(value)));
+                this.Date = simpleDateFormat.format(date);
+            } else {
+                this.Date = value;
+            }
         } else if (key.compareTo("Photo") == 0) {
             this.Photo = value;
         } else if (key.compareTo("Rtc") == 0) {

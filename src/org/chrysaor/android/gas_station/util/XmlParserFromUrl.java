@@ -181,7 +181,7 @@ public class XmlParserFromUrl {
         String value = null;
         HashMap<String,String> map = new HashMap<String,String>();
 
-        try {    
+        try {
             initXmlPullParser(is);
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
@@ -196,19 +196,23 @@ public class XmlParserFromUrl {
                         key = null;
                         value = null;
                     }
-                       break;
+                    break;
                 case XmlPullParser.START_TAG:
                     key = xpp.getName();
                     break;
                 case XmlPullParser.TEXT:
                     value = xpp.getText();
-                       break;
+                    break;
                 }
                 
-                eventType = xpp.next();   
+                eventType = xpp.next();
             }
             
-        } catch (Exception e) {
+        } catch (XmlPullParserException e) {
+            // TODO 自動生成された catch ブロック
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO 自動生成された catch ブロック
             e.printStackTrace();
         }
 
@@ -299,8 +303,8 @@ public class XmlParserFromUrl {
                 case XmlPullParser.END_DOCUMENT:
                     break;
                 case XmlPullParser.END_TAG:
-//                	Utils.logging("END_TAG:" + xpp.getName());
-                	key = null;
+//                    Utils.logging("END_TAG:" + xpp.getName());
+                    key = null;
 
                     if (xpp.getName().equals("Item")) {
                         map.put("price", price);
@@ -311,7 +315,7 @@ public class XmlParserFromUrl {
                     break;
                 case XmlPullParser.START_TAG:
                     key = xpp.getName();
-//                	Utils.logging("START_TAG:" + key);
+//                    Utils.logging("START_TAG:" + key);
 
                     if (key.equals("Item")) {
                         map = new HashMap<String,String>();
@@ -321,17 +325,17 @@ public class XmlParserFromUrl {
                     }
                     break;
                 case XmlPullParser.TEXT:
-                	if (key != null) {
-	                	Utils.logging(key);
-	                	Utils.logging(xpp.getText());
-	                	if (key.equals("Price")) {
-	                		price = xpp.getText();
-	                	} else if (key.equals("ShopCode")) {
-	                		shopCode = xpp.getText();
-	                	} else if (key.equals("Date")) {
-	                		date = xpp.getText();
-	                	}
-                	}
+                    if (key != null) {
+                        Utils.logging(key);
+                        Utils.logging(xpp.getText());
+                        if (key.equals("Price")) {
+                            price = xpp.getText();
+                        } else if (key.equals("ShopCode")) {
+                            shopCode = xpp.getText();
+                        } else if (key.equals("Date")) {
+                            date = xpp.getText();
+                        }
+                    }
                     break;
                 }
                 
