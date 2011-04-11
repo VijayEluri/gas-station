@@ -54,14 +54,14 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class PostActivity extends Activity {
     
-    private static int MinRegularPrice = 100;
-    private static int MaxRegularPrice = 160;
-    private static int MinHighOcPrice = 110;
-    private static int MaxHighOcPrice = 170;
-    private static int MinDieselPrice = 80;
-    private static int MaxDieselPrice = 140;
-    private static int MinLampPrice = 1000;
-    private static int MaxLampPrice = 1700;
+    private static int MinRegularPrice = 120;
+    private static int MaxRegularPrice = 180;
+    private static int MinHighOcPrice = 130;
+    private static int MaxHighOcPrice = 190;
+    private static int MinDieselPrice = 100;
+    private static int MaxDieselPrice = 160;
+    private static int MinLampPrice = 1300;
+    private static int MaxLampPrice = 1900;
     private Handler mHandler = new Handler();
     private ProgressDialog dialog;
     private DatabaseHelper dbHelper = null;
@@ -392,21 +392,24 @@ public class PostActivity extends Activity {
                         public void run() {
                             dialog.dismiss();
                             
-                            // 結果の表示
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
-                            alertDialogBuilder.setMessage("価格投稿を受付ました。\nありがとうございました。");
-                            
-                            // アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックを登録します
-                            alertDialogBuilder.setPositiveButton("閉じる", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                }});
-                            
-                            // アラートダイアログのキャンセルが可能かどうかを設定します
-                            alertDialogBuilder.setCancelable(true);
+                            if (!isFinishing()) {
 
-                            alertDialogBuilder.show();
+                                // 結果の表示
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
+                                alertDialogBuilder.setMessage("価格投稿を受付ました。\nありがとうございました。");
+                            
+                                // アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックを登録します
+                                alertDialogBuilder.setPositiveButton("閉じる", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }});
+                                
+                                // アラートダイアログのキャンセルが可能かどうかを設定します
+                                alertDialogBuilder.setCancelable(true);
+
+                                alertDialogBuilder.show();
+                            }
                         }
                     });
 

@@ -69,10 +69,12 @@
   <string-array name="settings_sort_kind">
     <item>近い順</item>
     <item>安い順</item>
+    <item>更新日順</item>
   </string-array>
   <string-array name="settings_sort_kindvalues">
     <item>dist</item>
     <item>price</item>
+    <item>date</item>
   </string-array>
   <string-array name="post_check_kind">
     <item>店頭看板</item>

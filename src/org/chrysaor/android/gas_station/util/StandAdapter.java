@@ -53,104 +53,117 @@ public class StandAdapter extends ArrayAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-    	
-        // ビューを受け取る
-        View view = convertView;
-        if (view == null) {
+        final ViewHolder holder;
+        
+        if (convertView == null) {
             // 受け取ったビューがnullなら新しくビューを生成
-            view = inflater.inflate(R.layout.list_row, null);
+            convertView = inflater.inflate(R.layout.list_row, null);
             // 背景画像をセットする
-            view.setBackgroundResource(R.drawable.back);
+            convertView.setBackgroundResource(R.drawable.back);
+            
+            holder = new ViewHolder();
+            holder.screenName  = (TextView) convertView.findViewById(R.id.shop_name);
+            holder.text        = (TextView) convertView.findViewById(R.id.address);
+            holder.price       = (TextView) convertView.findViewById(R.id.price);
+            holder.dist        = (TextView) convertView.findViewById(R.id.distance);
+            holder.brand       = (ImageView) convertView.findViewById(R.id.icon);
+            holder.imgFavorite = (ImageView)  convertView.findViewById(R.id.img_favorite);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
         // 表示すべきデータの取得
         item = (GSInfo)items.get(position);
       
         if (item != null) {
-            TextView screenName = (TextView)view.findViewById(R.id.shop_name);
-            screenName.setTypeface(Typeface.DEFAULT_BOLD);
-            if (screenName != null) {
-                screenName.setText(item.ShopName);
+            // スクリーンネームをビューにセット
+            holder.screenName.setTypeface(Typeface.DEFAULT_BOLD);
+            if (holder.screenName != null) {
+                holder.screenName.setText(item.ShopName);
             }
     
-            // スクリーンネームをビューにセット
-            TextView text = (TextView)view.findViewById(R.id.address);
             // テキストをビューにセット
-            if (text != null) {
-                text.setText(item.Address);
+            if (holder.text != null) {
+                holder.text.setText(item.Address);
             }
 
-            TextView price = (TextView)view.findViewById(R.id.price);
             // テキストをビューにセット
-            if (price != null) {
+            if (holder.price != null) {
                 if (item.Price.equals("9999")) {
-                    price.setText("no data");
+                    holder.price.setText("no data");
                 } else {
-                    price.setText(item.Price + "円");
+                    holder.price.setText(item.Price + "円");
                 }
-                price.setTextColor(item.getDispPriceColor());
+                holder.price.setTextColor(item.getDispPriceColor());
             }
 
-            TextView dist = (TextView)view.findViewById(R.id.distance);
             // テキストをビューにセット
-            if (dist != null) {
-            	if (item.Distance != null) {
-	                Float distance = Float.parseFloat(item.Distance) / 1000;
-	                dist.setText(distance.toString() + "km");
-            	} else {
-                	// 距離が登録されてない（お気に入りGS）の場合、非表示
-            		dist.setVisibility(View.GONE);
-            	}
+            if (holder.dist != null) {
+                if (item.Distance != null) {
+                    Float distance = Float.parseFloat(item.Distance) / 1000;
+                    holder.dist.setText(distance.toString() + "km");
+                } else {
+                    // 距離が登録されてない（お気に入りGS）の場合、非表示
+                    holder.dist.setVisibility(View.GONE);
+                }
             }
         
-            ImageView brand = (ImageView)view.findViewById(R.id.icon);
-
             StandsHelper helper = StandsHelper.getInstance();
-            brand.setImageDrawable(context.getResources().getDrawable(helper.getBrandImage(item.Brand, Integer.valueOf(item.Price))));
-            
-            final ImageView imgFavorite = (ImageView) view.findViewById(R.id.img_favorite);
+            holder.brand.setImageDrawable(context.getResources().getDrawable(helper.getBrandImage(item.Brand, Integer.valueOf(item.Price))));
             
             if (favList == null || Arrays.binarySearch(favList, item.ShopCode) < 0) {
-            	imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_empty24));
-            	favStates[position] = 0;
+                holder.imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_empty24));
+                favStates[position] = 0;
             } else {
-                imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_full24));
-            	favStates[position] = 1;
+                holder.imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_full24));
+                favStates[position] = 1;
             }
-            imgFavorite.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					
-					GSInfo item = (GSInfo)items.get(position);
-	                
-			        db = dbHelper.getReadableDatabase();
-	                FavoritesDao favoritesDao = new FavoritesDao(db);
-	                
-	                switch (favStates[position]) {
-	                case 0:
-	                    // 登録件数の確認
-	                    if (favoritesDao.findAll("create_date").size() >= 20) {
-	                        Toast.makeText(context, "お気に入りは20件までしか登録出来ません。", Toast.LENGTH_SHORT).show();
-	                    } else {
-	                        favoritesDao.insert(item);
-	                        imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_full24));
-		                	favStates[position] = 1;
-	                    }
-	                    break;
-	                case 1:
-	                    favoritesDao.deleteByShopCd(item.ShopCode);
-	                	imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_empty24));
-	                	favStates[position] = 0;
-	                    break;
-	                }
-	                db.close();
-	                updateFavList();
-	                Utils.logging(favStates[position].toString());
-				}
-			});
+            holder.imgFavorite.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    
+                    GSInfo item = (GSInfo)items.get(position);
+                    
+                    db = dbHelper.getReadableDatabase();
+                    FavoritesDao favoritesDao = new FavoritesDao(db);
+                    
+                    switch (favStates[position]) {
+                    case 0:
+                        // 登録件数の確認
+                        if (favoritesDao.findAll("create_date").size() >= 20) {
+                            Toast.makeText(context, "お気に入りは20件までしか登録出来ません。", Toast.LENGTH_SHORT).show();
+                        } else {
+                            favoritesDao.insert(item);
+                            holder.imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_full24));
+                            favStates[position] = 1;
+                        }
+                        break;
+                    case 1:
+                        favoritesDao.deleteByShopCd(item.ShopCode);
+                        holder.imgFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.star_empty24));
+                        favStates[position] = 0;
+                        break;
+                    }
+                    db.close();
+                    updateFavList();
+                    Utils.logging(favStates[position].toString());
+                }
+            });
         }
-        return view;
+        
+        return convertView;
     }
     
+    static class ViewHolder {
+        TextView screenName;
+        TextView text;
+        ImageView image;
+        TextView price;
+        TextView dist;
+        ImageView brand;
+        ImageView imgFavorite;
+    }
 }

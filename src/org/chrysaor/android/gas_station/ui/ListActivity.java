@@ -1,6 +1,7 @@
 package org.chrysaor.android.gas_station.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import jp.co.nobot.libYieldMaker.libYieldMaker;
 import net.londatiga.android.ActionItem;
@@ -31,7 +32,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -67,6 +70,51 @@ public class ListActivity extends Activity {
         db.close();
         init();
 
+        Spinner spinSort = (Spinner) findViewById(R.id.spin_sort);
+        
+        if (mode.equals("distance")) {
+            spinSort.setSelection(0);
+        } else if (mode.equals("price")) {
+            spinSort.setSelection(1);
+        }else  if (mode.equals("date")) {
+            spinSort.setSelection(2);
+        }
+        spinSort.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                    int position, long id) {
+                
+                switch (position) {
+                case 0:
+                    mode = "dist";
+                    break;
+                case 1:
+                    mode = "price";
+                    break;
+                case 2:
+                    mode = "date";
+                    break;
+                }
+                
+                db = dbHelper.getWritableDatabase();
+                standsDao = new StandsDao(db);
+                list = standsDao.findAll(mode);
+                db.close();
+                init();
+                
+                // イベントトラック（並び順）
+                tracker.trackEvent(
+                    "List",       // Category
+                    "Sort",       // Action
+                    mode,         // Label
+                    0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {}
+        });
+        /*
         RadioButton priceButton = (RadioButton) findViewById(R.id.sort_price);
         
         priceButton.setOnClickListener(new OnClickListener() {
@@ -117,6 +165,7 @@ public class ListActivity extends Activity {
         } else {
             distanceButton.setChecked(true);
         }
+        */
 
         if (Utils.isDonate(this)) {
             LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);

@@ -63,6 +63,8 @@ public class StandsDao {
             sortColumn = COLUMN_PRICE;
         } else if (sortColumn.equals("dist")) {
             sortColumn = COLUMN_DISTANCE;
+        } else if (sortColumn.equals("date")) {
+            sortColumn = COLUMN_DATE + " desc";
         } else {
             sortColumn = COLUMN_ID;
         }

@@ -136,10 +136,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 } else {
                     pref.setSummary("現金フリー");
                 }
+                setNoPostDataSummary();
             } else if (key.equals("settings_no_postdata")) {
                 setNoPostDataSummary();
             }
-            
             
             // イベントトラック
             tracker.trackEvent(
@@ -165,14 +165,20 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     }
     
     private void setNoPostDataSummary() {
-        ListPreference dist_pref = (ListPreference) getPreferenceScreen().findPreference("settings_dist");
-        CheckBoxPreference pref = (CheckBoxPreference)getPreferenceScreen().findPreference("settings_no_postdata");
+        ListPreference dist_pref       = (ListPreference) getPreferenceScreen().findPreference("settings_dist");
+        CheckBoxPreference pref        = (CheckBoxPreference)getPreferenceScreen().findPreference("settings_no_postdata");
+        CheckBoxPreference member_pref = (CheckBoxPreference)getPreferenceScreen().findPreference("settings_member");
         
         int dist = Integer.valueOf(dist_pref.getValue());
         if (dist > 10) {
             dist = 10;
         }
-        String msg = dist + "km圏内の価格が無いスタンドを表示します";
+        String msg = dist + "km圏内の価格が無いスタンドを表示します。\n";
+        
+        // 会員価格の場合
+        if (member_pref.isChecked()) {
+            msg += "会員価格がない場合は現金フリーを表示します。";
+        }
         pref.setSummary(msg);
     }
     

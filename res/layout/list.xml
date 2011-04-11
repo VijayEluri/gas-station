@@ -21,24 +21,7 @@
       android:gravity="right|center_vertical"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical">
-      <RadioGroup
-        android:id="@+id/RadioGroup01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="5px"
-        android:orientation="horizontal">
-        <RadioButton
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="近い順"
-          android:layout_marginRight="5px"
-          android:id="@+id/sort_distance" />
-        <RadioButton
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="安い順"
-          android:id="@+id/sort_price" />
-      </RadioGroup>
+        <Spinner android:layout_width="wrap_content" android:entries="@array/settings_sort_kind" android:layout_height="wrap_content" android:id="@+id/spin_sort" android:layout_gravity="center_vertical"></Spinner>
     </LinearLayout>
   </LinearLayout>
   <LinearLayout
