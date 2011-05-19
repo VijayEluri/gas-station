@@ -171,8 +171,8 @@ public class UpdateFavoritesService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                db.endTransaction();
                 if (db != null && db.isOpen()) {
+                    db.endTransaction();
                     db.close();
                 }
             }

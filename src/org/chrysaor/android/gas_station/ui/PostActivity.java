@@ -460,14 +460,30 @@ public class PostActivity extends Activity {
         
         XmlParserFromUrl xml = new XmlParserFromUrl();
     
-        byte[] byteArray = Utils.getByteArrayFromURL(url, "GET");
-        if (byteArray == null) {
-        	err_msg.add("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0003]");
+        HashMap<String, String> res = null;
+        
+        for (int i = 0; i< 3;i++) {
+
+            byte[] byteArray = Utils.getByteArrayFromURL(url, "GET");
+            if (byteArray == null) {
+                continue;
+            }
+            String data = new String(byteArray);
+            
+            res = xml.convertHashMapPrice(data);
+            
+            if (   res == null
+                || res.get("regular_min") == null) {
+                continue;
+            } else {
+                break;
+            }
+        }
+        
+        if (res == null) {
+            err_msg.add("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0004]");
             return err_msg;
         }
-        String data = new String(byteArray);
-        
-        HashMap<String, String> res = xml.convertHashMapPrice(data);
         
         // レギュラー価格チェック
         if (regular.getSelectedItem() != "") {
@@ -582,21 +598,25 @@ public class PostActivity extends Activity {
         Utils.logging(url);
         XmlParserFromUrl xml = new XmlParserFromUrl();
 
-        byte[] byteArray = Utils.getByteArrayFromURL(url, "GET");
-        if (byteArray == null) {
-            throw new PostException("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0002]");
+        for (int i = 0; i< 3;i++) {
+            byte[] byteArray = Utils.getByteArrayFromURL(url, "GET");
+            if (byteArray == null) {
+                continue;
+            }
+            String data = new String(byteArray);
+            
+            HashMap<String, String> res = xml.convertHashMap(data);
+            
+            if (res == null || res.containsKey("Result") == false) {
+                continue;
+            } else if (res.get("Result").equals("1")) {
+                return true;
+            } else {
+                throw new AuthException("認証に失敗しました。\nユーザID、パスワードを確認してください。");
+            }
         }
-        String data = new String(byteArray);
-        
-        HashMap<String, String> res = xml.convertHashMap(data);
-        
-        if (res == null || res.containsKey("Result") == false) {
-            throw new PostException("認証に失敗しました。時間をおいて再度お試しください。");
-        } else if (res.get("Result").equals("1")) {
-            return true;
-        } else {
-            throw new AuthException("認証に失敗しました。\nユーザID、パスワードを確認してください。");
-        }
+
+        throw new PostException("認証に失敗しました。時間をおいて再度お試しください。");
     }
     
     /**
@@ -672,41 +692,47 @@ public class PostActivity extends Activity {
         
         XmlParserFromUrl xml = new XmlParserFromUrl();
 
-        byte[] byteArray = Utils.getByteArrayFromURL(url, "POST");
-        if (byteArray == null) {
-            throw new PostException("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0001]");
-        }
-        String data = new String(byteArray);
-        
-        HashMap<String, String> res = xml.convertHashMap(data);
-        
-        if (res.get("Status").equals("ok")) {
-        
-            // 確認方法、価格区分を記録する
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-            
-            Editor editor = sp.edit();
-            
-            if (chkSaveSelectItem.isChecked()) {
-                editor.putBoolean("save_select_item", true);
-            } else {
-                editor.putBoolean("save_select_item", false);
-            }
-            editor.commit();
-            
-            // 投稿履歴を記録
-            dbHelper = new DatabaseHelper(this);
-            db = dbHelper.getWritableDatabase();
-            PostHistoriesDao postHistoriesDao = new PostHistoriesDao(db);
-            postHistoriesDao.insert(postItem);
-            db.close();
+        for (int i = 0; i< 3;i++) {
 
-            return true;
+            byte[] byteArray = Utils.getByteArrayFromURL(url, "POST");
+            if (byteArray == null) {
+                continue;
+            }
+            String data = new String(byteArray);
             
-        } else {
-            throw new PostException("登録に失敗しました。\nエラーコード[" + res.get("Message") + "]");
+            HashMap<String, String> res = xml.convertHashMap(data);
+            
+            if (res == null || res.containsKey("Status") == false) {
+                continue;
+            } else if (res.get("Status").equals("ok")) {
+            
+                // 確認方法、価格区分を記録する
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+                
+                Editor editor = sp.edit();
+                
+                if (chkSaveSelectItem.isChecked()) {
+                    editor.putBoolean("save_select_item", true);
+                } else {
+                    editor.putBoolean("save_select_item", false);
+                }
+                editor.commit();
+                
+                // 投稿履歴を記録
+                dbHelper = new DatabaseHelper(this);
+                db = dbHelper.getWritableDatabase();
+                PostHistoriesDao postHistoriesDao = new PostHistoriesDao(db);
+                postHistoriesDao.insert(postItem);
+                db.close();
+    
+                return true;
+                
+            } else {
+                throw new PostException("登録に失敗しました。\nエラーコード[" + res.get("Message") + "]");
+            }
         }
         
+        throw new PostException("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0001]");
     }
     
     @Override
