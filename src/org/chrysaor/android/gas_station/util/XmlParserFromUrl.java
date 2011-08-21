@@ -48,7 +48,7 @@ public class XmlParserFromUrl {
 
         if (is == null) {
             Log.d(LOG_TAG, "null!!");
-            return null;            
+            return null;
         }
 
         try {
@@ -80,7 +80,6 @@ public class XmlParserFromUrl {
                                shop_codes[iterator] = ret.ShopCode;
                                list.add(ret);
                                iterator++;
-                               
                            }
                        } else if (flag == 1) {
                            ret.setData(tmpName, value);
@@ -92,7 +91,7 @@ public class XmlParserFromUrl {
                        break;
                 }
                 
-                eventType = xpp.next();   
+                eventType = xpp.next();
             }
         } catch (Exception e) {
             e.printStackTrace();

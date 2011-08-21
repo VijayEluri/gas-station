@@ -53,7 +53,7 @@ public class StandsHelper {
         
         switch (price) {
         case 9999:
-               if (brand_name.compareTo("JOMO") == 0) {
+            if (brand_name.compareTo("JOMO") == 0) {
                 res = noprice_images[0];
             } else if (brand_name.compareTo("ESSO") == 0) {
                 res = noprice_images[1];
@@ -84,7 +84,7 @@ public class StandsHelper {
             }
             break;
         default:
-               if (brand_name.compareTo("JOMO") == 0) {
+            if (brand_name.compareTo("JOMO") == 0) {
                 res = images[0];
             } else if (brand_name.compareTo("ESSO") == 0) {
                 res = images[1];

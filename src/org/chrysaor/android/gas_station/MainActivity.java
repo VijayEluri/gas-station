@@ -3,10 +3,13 @@ package org.chrysaor.android.gas_station;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import jp.co.nobot.libYieldMaker.libYieldMaker;
 
+import org.apache.commons.lang.StringUtils;
 import org.chrysaor.android.gas_station.ui.AboutActivity;
 import org.chrysaor.android.gas_station.ui.DetailActivity;
 import org.chrysaor.android.gas_station.ui.FavoriteListActivity;
@@ -26,6 +29,7 @@ import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -47,11 +51,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,7 +97,9 @@ public class MainActivity extends MapActivity implements Runnable {
     private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
     GoogleAnalyticsTracker tracker;
     private static Typeface tf;
-
+    public static Display display;
+    public static final String[] brands = {"1", "2", "3", "4", "6", "7", "8", "9", "10", "11", "12", "13", "14", "99"};
+    public static final String[] brands_value = {"JOMO", "ESSO", "ENEOS", "KYGNUS", "COSMO", "SHELL", "IDEMITSU", "MITSUI", "MOBIL", "SOLATO", "JA-SS", "GENERAL", "ITOCHU", "OTHER"};
 
     //天候情報生成クラス
     private InfoController infoController;
@@ -118,6 +127,9 @@ public class MainActivity extends MapActivity implements Runnable {
         String num = PreferenceManager.getDefaultSharedPreferences(this).getString("settings_dist", "60");
 //        Log.d(LOG_TAG, LOG_TAG + num);
 
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        display = wm.getDefaultDisplay();
+        
         // 操作パネルの透過率設定
         setPenetration();
 
@@ -126,6 +138,17 @@ public class MainActivity extends MapActivity implements Runnable {
         
         tf = Typeface.createFromAsset(getAssets(), "fonts/7barPBd.TTF");
 
+        ViewStub stub = (ViewStub) findViewById(R.id.mapview_stub);
+        if(Utils.isDeguggable(this)){
+        	Utils.logging("debug");
+           stub.setLayoutResource(R.layout.map4dev);
+        }else{
+        	Utils.logging("release");
+           stub.setLayoutResource(R.layout.map4prod);
+        }
+        View inflated = stub.inflate();
+        mMapView = (MapView) inflated;
+        
         mMapView = (MapView) findViewById(R.id.main_map);
 //        mMapView.setBuiltInZoomControls(true);
 
@@ -518,6 +541,19 @@ public class MainActivity extends MapActivity implements Runnable {
                         "&lon_max=" + (double) (lon + 0.0125 * no_dist) +
                         "&pm=" + pref.getString("settings_kind", "0") +
                         "&n=100";
+                
+                ArrayList maker = new ArrayList();
+                
+                for (int i = 0; i < brands.length; i++) {
+                    
+                    if (pref.getBoolean("brand" + brands[i], true)) {
+                        maker.add(brands[i]);
+                    }
+                }
+                
+                if (maker.size() > 0) {
+                    url4all += "&maker=" + StringUtils.join(maker, ',');
+                }
             }
             
             Utils.logging(url4all);
@@ -576,11 +612,31 @@ public class MainActivity extends MapActivity implements Runnable {
             StandsHelper helper = StandsHelper.getInstance();
 
             db.beginTransaction();
+            int data_size = 0;
+
             try {
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+                HashMap<String, String> maker = new HashMap<String, String>();
+                
+                for (int i = 0; i < brands.length; i++) {
+                    if (pref.getBoolean("brand" + brands[i], true)) {
+                        maker.put(brands[i], brands_value[i]);
+                    }
+                }
+
                 int size = list.size();
+                
                 for (int i=0;i<size;i++) {
 
                     GSInfo info = list.get(i);
+                    
+                    if (maker.containsValue(info.Brand) == false) {
+                        continue;
+                    } else {
+                        data_size++;
+                    }
+                    
                     standsDao.insert(info);
                     
                     if (pin_type.compareTo("price") == 0) {
@@ -618,7 +674,7 @@ public class MainActivity extends MapActivity implements Runnable {
             mMapView.invalidate();
             
             btn.setVisibility(View.VISIBLE);
-            Toast.makeText(this, list.size() + "件のスタンドが見つかりました", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, String.valueOf(data_size) + "件のスタンドが見つかりました", Toast.LENGTH_LONG).show();
         }
         db.close();
     }
@@ -740,14 +796,24 @@ public class MainActivity extends MapActivity implements Runnable {
             
             Paint p = new Paint();
             
+            int fontSize = 18;
+            int addtionHeight = 19;
+            if (Build.MODEL.equals("HTC Aria A6380")) {
+                fontSize = 13;
+                addtionHeight = 11;
+            }
+
             // Draw point caption and its bounding rectangle
-            p.setTextSize(18);
+            p.setTextSize(fontSize);
             p.setColor(Color.BLUE);
             p.setAntiAlias(true);
             p.setTypeface(tf);
 
             int size = prices.size();
             
+//            Log.d("display", "w:" + display.getWidth());
+//            Log.d("display", "h:" + display.getHeight());
+
             for (int i=0;i<size;i++) {
 
                 String price = prices.get(i);
@@ -768,7 +834,7 @@ public class MainActivity extends MapActivity implements Runnable {
                 
                 int sw = (int)(p.measureText(price) + 0.5f);
                 int sx = pt.x - sw / 2 - 1;
-                int sy = pt.y - 19;
+                int sy = pt.y - addtionHeight;
 
                 canvas.drawText(price, sx, sy, p);
             }

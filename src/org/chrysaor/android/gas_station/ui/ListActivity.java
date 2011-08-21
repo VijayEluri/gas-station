@@ -1,7 +1,6 @@
 package org.chrysaor.android.gas_station.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import jp.co.nobot.libYieldMaker.libYieldMaker;
 import net.londatiga.android.ActionItem;
@@ -9,7 +8,6 @@ import net.londatiga.android.QuickAction;
 
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.DatabaseHelper;
-import org.chrysaor.android.gas_station.util.FavoritesDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.StandsDao;
@@ -31,7 +29,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;

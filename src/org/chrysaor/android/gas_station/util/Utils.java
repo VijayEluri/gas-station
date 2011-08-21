@@ -121,4 +121,22 @@ public class Utils {
             return null;
         }
     }
+    
+    
+    public static boolean isDeguggable(Context context) {
+        PackageManager manager = context.getPackageManager();
+        ApplicationInfo appInfo = null;
+        
+        try {
+            appInfo = manager.getApplicationInfo(context.getPackageName(), 0);
+        } catch (NameNotFoundException e) {
+            return false;
+        }
+        
+        if ((appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) == ApplicationInfo.FLAG_DEBUGGABLE) {
+            return true;
+        }
+        
+        return false;
+    }
 }

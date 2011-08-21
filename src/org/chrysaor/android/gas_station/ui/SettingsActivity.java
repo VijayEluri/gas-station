@@ -18,7 +18,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.util.Log;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -98,7 +97,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     
     private void setSummaryAll(String key) {
         
-        if (key.equals("settings_passwd_md5") || key.equals("save_select_item")) {
+        if (key.equals("settings_passwd_md5") || key.equals("settings_twitter") || key.equals("save_select_item") || key.indexOf("brand") != -1) {
             return;
         }
         String class_name = getPreferenceScreen().findPreference(key).getClass().toString();

@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/Users/pain_tail/Downloads/AndroidSDK0.8/libYieldMaker.jar"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="lib" path="libs/adlantis.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang-2.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

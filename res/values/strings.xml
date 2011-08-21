@@ -49,6 +49,8 @@
     <string name="settings_passwd_dialogtitle">パスワード</string>
     <string name="settings_passwd_summary"></string>
     <string name="settings_passwd_title">パスワード</string>
+    <string name="settings_twitter_summary">価格投稿時にtwitterに投稿します。gogo.gsのtwitter連携機能が有効になっている必要があります。</string>
+    <string name="settings_twitter_title">twitter連携</string>
     <string name="settings_favorite_title">お気に入り設定</string>
     <string name="settings_favorite_interval_dialogtitle">同期間隔</string>
     <string name="settings_favorite_interval_summary">お気に入りの同期間隔を設定します</string>

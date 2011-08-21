@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,27 +40,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class PostActivity extends Activity {
     
-    private static int MinRegularPrice = 120;
-    private static int MaxRegularPrice = 180;
-    private static int MinHighOcPrice = 130;
-    private static int MaxHighOcPrice = 190;
-    private static int MinDieselPrice = 100;
-    private static int MaxDieselPrice = 160;
-    private static int MinLampPrice = 1300;
-    private static int MaxLampPrice = 1900;
     private Handler mHandler = new Handler();
     private ProgressDialog dialog;
     private DatabaseHelper dbHelper = null;
@@ -70,16 +62,20 @@ public class PostActivity extends Activity {
     private GSInfo info = null;
     private Spinner price_kind;
     private Spinner check;
-    private Spinner regular;
-    private Spinner highoc;
-    private Spinner diesel;
-    private Spinner lamp;
+    private EditText regular;
+    private EditText highoc;
+    private EditText diesel;
+    private EditText lamp;
     private EditText comment;
+    private RadioGroup lampSelector;
+    private TextView lampLabel;
     private CheckBox chkSaveSelectItem;
+    private CheckBox chkTweet;
     private static final String apid = "gsearcho0o0";
     private static final String secretkey = "a456fwer7862343j4we8f54w634";
     private static String ss_id;
     private SharedPreferences sp;
+    private static boolean tweetFlg = false;
     GoogleAnalyticsTracker tracker;
     View loginView;
 
@@ -118,7 +114,18 @@ public class PostActivity extends Activity {
         
         if (user_id.equals("") || passwd.equals("")) {
             showAccountDialog();
+        } else {
+            try {
+                auth();
+            } catch (AuthException e) {
+                Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                showAccountDialog();
+            } catch (Exception e) {
+                Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                showAccountDialog();
+            }
         }
+        
     }
     
     /**
@@ -168,7 +175,6 @@ public class PostActivity extends Activity {
         .setView(loginView)
         .create()
         .show();
-
     }
     
     private View getLoginView() {
@@ -206,15 +212,31 @@ public class PostActivity extends Activity {
         
         price_kind = (Spinner) findViewById(R.id.list_price_kind);
         check      = (Spinner) findViewById(R.id.list_check);
-        regular    = (Spinner) findViewById(R.id.list_regular_price);
-        highoc     = (Spinner) findViewById(R.id.list_highoc_price);
-        diesel     = (Spinner) findViewById(R.id.list_diesel_price);
-        lamp       = (Spinner) findViewById(R.id.list_lamp_price);
+        regular    = (EditText) findViewById(R.id.txt_regular);
+        highoc    = (EditText) findViewById(R.id.txt_highoc);
+        diesel     = (EditText) findViewById(R.id.txt_diesel);
+        lamp       = (EditText) findViewById(R.id.txt_lamp);
         comment   = (EditText) findViewById(R.id.edit_comment);
+        lampLabel = (TextView) findViewById(R.id.label_lamp);
         comment.setLines(3);
         comment.setHint("価格の確認方法をご記入ください。");
         chkSaveSelectItem = (CheckBox) findViewById(R.id.chk_save_select_item);
-
+        chkTweet          = (CheckBox) findViewById(R.id.chk_tweet);
+        chkTweet.setVisibility(View.GONE);
+        
+        lampSelector = (RadioGroup) findViewById(R.id.radioGroup1);
+        lampSelector.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radio0) {
+                    lampLabel.setText("円/18L");
+                } else if (checkedId == R.id.radio1) {
+                    lampLabel.setText("円/1L");
+                }
+            }
+        });
+        
         Bundle extras=getIntent().getExtras();
         if (extras!=null) {
             ss_id = extras.getString("shopcode");
@@ -263,54 +285,6 @@ public class PostActivity extends Activity {
             TextView textShopName = (TextView) findViewById(R.id.shop_text);
             textShopName.setText(info.ShopName);
         }
-        
-        // レギュラー
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // アイテムを追加します
-        adapter.add("");
-        for (int i = MinRegularPrice; i<= MaxRegularPrice; i++) {
-            adapter.add(String.valueOf(i));
-        }
-        
-        regular.setAdapter(adapter);
-
-        // ハイオク
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // アイテムを追加します
-        adapter2.add("");
-        for (int i = MinHighOcPrice; i<= MaxHighOcPrice; i++) {
-            adapter2.add(String.valueOf(i));
-        }
-        
-        highoc.setAdapter(adapter2);
-        
-        // 軽油
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // アイテムを追加します
-        adapter3.add("");
-        for (int i = MinDieselPrice; i<= MaxDieselPrice; i++) {
-            adapter3.add(String.valueOf(i));
-        }
-        
-        diesel.setAdapter(adapter3);
-        
-        // 灯油
-        ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // アイテムを追加します
-        adapter4.add("");
-        for (int i = MinLampPrice; i<= MaxLampPrice; i++) {
-            if (i % 18 == 0) {
-                adapter4.add(String.valueOf(i) + "(" + i/18 + "円/L)");
-            } else {
-                adapter4.add(String.valueOf(i));
-            }
-        }
-        
-        lamp.setAdapter(adapter4);
         
         // 戻るボタン
         Button backButton = (Button) findViewById(R.id.btn_back);
@@ -486,8 +460,8 @@ public class PostActivity extends Activity {
         }
         
         // レギュラー価格チェック
-        if (regular.getSelectedItem() != "") {
-            int regular_price = Integer.parseInt(regular.getSelectedItem().toString());
+        if (regular.getText().length() > 0) {
+            int regular_price = Integer.parseInt(regular.getText().toString());
             if (   Integer.parseInt(res.get("regular_min")) > regular_price
                 || Integer.parseInt(res.get("regular_max")) < regular_price) {
                 
@@ -496,8 +470,8 @@ public class PostActivity extends Activity {
         }
         
         // ハイオク価格チェック
-        if (highoc.getSelectedItem() != "") {
-            int highoc_price = Integer.parseInt(highoc.getSelectedItem().toString());
+        if (highoc.getText().length() > 0) {
+            int highoc_price = Integer.parseInt(highoc.getText().toString());
             if (   Integer.parseInt(res.get("highoc_min")) > highoc_price
                 || Integer.parseInt(res.get("highoc_max")) < highoc_price) {
                 
@@ -506,8 +480,8 @@ public class PostActivity extends Activity {
         }
 
         // 軽油価格チェック
-        if (diesel.getSelectedItem() != "") {
-            int diesel_price = Integer.parseInt(diesel.getSelectedItem().toString());
+        if (diesel.getText().length() > 0) {
+            int diesel_price = Integer.parseInt(diesel.getText().toString());
             if (   Integer.parseInt(res.get("diesel_min")) > diesel_price
                 || Integer.parseInt(res.get("diesel_max")) < diesel_price) {
                 
@@ -516,8 +490,8 @@ public class PostActivity extends Activity {
         }
         
         // 灯油価格チェック
-        if (lamp.getSelectedItem() != "") {
-            int lamp_price = Integer.parseInt(lamp.getSelectedItem().toString().replaceAll("\\(.*\\)", ""));
+        if (lamp.getText().length() > 0) {
+            int lamp_price = getLampPrice();
             if (   Integer.parseInt(res.get("lamp_min")) > lamp_price
                 || Integer.parseInt(res.get("lamp_max")) < lamp_price) {
                 
@@ -528,6 +502,17 @@ public class PostActivity extends Activity {
         return err_msg;
     }
 
+    private int getLampPrice() {
+       int price = 0;
+       price = Integer.parseInt(lamp.getText().toString());
+       
+       if (lampSelector.getCheckedRadioButtonId() == R.id.radio1) {
+          price *= 18;
+       }
+       
+       return price;
+    }
+    
     /**
      * 入力データのチェック
      * 
@@ -539,18 +524,18 @@ public class PostActivity extends Activity {
         ArrayList<String> err_msg = new ArrayList<String>();
         
         // １つも価格が設定されていない
-        if (   regular.getSelectedItem() == ""
-            && highoc.getSelectedItem() == ""
-            && diesel.getSelectedItem() == ""
-            && lamp.getSelectedItem() == "") {
+        if (   regular.getText().toString() == ""
+            && highoc.getText().toString() == ""
+            && diesel.getText().toString() == ""
+            && lamp.getText().toString() == "") {
             
             err_msg.add("価格は１つ以上指定してください。");
         }
         
         // レギュラー＞ハイオクの場合
-        if (   regular.getSelectedItem() != ""
-            && highoc.getSelectedItem() != ""
-            && Integer.parseInt(regular.getSelectedItem().toString()) > Integer.parseInt(highoc.getSelectedItem().toString())) {
+        if (   regular.getText().length() > 0
+            && highoc.getText().length() > 0
+            && Integer.parseInt(regular.getText().toString()) > Integer.parseInt(highoc.getText().toString())) {
             
             err_msg.add("レギュラー価格はハイオク価格より安い価格で設定してください。");
         }
@@ -610,6 +595,13 @@ public class PostActivity extends Activity {
             if (res == null || res.containsKey("Result") == false) {
                 continue;
             } else if (res.get("Result").equals("1")) {
+                if (res.containsKey("TwitterAuth") && res.get("TwitterAuth").contains("1")) {
+                    chkTweet.setVisibility(View.VISIBLE);
+                    if (sp.getBoolean("settings_twitter", false) == true) {
+                        chkTweet.setChecked(true);
+                    }
+
+                }
                 return true;
             } else {
                 throw new AuthException("認証に失敗しました。\nユーザID、パスワードを確認してください。");
@@ -646,17 +638,18 @@ public class PostActivity extends Activity {
         postItem.ssid    = ss_id;
         postItem.kakunin = String.valueOf(check.getSelectedItemId());
         postItem.kubun   = String.valueOf(price_kind.getSelectedItemId());
-        if (regular.getSelectedItem() != "") {
-            postItem.nedan0 = Integer.valueOf(regular.getSelectedItem().toString());
+        if (regular.getText().length() > 0) {
+            postItem.nedan0 = Integer.valueOf(regular.getText().toString());
         }
-        if (highoc.getSelectedItem() != "") {
-            postItem.nedan1 = Integer.valueOf(highoc.getSelectedItem().toString());
+        if (highoc.getText().length() > 0) {
+            postItem.nedan1 = Integer.valueOf(highoc.getText().toString());
         }
-        if (diesel.getSelectedItem() != "") {
-            postItem.nedan2 = Integer.valueOf(diesel.getSelectedItem().toString());
+
+        if (diesel.getText().length() > 0) {
+            postItem.nedan2 = Integer.valueOf(diesel.getText().toString());
         }
-        if (lamp.getSelectedItem() != "") {
-            postItem.nedan3 = Integer.valueOf(lamp.getSelectedItem().toString().replaceAll("\\(.*\\)", ""));
+        if (lamp.getText().length() > 0) {
+            postItem.nedan3 = getLampPrice();
         }
         postItem.regdategap  = 0;
         postItem.regdatetime = calendar.get(Calendar.HOUR_OF_DAY);
@@ -672,20 +665,25 @@ public class PostActivity extends Activity {
                 "regdategap=0&regdatetime=" + calendar.get(Calendar.HOUR_OF_DAY) + "&" +
                 "memo=" + URLEncoder.encode(String.valueOf(comment.getText()));
 
-        if (regular.getSelectedItem() != "") {
-            url += "&nedan0=" + regular.getSelectedItem();
+        if (regular.getText().length() > 0) {
+            url += "&nedan0=" + regular.getText().toString();
+        }
+
+        if (highoc.getText().length() > 0) {
+            url += "&nedan1=" + highoc.getText().toString();
         }
         
-        if (highoc.getSelectedItem() != "") {
-            url += "&nedan1=" + highoc.getSelectedItem();
+        if (diesel.getText().length() > 0) {
+            url += "&nedan2=" + diesel.getText().toString();
         }
         
-        if (diesel.getSelectedItem() != "") {
-            url += "&nedan2=" + diesel.getSelectedItem();
+        if (lamp.getText().length() > 0) {
+            url += "&nedan3=" + getLampPrice();
         }
         
-        if (lamp.getSelectedItem() != "") {
-            url += "&nedan3=" + lamp.getSelectedItem().toString().replaceAll("\\(.*\\)", "");
+        // 投稿内容をツイートするにチェックが入っていた場合
+        if (chkTweet.isChecked()) {
+            url += "&twpost=y";
         }
 
         Utils.logging(url);
@@ -693,7 +691,7 @@ public class PostActivity extends Activity {
         XmlParserFromUrl xml = new XmlParserFromUrl();
 
         for (int i = 0; i< 3;i++) {
-
+            
             byte[] byteArray = Utils.getByteArrayFromURL(url, "POST");
             if (byteArray == null) {
                 continue;
@@ -730,6 +728,7 @@ public class PostActivity extends Activity {
             } else {
                 throw new PostException("登録に失敗しました。\nエラーコード[" + res.get("Message") + "]");
             }
+            
         }
         
         throw new PostException("サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0001]");

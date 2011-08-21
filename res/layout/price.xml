@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/layout_bg"
+    android:layout_width="fill_parent">
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Please enter PIN"/>
+        
+    <LinearLayout
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        
+        <kankan.wheel.widget.WheelView android:id="@+id/price_1"
+            android:layout_height="wrap_content"
+            android:layout_width="50dip"/>
+        <kankan.wheel.widget.WheelView android:id="@+id/price_2"
+            android:layout_height="wrap_content"
+            android:layout_width="50dip"/>
+        <kankan.wheel.widget.WheelView android:id="@+id/price_3"
+            android:layout_height="wrap_content"
+            android:layout_width="50dip"/>
+        <kankan.wheel.widget.WheelView android:id="@+id/price_4"
+            android:layout_height="wrap_content"
+            android:layout_width="50dip"/>
+    </LinearLayout>
+</LinearLayout>

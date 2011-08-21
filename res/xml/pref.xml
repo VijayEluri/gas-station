@@ -41,6 +41,13 @@
       android:entries="@array/settings_list_span"
       android:entryValues="@array/settings_list_spanvalues"
       android:defaultValue="30" />
+    <PreferenceScreen android:title="ブランド">
+       <intent  
+          android:action="android.intent.action.MAIN"  
+          android:targetPackage="org.chrysaor.android.gas_station"  
+          android:targetClass="org.chrysaor.android.gas_station.ui.SettingsCategoryActivity" >  
+       </intent>    
+    </PreferenceScreen>
     <ListPreference
       android:key="settings_kind"
       android:title="@string/settings_kind_title"
@@ -77,6 +84,11 @@
       android:title="@string/settings_passwd_title"
       android:summary="@string/settings_passwd_summary"
       android:dialogTitle="@string/settings_passwd_dialogtitle" />
+    <CheckBoxPreference
+      android:key="settings_twitter"
+      android:title="@string/settings_twitter_title"
+      android:summary="@string/settings_twitter_summary" />
+      
   </PreferenceCategory>  
   <PreferenceCategory android:title="@string/settings_favorite_title">
     <ListPreference

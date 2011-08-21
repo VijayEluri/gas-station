@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:title="ブランド" android:key="brands">
+    <CheckBoxPreference
+      android:key="brand1"
+      android:title="JOMO"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand2"
+      android:title="ESSO"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand3"
+      android:title="ENEOS"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand4"
+      android:title="キグナス"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand6"
+      android:title="コスモ石油"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand7"
+      android:title="昭和シェル"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand8"
+      android:title="出光"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand9"
+      android:title="三井石油"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand10"
+      android:title="モービル"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand11"
+      android:title="SOLATO"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand12"
+      android:title="JA-SS"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand13"
+      android:title="ゼネラル"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand14"
+      android:title="ITOCHU"
+      android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="brand99"
+      android:title="独自ブランド"
+      android:defaultValue="true" />
+</PreferenceScreen>
