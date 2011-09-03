@@ -38,6 +38,7 @@ public class GSInfo {
     public String UpdateDate = null;
     public String CreateDate = null;
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    public Price[] Prices = null;
     
     //URL由来のストリーム
     protected InputStream is;

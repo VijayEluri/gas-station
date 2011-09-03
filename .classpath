@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="lib" path="libs/adlantis.jar"/>
 	<classpathentry kind="lib" path="libs/commons-lang-2.5.jar"/>
+	<classpathentry kind="src" path="QuickAction_src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

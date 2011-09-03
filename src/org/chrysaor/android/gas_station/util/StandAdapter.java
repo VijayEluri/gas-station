@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.ui.DetailActivity;
 
 import android.content.Context;

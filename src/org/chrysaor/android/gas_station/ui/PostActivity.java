@@ -9,13 +9,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.chrysaor.android.gas_station.R;
-import org.chrysaor.android.gas_station.util.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
+import org.chrysaor.android.gas_station.lib.database.PostHistoriesDao;
+import org.chrysaor.android.gas_station.lib.database.StandsDao;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
-import org.chrysaor.android.gas_station.util.FavoritesDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
-import org.chrysaor.android.gas_station.util.PostHistoriesDao;
+import org.chrysaor.android.gas_station.util.GoGoGsApi;
 import org.chrysaor.android.gas_station.util.PostItem;
-import org.chrysaor.android.gas_station.util.StandsDao;
 import org.chrysaor.android.gas_station.util.StandsHelper;
 import org.chrysaor.android.gas_station.util.Utils;
 import org.chrysaor.android.gas_station.util.XmlParserFromUrl;
@@ -263,15 +264,13 @@ public class PostActivity extends Activity {
             
             db = dbHelper.getReadableDatabase();
             
-            if (extras.containsKey("from") && extras.getString("from").equals("FavoriteListActivity")) {
-                FavoritesDao favoritesDao = new FavoritesDao(db);
-                info = favoritesDao.findByShopCd(ss_id);
-            } else {
-                standsDao = new StandsDao(db);
-                info = standsDao.findByShopCd(ss_id);
-            }
+            standsDao = new StandsDao(db);
+            info = standsDao.findByShopCd(ss_id);
             db.close();
-            
+            if (info == null) {
+            	info = GoGoGsApi.getShopInfoAndPrices(ss_id);
+            }
+
             if (info == null) {
                 return;
             }

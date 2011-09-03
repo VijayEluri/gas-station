@@ -267,7 +267,7 @@ public class XmlParserFromUrl {
                        break;
                 }
                 
-                eventType = xpp.next();   
+                eventType = xpp.next();
             }
             
         } catch (Exception e) {
@@ -283,7 +283,7 @@ public class XmlParserFromUrl {
      * @param is
      * @return
      */
-    public HashMap<String,HashMap<String,String>> getShopInfo(String is) {
+    public HashMap<String,HashMap<String,String>> getShopPrices4Fav(String is) {
         
         String key = null;
         String value = null;
@@ -348,6 +348,136 @@ public class XmlParserFromUrl {
         return list;
 
     }
+    
+    /**
+     * 価格情報取得
+     * 
+     * @param is
+     * @return
+     */
+    public Price[] getShopPrices(String is) {
+        String key = null;
+        Price price = null;
+        
+        Price[] list = new Price[8];
+
+        try {
+            initXmlPullParser(is);
+            int i = 0;
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                case XmlPullParser.START_DOCUMENT:
+                case XmlPullParser.END_DOCUMENT:
+                    break;
+                case XmlPullParser.END_TAG:
+//                    Utils.logging("END_TAG:" + xpp.getName());
+                    key = null;
+
+                    if (xpp.getName().equals("price")) {
+                    	list[i] = price;
+                    	i++;
+                    }
+                    break;
+                case XmlPullParser.START_TAG:
+                    key = xpp.getName();
+//                    Utils.logging("START_TAG:" + key);
+
+                    if (key.equals("price")) {
+                        price = new Price();
+                    }
+                    break;
+                case XmlPullParser.TEXT:
+                    if (key != null) {
+                        Utils.logging(key);
+                        Utils.logging(xpp.getText());
+                        if (key.equals("pnedan")) {
+                            price.setPrice(Integer.parseInt(xpp.getText()));
+                        } else if (key.equals("pmode")) {
+                        	price.setMode(Integer.parseInt(xpp.getText()));
+                        } else if (key.equals("p_member")) {
+                        	price.setMember(Integer.parseInt(xpp.getText()));
+                        } else if (key.equals("pregfdate")) {
+                        	price.setDate(xpp.getText());
+                        } else if (key.equals("preguser")) {
+                        	price.setUser(xpp.getText());
+                        } else if (key.equals("pmemo")) {
+                        	price.setMemo(xpp.getText());
+                        }
+                    }
+                    break;
+                }
+                
+                eventType = xpp.next();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+    
+    /**
+     * 価格情報取得
+     * 
+     * @param is
+     * @return
+     */
+    public GSInfo getShopInfo(String is) {
+        String key = null;
+        GSInfo item = new GSInfo();
+
+        try {
+            initXmlPullParser(is);
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                case XmlPullParser.START_DOCUMENT:
+                case XmlPullParser.END_DOCUMENT:
+                    break;
+                case XmlPullParser.END_TAG:
+                    key = null;
+                    break;
+                case XmlPullParser.START_TAG:
+                    key = xpp.getName();
+                    break;
+                case XmlPullParser.TEXT:
+                    if (key != null) {
+                        Utils.logging(key);
+                        Utils.logging(xpp.getText());
+                        if (key.equals("ShopCode")) {
+                            item.ShopCode = xpp.getText();
+                        } else if (key.equals("Brand")) {
+                        	item.Brand =  StandsHelper.getBrandName(xpp.getText());
+                        } else if (key.equals("ShopName")) {
+                        	item.ShopName =xpp.getText();
+                        } else if (key.equals("Latitude")) {
+                        	item.Latitude = Double.parseDouble(xpp.getText());
+                        } else if (key.equals("Longitude")) {
+                        	item.Longitude = xpp.getText();
+                        } else if (key.equals("Address")) {
+                        	item.Address = xpp.getText();
+                        } else if (key.equals("Photo")) {
+                        	item.Photo = xpp.getText();
+                        } else if (key.equals("Rtc")) {
+                        	item.Rtc = xpp.getText();
+                        } else if (key.equals("Self")) {
+                        	item.Self = xpp.getText();
+                        }
+                    }
+                    break;
+                }
+                
+                eventType = xpp.next();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return item;
+    }
+
 
 
 }

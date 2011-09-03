@@ -10,20 +10,19 @@ import java.util.List;
 import jp.co.nobot.libYieldMaker.libYieldMaker;
 
 import org.apache.commons.lang.StringUtils;
+import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.StandsDao;
 import org.chrysaor.android.gas_station.ui.AboutActivity;
 import org.chrysaor.android.gas_station.ui.DetailActivity;
 import org.chrysaor.android.gas_station.ui.FavoriteListActivity;
 import org.chrysaor.android.gas_station.ui.ListActivity;
 import org.chrysaor.android.gas_station.ui.SettingsActivity;
 import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
-import org.chrysaor.android.gas_station.util.DatabaseHelper;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.InfoController;
 import org.chrysaor.android.gas_station.util.LocationOverlay;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
-import org.chrysaor.android.gas_station.util.StandController;
-import org.chrysaor.android.gas_station.util.StandsDao;
 import org.chrysaor.android.gas_station.util.StandsHelper;
 import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
@@ -716,7 +715,6 @@ public class MainActivity extends MapActivity implements Runnable {
         private List<String> prices = new ArrayList<String>();
         private List<String> pin_types = new ArrayList<String>();
         private List<GSInfo> gsInfo = new ArrayList<GSInfo>();
-        private StandController stand;
 
         public PinItemizedOverlay(Drawable defaultMarker) {
             super( boundCenterBottom(defaultMarker) );

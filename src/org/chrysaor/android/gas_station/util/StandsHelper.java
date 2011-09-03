@@ -1,11 +1,23 @@
 package org.chrysaor.android.gas_station.util;
 
 import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
+import org.chrysaor.android.gas_station.lib.database.StandsDao;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 
 public class StandsHelper {
 
     private int[] images = new int[14];
     private int[] noprice_images = new int[14];
+    private DatabaseHelper dbHelper = null;
+    private SQLiteDatabase db = null;
+    private GSInfo info = null;
+    private ProgressDialog dialog;
 
     // このクラスに唯一のインスタンス
     private static StandsHelper instance = new StandsHelper();
@@ -117,6 +129,87 @@ public class StandsHelper {
         }
         
         return res;
+    }
+    
+    public GSInfo getGsInfo(Context context, final String ssId) {
+    	info = null;
+    	
+    	try {
+            dbHelper = new DatabaseHelper(context);
+            db = dbHelper.getReadableDatabase();
+            StandsDao standsDao = new StandsDao(db);
+            info = standsDao.findByShopCd(ssId);
+            
+            if (info == null) {
+                FavoritesDao favoritesDao = new FavoritesDao(db);
+                info = favoritesDao.findByShopCd(ssId);
+            }
+            
+            if (info == null) {
+                info = GoGoGsApi.getShopInfoAndPrices(ssId);
+            }
+            
+            return info;
+		} catch (Exception e) {
+			e.printStackTrace();
+    	} finally {
+    		if (db instanceof SQLiteDatabase) {
+    			db.close();
+    		}
+    	}
+    	
+    	return info;
+    }
+    
+    public static String getBrandName(String brandId) {
+    	
+    	String brandName = null;
+    	switch (Integer.parseInt(brandId)) {
+    	case 1:
+    		brandName = "JOMO";
+    		break;
+    	case 2:
+    		brandName = "ESSO";
+    		break;
+    	case 3:
+    		brandName = "ENEOS";
+    		break;
+    	case 4:
+    		brandName = "KYGNUS";
+    		break;
+    	case 6:
+    		brandName = "COSMO";
+    		break;
+    	case 7:
+    		brandName = "SHELL";
+    		break;
+    	case 8:
+    		brandName = "IDEMITSU";
+    		break;
+    	case 9:
+    		brandName = "MITSUI";
+    		break;
+    	case 10:
+    		brandName = "MOBIL";
+    		break;
+    	case 11:
+    		brandName = "SOLATO";
+    		break;
+    	case 12:
+    		brandName = "JA-SS";
+    		break;
+    	case 13:
+    		brandName = "GENERAL";
+    		break;
+    	case 14:
+    		brandName = "ITOCHU";
+    		break;
+    	case 99:
+    		brandName = "ETC";
+    		break;
+    	}
+		return brandName;
+    	
     }
   
 }

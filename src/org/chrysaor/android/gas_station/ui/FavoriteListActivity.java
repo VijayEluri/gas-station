@@ -2,16 +2,17 @@ package org.chrysaor.android.gas_station.ui;
 
 import java.util.ArrayList;
 
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
 
 import org.chrysaor.android.gas_station.R;
-import org.chrysaor.android.gas_station.util.DatabaseHelper;
-import org.chrysaor.android.gas_station.util.FavoritesDao;
+import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
+
+import yanzm.products.quickaction.lib.ActionItem;
+import yanzm.products.quickaction.lib.QuickAction;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,7 +49,7 @@ public class FavoriteListActivity extends Activity {
     private static String mode = "none";
     private SharedPreferences pref = null;
     GoogleAnalyticsTracker tracker;
-    public QuickAction qa;
+    public yanzm.products.quickaction.lib.QuickAction qa;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

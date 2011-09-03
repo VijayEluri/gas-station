@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import org.chrysaor.android.gas_station.MainActivity;
+import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 
 import android.R;
 import android.app.Service;
@@ -137,7 +139,7 @@ public class UpdateFavoritesService extends Service {
                 // トランザクション開始
                 db.beginTransaction();
                 
-                HashMap<String,HashMap<String,String>> res = xml.getShopInfo(data);
+                HashMap<String,HashMap<String,String>> res = xml.getShopPrices4Fav(data);
                 
                 for (GSInfo item : list) {
                     

@@ -3,15 +3,16 @@ package org.chrysaor.android.gas_station.ui;
 import java.util.ArrayList;
 
 import jp.co.nobot.libYieldMaker.libYieldMaker;
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
 
 import org.chrysaor.android.gas_station.R;
-import org.chrysaor.android.gas_station.util.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
+import org.chrysaor.android.gas_station.lib.database.StandsDao;
 import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.StandAdapter;
-import org.chrysaor.android.gas_station.util.StandsDao;
 import org.chrysaor.android.gas_station.util.Utils;
+
+import yanzm.products.quickaction.lib.ActionItem;
+import yanzm.products.quickaction.lib.QuickAction;
 
 import android.app.Activity;
 import android.app.AlertDialog;
