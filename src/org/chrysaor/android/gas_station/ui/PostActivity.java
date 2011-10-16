@@ -74,6 +74,7 @@ public class PostActivity extends Activity {
     private CheckBox chkTweet;
     private static final String apid = "gsearcho0o0";
     private static final String secretkey = "a456fwer7862343j4we8f54w634";
+    private static final int HTTP_TIMEOUT = 10000;
     private static String ss_id;
     private SharedPreferences sp;
     private static boolean tweetFlg = false;
@@ -627,9 +628,9 @@ public class PostActivity extends Activity {
         }
         
         DefaultHttpClient objHttp = new DefaultHttpClient();
-        HttpParams params = objHttp.getParams();  
-        HttpConnectionParams.setConnectionTimeout(params, 3000); //接続のタイムアウト  
-        HttpConnectionParams.setSoTimeout(params, 3000); //データ取得のタイムアウト  
+        HttpParams params = objHttp.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, HTTP_TIMEOUT); //接続のタイムアウト  
+        HttpConnectionParams.setSoTimeout(params, HTTP_TIMEOUT); //データ取得のタイムアウト  
         
         final Calendar calendar = Calendar.getInstance();
 
