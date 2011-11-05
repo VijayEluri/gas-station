@@ -61,7 +61,7 @@ public class StandAdapter extends ArrayAdapter {
             // 受け取ったビューがnullなら新しくビューを生成
             convertView = inflater.inflate(R.layout.list_row, null);
             // 背景画像をセットする
-            convertView.setBackgroundResource(R.drawable.back);
+            convertView.setBackgroundResource(R.drawable.button_shop);
             
             holder = new ViewHolder();
             holder.screenName  = (TextView) convertView.findViewById(R.id.shop_name);

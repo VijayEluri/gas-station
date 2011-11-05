@@ -32,6 +32,8 @@
     <string name="settings_kind_dialogtitle">油種</string>
     <string name="settings_member_summary">チェックを外すと現金フリー価格で検索します</string>
     <string name="settings_member_title">会員価格</string>
+    <string name="settings_rtc_summary">24時間営業のガソリンスタンドのみ表示</string>
+    <string name="settings_rtc_title">24時間営業</string>
     <string name="settings_sort_dialogtitle">並び順</string>
     <string name="settings_sort_summary">検索結果の並び順を設定します</string>
     <string name="settings_sort_title">並び順</string>

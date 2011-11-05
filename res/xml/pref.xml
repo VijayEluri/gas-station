@@ -60,6 +60,10 @@
       android:key="settings_member"
       android:title="@string/settings_member_title"
       android:summary="@string/settings_member_summary" />
+    <CheckBoxPreference
+      android:key="settings_rtc"
+      android:title="@string/settings_rtc_title"
+      android:summary="@string/settings_rtc_summary" />
     <ListPreference
       android:key="settings_sort"
       android:title="@string/settings_sort_title"
