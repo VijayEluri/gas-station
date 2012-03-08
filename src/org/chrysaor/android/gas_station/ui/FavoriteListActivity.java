@@ -49,7 +49,7 @@ public class FavoriteListActivity extends Activity {
     private static String mode = "none";
     private SharedPreferences pref = null;
     GoogleAnalyticsTracker tracker;
-    public yanzm.products.quickaction.lib.QuickAction qa;
+    public QuickAction qa;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

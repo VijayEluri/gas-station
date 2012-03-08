@@ -118,7 +118,7 @@ public class PostActivity extends Activity {
             showAccountDialog();
         } else {
             try {
-                auth();
+                auth(true);
             } catch (AuthException e) {
                 Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 showAccountDialog();
@@ -159,7 +159,7 @@ public class PostActivity extends Activity {
                     editor.commit();
 
                     // 認証処理
-                    auth();
+                    auth(true);
                     
                     Toast.makeText(PostActivity.this, "認証に成功しました。", Toast.LENGTH_LONG).show();
 
@@ -356,7 +356,7 @@ public class PostActivity extends Activity {
                     checkEntryData();
                     
                     //ユーザ認証
-                    auth();
+                    auth(false);
                     
                     // データPOST
                     post();
@@ -524,10 +524,10 @@ public class PostActivity extends Activity {
         ArrayList<String> err_msg = new ArrayList<String>();
         
         // １つも価格が設定されていない
-        if (   regular.getText().toString() == ""
-            && highoc.getText().toString() == ""
-            && diesel.getText().toString() == ""
-            && lamp.getText().toString() == "") {
+        if (   regular.getText().toString().length() == 0
+            && highoc.getText().toString().length() == 0
+            && diesel.getText().toString().length() == 0
+            && lamp.getText().toString().length() == 0) {
             
             err_msg.add("価格は１つ以上指定してください。");
         }
@@ -573,7 +573,7 @@ public class PostActivity extends Activity {
      * @return
      * @throws Exception
      */
-    private boolean auth() throws AuthException, PostException {
+    private boolean auth(final boolean tweetFlg) throws AuthException, PostException {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(PostActivity.this);
 
         String url = "http://gogo.gs/api/sp/uauth.php?apid=" + apid + "&" +
@@ -590,18 +590,23 @@ public class PostActivity extends Activity {
             }
             String data = new String(byteArray);
             
-            HashMap<String, String> res = xml.convertHashMap(data);
+            final HashMap<String, String> res = xml.convertHashMap(data);
             
             if (res == null || res.containsKey("Result") == false) {
                 continue;
             } else if (res.get("Result").equals("1")) {
-                if (res.containsKey("TwitterAuth") && res.get("TwitterAuth").contains("1")) {
-                    chkTweet.setVisibility(View.VISIBLE);
-                    if (sp.getBoolean("settings_twitter", false) == true) {
-                        chkTweet.setChecked(true);
+                mHandler.post(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        if (res.containsKey("TwitterAuth") && res.get("TwitterAuth").contains("1")) {
+                            chkTweet.setVisibility(View.VISIBLE);
+                            if (tweetFlg == true && sp.getBoolean("settings_twitter", false) == true) {
+                                chkTweet.setChecked(true);
+                            }
+                        }
                     }
-
-                }
+                });
                 return true;
             } else {
                 throw new AuthException("認証に失敗しました。\nユーザID、パスワードを確認してください。");

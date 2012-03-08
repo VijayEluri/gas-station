@@ -1,49 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<LinearLayout android:id="@+id/LinearLayout03"
-		android:layout_width="wrap_content" android:layout_height="fill_parent"
-		android:orientation="vertical" android:gravity="center_vertical|center"
-		android:paddingLeft="10dip" android:paddingRight="5dip"
-		android:paddingBottom="6dip" android:paddingTop="6dip">
-		<TextView android:layout_height="wrap_content" android:text="123円"
-			android:gravity="center_vertical" android:layout_width="fill_parent"
-			android:id="@+id/price" android:textColor="@color/blue"></TextView>
-		<TextView android:layout_height="wrap_content" android:text="距離"
-			android:id="@+id/distance" android:textColor="@color/text_color"
-			android:textSize="11dip" android:layout_width="fill_parent"
-			android:layout_gravity="center" android:gravity="center"
-			android:paddingTop="2dip"></TextView>
-	</LinearLayout>
-	<LinearLayout android:orientation="vertical"
-		android:layout_weight="1" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:paddingLeft="5dip"
-		android:paddingTop="6dip">
-		<LinearLayout android:id="@+id/LinearLayout01"
-			android:layout_height="wrap_content" android:layout_width="fill_parent">
-			<ImageView android:id="@+id/icon" android:layout_width="wrap_content"
-				android:layout_height="fill_parent" android:layout_marginRight="6dip"
-				android:src="@drawable/icon_maker1" android:padding="3dip" />
-			<TextView android:layout_width="fill_parent"
-				android:layout_weight="1" android:gravity="center_vertical"
-				android:textColor="@color/screenname_color" android:textStyle="bold"
-				android:text="ガソリンスタンド" android:layout_height="fill_parent"
-				android:id="@+id/shop_name" android:textSize="13dip"
-				android:paddingRight="6dip" />
-		</LinearLayout>
-		<LinearLayout android:id="@+id/LinearLayout02"
-			android:layout_height="wrap_content" android:layout_width="fill_parent"
-			android:orientation="horizontal">
-			<TextView android:layout_width="fill_parent"
-				android:ellipsize="marquee" android:textColor="@color/text_color"
-				android:text="住所" android:id="@+id/address" android:textSize="12dip"
-				android:layout_weight="1" android:layout_height="fill_parent"
-				android:paddingBottom="6dip" android:paddingTop="3dip"
-				android:singleLine="true" />
-			<ImageView android:layout_height="wrap_content"
-				android:layout_width="wrap_content" android:id="@+id/img_favorite"
-				android:src="@drawable/star_empty24" android:paddingLeft="5dip"
-				android:paddingRight="6dip" android:paddingBottom="6dip"></ImageView>
-		</LinearLayout>
-	</LinearLayout>
-</LinearLayout>  
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@+id/LinearLayout03"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical|center"
+        android:orientation="vertical"
+        android:paddingBottom="6dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="5dip"
+        android:paddingTop="6dip" >
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="123円"
+            android:textColor="@color/blue" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="2dip"
+            android:text="距離"
+            android:textColor="@color/text_color"
+            android:textSize="11dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="5dip"
+        android:paddingTop="6dip" >
+
+        <LinearLayout
+            android:id="@+id/LinearLayout01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginRight="6dip"
+                android:padding="3dip"
+                android:src="@drawable/icon_maker1" />
+
+            <TextView
+                android:id="@+id/shop_name"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingRight="6dip"
+                android:text="ガソリンスタンド"
+                android:textColor="@color/screenname_color"
+                android:textSize="13dip"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:paddingBottom="6dip"
+                android:paddingTop="3dip"
+                android:singleLine="true"
+                android:text="住所"
+                android:textColor="@color/text_color"
+                android:textSize="12dip" />
+
+            <ImageView
+                android:id="@+id/img_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="6dip"
+                android:paddingLeft="5dip"
+                android:paddingRight="6dip"
+                android:src="@drawable/star_empty24" >
+            </ImageView>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
