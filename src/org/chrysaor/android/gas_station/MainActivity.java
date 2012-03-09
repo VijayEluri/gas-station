@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import jp.co.nobot.libYieldMaker.libYieldMaker;
-
 import org.apache.commons.lang.StringUtils;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
@@ -342,16 +340,17 @@ public class MainActivity extends MapActivity implements Runnable {
         if (donate == false) {
             LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
             head.setVisibility(View.VISIBLE);
-            libYieldMaker mv = (libYieldMaker) findViewById(R.id.admakerview);
-            mv.setActivity(this);
-            mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
-            // IS03の場合、高さを100pxに変更
-            if (Build.MODEL.equals("IS03")) {
-                mv.setMinimumHeight(100);
-                mv.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, 100));
-            }
-            mv.startView();
+            // libYieldMaker mv = (libYieldMaker)
+            // findViewById(R.id.admakerview);
+            // mv.setActivity(this);
+            // mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
+            // // IS03の場合、高さを100pxに変更
+            // if (Build.MODEL.equals("IS03")) {
+            // mv.setMinimumHeight(100);
+            // mv.setLayoutParams(new LinearLayout.LayoutParams(
+            // LinearLayout.LayoutParams.WRAP_CONTENT, 100));
+            // }
+            // mv.startView();
         } else {
             View header = (View) findViewById(R.id.header);
             header.setVisibility(View.VISIBLE);
@@ -823,9 +822,17 @@ public class MainActivity extends MapActivity implements Runnable {
         private List<String> prices = new ArrayList<String>();
         private List<String> pin_types = new ArrayList<String>();
         private List<GSInfo> gsInfo = new ArrayList<GSInfo>();
+        private int fontSize = 12;
+        private int additionHeight = 12;
 
         public PinItemizedOverlay(Drawable defaultMarker) {
             super(boundCenterBottom(defaultMarker));
+
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+            fontSize *= metrics.density;
+            additionHeight *= metrics.density;
         }
 
         @Override
@@ -901,18 +908,6 @@ public class MainActivity extends MapActivity implements Runnable {
 
             Paint p = new Paint();
 
-            int fontSize = 18;
-            int addtionHeight = 19;
-
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            Utils.logging("dpi:" + metrics.densityDpi);
-            if ((metrics.widthPixels <= 320 && metrics.heightPixels <= 480)
-                    || (metrics.widthPixels <= 480 && metrics.heightPixels <= 320)) {
-                fontSize = 13;
-                addtionHeight = 11;
-            }
-
             // Draw point caption and its bounding rectangle
             p.setTextSize(fontSize);
             p.setColor(Color.BLUE);
@@ -941,7 +936,7 @@ public class MainActivity extends MapActivity implements Runnable {
 
                 int sw = (int) (p.measureText(price) + 0.5f);
                 int sx = pt.x - sw / 2 - 1;
-                int sy = pt.y - addtionHeight;
+                int sy = pt.y - additionHeight;
 
                 canvas.drawText(price, sx, sy, p);
             }

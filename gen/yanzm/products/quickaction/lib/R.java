@@ -311,11 +311,10 @@ containing a value of this type.
         public static final int TextView27=0x7f0a0024;
         public static final int TextView28=0x7f0a0025;
         public static final int TextView29=0x7f0a0026;
-        public static final int ToggleButton01=0x7f0a0077;
+        public static final int ToggleButton01=0x7f0a0078;
         public static final int adView=0x7f0a002e;
         public static final int address=0x7f0a0057;
         public static final int address_text=0x7f0a0059;
-        public static final int admakerview=0x7f0a0074;
         public static final int arrow_down=0x7f0a0086;
         public static final int arrow_up=0x7f0a0085;
         public static final int brand_image=0x7f0a0034;
@@ -354,6 +353,7 @@ containing a value of this type.
         public static final int main_list=0x7f0a007e;
         public static final int main_map=0x7f0a0082;
         public static final int mapview_stub=0x7f0a0073;
+        public static final int nend=0x7f0a0074;
         public static final int price=0x7f0a006b;
         public static final int price_1=0x7f0a0099;
         public static final int price_2=0x7f0a009a;
@@ -386,7 +386,7 @@ containing a value of this type.
         public static final int textView1=0x7f0a003b;
         public static final int textView2=0x7f0a0055;
         public static final int title=0x7f0a0028;
-        public static final int toggle_member=0x7f0a0078;
+        public static final int toggle_member=0x7f0a0077;
         public static final int toggle_rtc=0x7f0a0079;
         public static final int trace_mylocation=0x7f0a007b;
         public static final int trace_mylocation_label=0x7f0a0076;
