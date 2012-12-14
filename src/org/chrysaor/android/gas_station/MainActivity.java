@@ -168,6 +168,51 @@ public class MainActivity extends MapActivity implements Runnable {
         CenterCircleOverlay location = new CenterCircleOverlay(this);
         mMapView.getOverlays().add(location);
 
+        // 現在地追跡処理 START
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.trace_mylocation);
+
+        // 今回の主役。有効にすることでGPSの取得が可能に
+        overlay = new LocationOverlay(getApplicationContext(), mMapView);
+        overlay.enableMyLocation();
+        overlay.enableCompass();
+        overlay.setTraceToggle(toggle);
+
+        // GPS取得が可能な状態になり、GPS初取得時の動作を決定（らしい）
+        overlay.runOnFirstFix(new Runnable() {
+            public void run() {
+                try {
+                    // animateTo(GeoPoint)で指定GeoPoint位置に移動
+                    // この場合、画面中央がGPS取得による現在位置になる
+                    mMapView.getController().animateTo(overlay.getMyLocation());
+                } catch (Exception e) {
+
+                }
+            }
+        });
+        // 現在地追跡処理 END
+
+        // ヘッダーViewの設定
+        setHeaderView();
+
+        // フッターViewの設定
+        setFooterView();
+
+        // Overlayとして登録
+        mMapView.getOverlays().add(overlay);
+
+        mMapView.invalidate();
+
+        // お気に入り更新サービスの起動
+        Intent service = new Intent(this, UpdateFavoritesService.class);
+        service.setAction(UpdateFavoritesService.START_ACTION);
+        startService(service);
+
+    }
+
+    /**
+     * ヘッダーViewの設定
+     */
+    private void setHeaderView() {
         // 会員価格処理 START
         ToggleButton toggleMember = (ToggleButton) findViewById(R.id.toggle_member);
         toggleMember.setChecked(sp.getBoolean("settings_member", false));
@@ -220,32 +265,19 @@ public class MainActivity extends MapActivity implements Runnable {
         });
         // 24H ONLY処理 START
 
-        // 現在地追跡処理 START
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.trace_mylocation);
+        if (donate == false) {
+            LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
+            head.setVisibility(View.VISIBLE);
+        } else {
+            View header = (View) findViewById(R.id.header);
+            header.setVisibility(View.VISIBLE);
+        }
+    }
 
-        // 今回の主役。有効にすることでGPSの取得が可能に
-        overlay = new LocationOverlay(getApplicationContext(), mMapView);
-        overlay.enableMyLocation();
-        overlay.enableCompass();
-        overlay.setTraceToggle(toggle);
-
-        // GPS取得が可能な状態になり、GPS初取得時の動作を決定（らしい）
-        overlay.runOnFirstFix(new Runnable() {
-            public void run() {
-                try {
-                    // animateTo(GeoPoint)で指定GeoPoint位置に移動
-                    // この場合、画面中央がGPS取得による現在位置になる
-                    mMapView.getController().animateTo(overlay.getMyLocation());
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        // 現在地追跡処理 END
-
-        // Overlayとして登録
-        mMapView.getOverlays().add(overlay);
-
+    /**
+     * フッターViewの設定
+     */
+    private void setFooterView() {
         // 検索ボタンのonClick設定
         ImageView search_img = (ImageView) findViewById(R.id.search_img);
         search_img.setOnTouchListener(new View.OnTouchListener() {
@@ -336,38 +368,6 @@ public class MainActivity extends MapActivity implements Runnable {
                 return true;
             }
         });
-
-        if (donate == false) {
-            LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
-            head.setVisibility(View.VISIBLE);
-            // libYieldMaker mv = (libYieldMaker)
-            // findViewById(R.id.admakerview);
-            // mv.setActivity(this);
-            // mv.setUrl("http://images.ad-maker.info/apps/x0umfpssg2zu.html");
-            // // IS03の場合、高さを100pxに変更
-            // if (Build.MODEL.equals("IS03")) {
-            // mv.setMinimumHeight(100);
-            // mv.setLayoutParams(new LinearLayout.LayoutParams(
-            // LinearLayout.LayoutParams.WRAP_CONTENT, 100));
-            // }
-            // mv.startView();
-        } else {
-            View header = (View) findViewById(R.id.header);
-            header.setVisibility(View.VISIBLE);
-        }
-
-        mMapView.invalidate();
-        /*
-         * // 位置情報の取得を開始 mLocationManager = ((LocationManager)
-         * getSystemService(Context.LOCATION_SERVICE));
-         * mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-         * LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, mListener);
-         */
-
-        Intent service = new Intent(this, UpdateFavoritesService.class);
-        service.setAction(UpdateFavoritesService.START_ACTION);
-        startService(service);
-
     }
 
     // アクティビティ呼び出し結果の取得
@@ -390,13 +390,9 @@ public class MainActivity extends MapActivity implements Runnable {
 
     @Override
     protected void onResume() {
+        super.onResume();
+
         overlay.enableMyLocation();
-        overlay.enableCompass();
-        if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME,
-                    LOCATION_MIN_DISTANCE, mListener);
-        }
 
         // Donateの確認
         checkDonate();
@@ -419,20 +415,13 @@ public class MainActivity extends MapActivity implements Runnable {
         // 操作パネルの透過率設定
         setPenetration();
 
-        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        overlay.disableMyLocation();
-        overlay.disableCompass();
-        if (mLocationManager != null) {
-            mLocationManager.removeUpdates(mListener);
-        }
-
-        // Log.d(LOG_TAG, "gas pause");
-
         super.onPause();
+
+        overlay.disableMyLocation();
     }
 
     @Override
@@ -471,6 +460,9 @@ public class MainActivity extends MapActivity implements Runnable {
         return true;
     }
 
+    /**
+     * 有料版の確認
+     */
     protected void checkDonate() {
         // PackageManagerの取得
         PackageManager manager = getPackageManager();
@@ -524,10 +516,7 @@ public class MainActivity extends MapActivity implements Runnable {
         switch (item.getItemId()) {
         case 0:
             // イベントトラック（設定）
-            tracker.trackEvent("Main", // Category
-                    "Settings", // Action
-                    null, // Label
-                    0);
+            tracker.trackEvent("Main", "Settings", null, 0);
 
             Intent intent = new Intent(MainActivity.this,
                     SettingsActivity.class);
@@ -535,10 +524,7 @@ public class MainActivity extends MapActivity implements Runnable {
             return true;
         case 1:
             // イベントトラック（現在地）
-            tracker.trackEvent("Main", // Category
-                    "Location", // Action
-                    null, // Label
-                    0);
+            tracker.trackEvent("Main", "Location", null, 0);
 
             // overlay.setMyLocationFlag(true);
             GeoPoint l = overlay.getMyLocation();
@@ -554,10 +540,7 @@ public class MainActivity extends MapActivity implements Runnable {
             return searchAction();
         case 3:
             // イベントトラック（about）
-            tracker.trackEvent("Main", // Category
-                    "About", // Action
-                    null, // Label
-                    0);
+            tracker.trackEvent("Main", "About", null, 0);
 
             Intent intent2 = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(intent2);
@@ -574,35 +557,27 @@ public class MainActivity extends MapActivity implements Runnable {
             resource = getResources();
 
             String url_string = "http://api.gogo.gs/v1.2/?apid=gsearcho0o0";
-            url_string = url_string + "&dist=" + dist;
-            url_string = url_string + "&num="
-                    + pref.getString("settings_num", "60");
-            url_string = url_string + "&span="
-                    + pref.getString("settings_span", "");
+            url_string += "&dist=" + dist;
+            url_string += "&num=" + pref.getString("settings_num", "60");
+            url_string += "&span=" + pref.getString("settings_span", "");
             Boolean member = pref.getBoolean("settings_member", false);
             if (member == true) {
-                url_string = url_string + "&member=1";
+                url_string += "&member=1";
             }
-            url_string = url_string + "&kind="
-                    + pref.getString("settings_kind", "0");
+            url_string += "&kind=" + pref.getString("settings_kind", "0");
 
             String sort = pref.getString("settings_sort", "dist");
             if (sort.equals("dist")) {
-                url_string = url_string + "&sort=d";
+                url_string += "&sort=d";
             }
 
             // イベントトラック（検索）
-            tracker.trackEvent("Main", // Category
-                    "Search", // Action
-                    url_string, // Label
-                    0);
+            tracker.trackEvent("Main", "Search", url_string, 0);
 
             // 地図の中心位置を取得
             GeoPoint center = mMapView.getMapCenter();
-            url_string = url_string + "&lat=" + (double) center.getLatitudeE6()
-                    / E6;
-            url_string = url_string + "&lon="
-                    + (double) center.getLongitudeE6() / E6;
+            url_string += "&lat=" + (double) center.getLatitudeE6() / E6;
+            url_string += "&lon=" + (double) center.getLongitudeE6() / E6;
 
             String url = url_string;
             Utils.logging("url = " + url.toString());
@@ -612,8 +587,9 @@ public class MainActivity extends MapActivity implements Runnable {
 
             String url4all = "";
 
-            if (pref.getBoolean("settings_no_postdata", Boolean
-                    .valueOf(resource.getText(
+            if (pref.getBoolean(
+                    "settings_no_postdata",
+                    Boolean.valueOf(resource.getText(
                             R.string.settings_no_postdata_default).toString()))) {
                 int no_dist = Integer.valueOf(dist);
                 if (no_dist > 10) {
@@ -751,9 +727,9 @@ public class MainActivity extends MapActivity implements Runnable {
                                                 Integer.valueOf(info.Price))));
                     }
 
-                    GeoPoint point = new GeoPoint((int) ((double) info
-                            .getLatitude() * E6), (int) (Double
-                            .parseDouble(info.getLongitude()) * E6));
+                    GeoPoint point = new GeoPoint(
+                            (int) ((double) info.getLatitude() * E6),
+                            (int) (Double.parseDouble(info.getLongitude()) * E6));
 
                     pinOverlay.addPoint(point);
                     pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n"
@@ -779,48 +755,13 @@ public class MainActivity extends MapActivity implements Runnable {
         db.close();
     }
 
-    /**
-     * 位置情報の更新を処理するリスナー
-     */
-    private LocationListener mListener = new LocationListener() {
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            switch (status) {
-            case LocationProvider.AVAILABLE:
-                break;
-            case LocationProvider.OUT_OF_SERVICE:
-                Toast.makeText(MainActivity.this, "GPSサービスが利用できません",
-                        Toast.LENGTH_LONG).show();
-                break;
-            case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                // Toast.makeText(MainActivity.this, "GPSデータを取得できません",
-                // Toast.LENGTH_LONG).show();
-                break;
-            }
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onProviderDisabled(String provider) {
-        }
-
-        public void onLocationChanged(Location location) {
-
-            Utils.logging("longitude = " + location.getLongitude());
-            Utils.logging("latitude = " + location.getLatitude());
-
-            MainActivity.myLocation = location;
-        }
-    };
-
     public class PinItemizedOverlay extends ItemizedOverlay<PinOverlayItem>
             implements Runnable {
 
         private List<GeoPoint> points = new ArrayList<GeoPoint>();
         private List<String> msgs = new ArrayList<String>();
         private List<String> prices = new ArrayList<String>();
-        private List<String> pin_types = new ArrayList<String>();
+        private List<String> pinTypes = new ArrayList<String>();
         private List<GSInfo> gsInfo = new ArrayList<GSInfo>();
         private int fontSize = 12;
         private int additionHeight = 12;
@@ -861,7 +802,7 @@ public class MainActivity extends MapActivity implements Runnable {
         }
 
         public void setPinType(String type) {
-            this.pin_types.add(type);
+            this.pinTypes.add(type);
         }
 
         public void setPrice(String title) {
@@ -919,7 +860,7 @@ public class MainActivity extends MapActivity implements Runnable {
             for (int i = 0; i < size; i++) {
 
                 String price = prices.get(i);
-                String pin = pin_types.get(i);
+                String pin = pinTypes.get(i);
 
                 if (pin.compareTo("brand") == 0) {
                     continue;

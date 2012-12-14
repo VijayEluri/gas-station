@@ -101,7 +101,7 @@ public class Utils {
  }
 
     public static void logging(String msg) {
-//        Log.i("GasSta!", msg);
+        Log.i("GasSta!", msg);
     }
     
     public static String md5(String input) {

@@ -20,8 +20,8 @@ import org.apache.http.params.HttpParams;
 import android.graphics.Color;
 
 public class GSInfo {
-	
-	public Integer RowId = null;
+
+    public Integer RowId = null;
     public String ShopCode = null;
     public String Brand = null;
     public String ShopName = null;
@@ -37,15 +37,16 @@ public class GSInfo {
     public boolean Member = false;
     public String UpdateDate = null;
     public String CreateDate = null;
-    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+            "yyyy/MM/dd");
     public Price[] Prices = null;
-    
-    //URL由来のストリーム
+
+    // URL由来のストリーム
     protected InputStream is;
-    
+
     protected ArrayList<GSInfo> list = new ArrayList<GSInfo>();
-    
-    //ストリームを閉じる処理を共通メソッドとして定義
+
+    // ストリームを閉じる処理を共通メソッドとして定義
     public void close() {
         if (is != null) {
             try {
@@ -56,21 +57,21 @@ public class GSInfo {
             }
         }
     }
-    
+
     // ガソリンスタンド情報を取得・設定する
     public void setGSInfoList(String[] urls) {
 
         XmlParserFromUrl xml = new XmlParserFromUrl();
 
-        for (int i=0; i<urls.length;i++) {
+        for (int i = 0; i < urls.length; i++) {
             byte[] byteArray = Utils.getByteArrayFromURL(urls[i], "GET");
             if (byteArray == null) {
                 Utils.logging("URLの取得に失敗");
                 continue;
-    //            return result;
+                // return result;
             }
             String data = new String(byteArray);
-            
+
             if (urls[i].contains("member=1") == true) {
                 this.list.addAll(xml.getGSInfoFromXML(data, "true"));
             } else {
@@ -80,7 +81,7 @@ public class GSInfo {
 
         close();
     }
-    
+
     public ArrayList<GSInfo> getGSInfoList() {
         return this.list;
     }
@@ -106,10 +107,12 @@ public class GSInfo {
             try {
                 Double.parseDouble(value);
                 this.Price = value;
-            } catch(NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+            }
         } else if (key.compareTo("Date") == 0) {
             if (value.matches("[0-9]+")) {
-                Date date = new Date(TimeUnit.SECONDS.toMillis(Long.valueOf(value)));
+                Date date = new Date(TimeUnit.SECONDS.toMillis(Long
+                        .valueOf(value)));
                 this.Date = simpleDateFormat.format(date);
             } else {
                 this.Date = value;
@@ -124,45 +127,46 @@ public class GSInfo {
             Utils.logging(value);
             this.Member = Boolean.valueOf(value);
         }
-        
+
     }
-    
+
     public Double getLatitude() {
         return this.Latitude;
     }
-    
+
     public String getLongitude() {
         return this.Longitude;
     }
-    
+
     public String getDispPrice() {
-        return (Price.equals("9999")? "no data": Price);
+        return (Price.equals("9999") ? "no data" : Price);
     }
 
     public int getDispPriceColor() {
-        return (Price.equals("9999")? Color.rgb(204, 0, 0): Color.rgb(0, 0, 255));
+        return (Price.equals("9999") ? Color.rgb(204, 0, 0) : Color.rgb(0, 0,
+                255));
     }
 
     public String getData(String sUrl) {
         DefaultHttpClient objHttp = new DefaultHttpClient();
-        objHttp.getCredentialsProvider().setCredentials(
-                  AuthScope.ANY, new UsernamePasswordCredentials("test", "kdlkdl"));
+        objHttp.getCredentialsProvider().setCredentials(AuthScope.ANY,
+                new UsernamePasswordCredentials("test", "kdlkdl"));
 
         HttpParams params = objHttp.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, 1000); //接続のタイムアウト
-        HttpConnectionParams.setSoTimeout(params, 1000); //データ取得のタイムアウト
+        HttpConnectionParams.setConnectionTimeout(params, 1000); // 接続のタイムアウト
+        HttpConnectionParams.setSoTimeout(params, 1000); // データ取得のタイムアウト
         String sReturn = "";
         try {
             HttpGet objGet = new HttpGet(sUrl);
-            
+
             HttpResponse objResponse = objHttp.execute(objGet);
-            if (objResponse.getStatusLine().getStatusCode() < 400){
+            if (objResponse.getStatusLine().getStatusCode() < 400) {
                 InputStream objStream = objResponse.getEntity().getContent();
                 InputStreamReader objReader = new InputStreamReader(objStream);
                 BufferedReader objBuf = new BufferedReader(objReader);
                 StringBuilder objJson = new StringBuilder();
                 String sLine;
-                while((sLine = objBuf.readLine()) != null){
+                while ((sLine = objBuf.readLine()) != null) {
                     objJson.append(sLine);
                 }
                 sReturn = objJson.toString();
@@ -174,4 +178,3 @@ public class GSInfo {
         return sReturn;
     }
 }
-
