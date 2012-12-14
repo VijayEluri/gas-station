@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 import org.chrysaor.android.gas_station.ui.AboutActivity;
 import org.chrysaor.android.gas_station.ui.DetailActivity;
 import org.chrysaor.android.gas_station.ui.FavoriteListActivity;
@@ -15,7 +16,6 @@ import org.chrysaor.android.gas_station.ui.ListActivity;
 import org.chrysaor.android.gas_station.ui.SettingsActivity;
 import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
-import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.InfoController;
 import org.chrysaor.android.gas_station.util.LocationOverlay;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
@@ -88,7 +88,7 @@ public class MainActivity extends MapActivity implements Runnable {
     private Resources resource;
     private LocationOverlay overlay;
     private SQLiteDatabase db;
-    public ArrayList<GSInfo> list;
+    public ArrayList<GasStand> list;
     public static final String DONATE_PACKAGE = "org.chrysaor.android.gas_station.plus";
     public static final String ACTION_FAVORITE = "org.chrysaor.android.intent.receive.FAVORITE";
     private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
@@ -696,7 +696,7 @@ public class MainActivity extends MapActivity implements Runnable {
 
                 for (int i = 0; i < size; i++) {
 
-                    GSInfo info = list.get(i);
+                    GasStand info = list.get(i);
 
                     // 24時間営業のGSかチェックする
                     if (pref.getBoolean("settings_rtc", false) == true
@@ -762,7 +762,7 @@ public class MainActivity extends MapActivity implements Runnable {
         private List<String> msgs = new ArrayList<String>();
         private List<String> prices = new ArrayList<String>();
         private List<String> pinTypes = new ArrayList<String>();
-        private List<GSInfo> gsInfo = new ArrayList<GSInfo>();
+        private List<GasStand> gsInfo = new ArrayList<GasStand>();
         private int fontSize = 12;
         private int additionHeight = 12;
 
@@ -809,7 +809,7 @@ public class MainActivity extends MapActivity implements Runnable {
             this.prices.add(title);
         }
 
-        public void setGSInfo(GSInfo info) {
+        public void setGSInfo(GasStand info) {
             this.gsInfo.add(info);
         }
 
@@ -819,7 +819,7 @@ public class MainActivity extends MapActivity implements Runnable {
         @Override
         protected boolean onTap(int index) {
 
-            GSInfo info = gsInfo.get(index);
+            GasStand info = gsInfo.get(index);
 
             // イベントトラック（GSタップ）
             tracker.trackEvent("Main", // Category

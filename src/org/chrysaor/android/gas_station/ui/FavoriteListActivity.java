@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
-import org.chrysaor.android.gas_station.util.GSInfo;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
@@ -40,7 +40,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class FavoriteListActivity extends Activity {
-    private ArrayList<GSInfo> list = null;
+    private ArrayList<GasStand> list = null;
     private StandAdapter adapter = null;
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
@@ -155,12 +155,12 @@ public class FavoriteListActivity extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> adapter, View view,
                         int position, long id) {
-                    final GSInfo item = list.get(position);
+                    final GasStand gasStandDto = list.get(position);
 
                     // イベントトラック（GSタップ）
                     tracker.trackEvent("List", // Category
                             "Stand", // Action
-                            item.ShopCode, // Label
+                            gasStandDto.ShopCode, // Label
                             0);
 
                     ActionItem item1 = new ActionItem();
@@ -174,12 +174,12 @@ public class FavoriteListActivity extends Activity {
                             // イベントトラック（地図）
                             tracker.trackEvent("List", // Category
                                     "Map", // Action
-                                    item.ShopCode, // Label
+                                    gasStandDto.ShopCode, // Label
                                     0);
 
                             Intent intent = new Intent();
-                            intent.putExtra("lat", item.Latitude);
-                            intent.putExtra("lon", item.Longitude);
+                            intent.putExtra("lat", gasStandDto.Latitude);
+                            intent.putExtra("lon", gasStandDto.Longitude);
                             setResult(Activity.RESULT_OK, intent);
                             // アクティビティの終了
                             finish();
@@ -194,13 +194,13 @@ public class FavoriteListActivity extends Activity {
                         public void onClick(View v) {
 
                             // イベントトラック（詳細）
-                            tracker.trackEvent("List", "Detail", item.ShopCode,
+                            tracker.trackEvent("List", "Detail", gasStandDto.ShopCode,
                                     0);
 
                             Intent intent1 = new Intent(
                                     FavoriteListActivity.this,
                                     DetailActivity.class);
-                            intent1.putExtra("shopcode", item.ShopCode);
+                            intent1.putExtra("shopcode", gasStandDto.ShopCode);
                             intent1.putExtra("from", "FavoriteListActivity");
                             startActivityForResult(intent1, 0);
                         }
@@ -216,7 +216,7 @@ public class FavoriteListActivity extends Activity {
 
                             // イベントトラック（ルート検索）
                             tracker.trackEvent("List", "RouteSearch",
-                                    item.ShopCode, 0);
+                                    gasStandDto.ShopCode, 0);
 
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_VIEW);
@@ -224,7 +224,7 @@ public class FavoriteListActivity extends Activity {
                                     "com.google.android.maps.MapsActivity");
                             intent.setData(Uri
                                     .parse("http://maps.google.com/maps?myl=saddr&daddr="
-                                            + item.Address + "&dirflg=d"));
+                                            + gasStandDto.Address + "&dirflg=d"));
                             startActivity(intent);
                         }
                     });
@@ -240,13 +240,13 @@ public class FavoriteListActivity extends Activity {
                             // イベントトラック（価格投稿）
                             tracker.trackEvent("List", // Category
                                     "Post", // Action
-                                    item.ShopCode, // Label
+                                    gasStandDto.ShopCode, // Label
                                     0);
 
                             Intent intent = new Intent(
                                     FavoriteListActivity.this,
                                     PostActivity.class);
-                            intent.putExtra("shopcode", item.ShopCode);
+                            intent.putExtra("shopcode", gasStandDto.ShopCode);
                             intent.putExtra("from", "FavoriteListActivity");
                             startActivityForResult(intent, 0);
                         }
@@ -260,7 +260,7 @@ public class FavoriteListActivity extends Activity {
 
                             // イベントトラック（給油記録）
                             tracker.trackEvent("Detail", "Charge",
-                                    item.ShopCode, 0);
+                                    gasStandDto.ShopCode, 0);
 
                             if (Utils
                                     .installedGasLogFree(FavoriteListActivity.this)
@@ -276,11 +276,11 @@ public class FavoriteListActivity extends Activity {
                                             "jp.pinetail.android.gas_log.free",
                                             "jp.pinetail.android.gas_log.core.FuelPostActivity");
                                 }
-                                intent.putExtra("ssid", item.ShopCode);
-                                intent.putExtra("shop_name", item.ShopName);
-                                intent.putExtra("shop_brand", item.Brand);
-                                intent.putExtra("lat", item.Latitude.toString());
-                                intent.putExtra("lon", item.Longitude);
+                                intent.putExtra("ssid", gasStandDto.ShopCode);
+                                intent.putExtra("shop_name", gasStandDto.ShopName);
+                                intent.putExtra("shop_brand", gasStandDto.Brand);
+                                intent.putExtra("lat", gasStandDto.Latitude.toString());
+                                intent.putExtra("lon", gasStandDto.Longitude);
                                 startActivity(intent);
                             } else {
                                 new AlertDialog.Builder(

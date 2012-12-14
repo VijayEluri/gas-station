@@ -13,8 +13,8 @@ import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.lib.database.PostHistoriesDao;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
-import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.GoGoGsApi;
 import org.chrysaor.android.gas_station.util.PostItem;
 import org.chrysaor.android.gas_station.util.StandsHelper;
@@ -60,7 +60,7 @@ public class PostActivity extends Activity {
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
     private StandsDao standsDao = null;
-    private GSInfo info = null;
+    private GasStand info = null;
     private Spinner price_kind;
     private Spinner check;
     private EditText regular;

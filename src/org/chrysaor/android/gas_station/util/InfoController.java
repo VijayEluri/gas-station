@@ -2,6 +2,8 @@ package org.chrysaor.android.gas_station.util;
 
 import java.util.ArrayList;
 
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
+
 import android.os.Handler;
 
 public class InfoController extends Thread {
@@ -9,7 +11,7 @@ public class InfoController extends Thread {
     private final Runnable listener;
     private String url;
     private String url4all = null;
-    private GSInfo gsInfo;
+    private GasStand gsInfo;
     
     //コンストラクタ
     public InfoController(Handler handler, Runnable listener, String url, String url4all) {
@@ -21,7 +23,7 @@ public class InfoController extends Thread {
         }
         
         //各情報取得クラスをインスタンス化
-        gsInfo = new GSInfo();
+        gsInfo = new GasStand();
     }
     
     @Override
@@ -40,7 +42,7 @@ public class InfoController extends Thread {
     }
     
     // ガソリンスタンド情報を取得
-    public ArrayList<GSInfo> getGSInfoList() {
+    public ArrayList<GasStand> getGSInfoList() {
         return gsInfo.getGSInfoList();
     }
     

@@ -3,6 +3,8 @@ package org.chrysaor.android.gas_station.util;
 import java.io.InputStream;
 
 import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.lib.data.Price;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class DetailAsyncTask extends
-        AbstractLoadingTask<String, Void, AsyncTaskResult<GSInfo>> {
+        AbstractLoadingTask<String, Void, AsyncTaskResult<GasStand>> {
 
     private Handler mHandler = new Handler();
     private static Typeface tf;
@@ -36,7 +38,7 @@ public class DetailAsyncTask extends
     public TextView txtMemHighocDate = null;
     public TextView txtMemDieselDate = null;
     public TextView txtMemLampDate = null;
-    private GSInfo info = null;
+    private GasStand info = null;
     private DetailTaskCallback callback;
 
     public DetailAsyncTask(Context context, View viewLoading, View viewMain) {
@@ -54,9 +56,9 @@ public class DetailAsyncTask extends
     }
 
     @Override
-    protected AsyncTaskResult<GSInfo> doInBackground(String... params) {
+    protected AsyncTaskResult<GasStand> doInBackground(String... params) {
         StandsHelper helper = StandsHelper.getInstance();
-        GSInfo info = helper.getGsInfo(context, params[0]);
+        GasStand info = helper.getGsInfo(context, params[0]);
 
         if (info == null) {
             return AsyncTaskResult.createErrorResult(0);
@@ -70,7 +72,7 @@ public class DetailAsyncTask extends
         showLoading();
     }
 
-    protected void onPostExecute(AsyncTaskResult<GSInfo> result) {
+    protected void onPostExecute(AsyncTaskResult<GasStand> result) {
 
         hideLoading();
 

@@ -4,6 +4,7 @@ import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,7 +17,7 @@ public class StandsHelper {
     private int[] noprice_images = new int[14];
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
-    private GSInfo info = null;
+    private GasStand info = null;
     private ProgressDialog dialog;
 
     // このクラスに唯一のインスタンス
@@ -131,7 +132,7 @@ public class StandsHelper {
         return res;
     }
     
-    public GSInfo getGsInfo(Context context, final String ssId) {
+    public GasStand getGsInfo(Context context, final String ssId) {
     	info = null;
     	
     	try {

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.chrysaor.android.gas_station.lib.data.Price;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -31,19 +33,19 @@ public class XmlParserFromUrl {
         factory.setNamespaceAware(true);
     }
     
-    public ArrayList<GSInfo> getGSInfoListFromXML(InputStream is) {
+    public ArrayList<GasStand> getGSInfoListFromXML(InputStream is) {
         
-        ArrayList<GSInfo> list = new ArrayList<GSInfo>();
+        ArrayList<GasStand> list = new ArrayList<GasStand>();
         return list;
         
     }
 
-    public ArrayList<GSInfo> getGSInfoFromXML(String is, String member) {
-        GSInfo ret = new GSInfo();
+    public ArrayList<GasStand> getGSInfoFromXML(String is, String member) {
+        GasStand ret = new GasStand();
         ret.setData("Member", member);
            String tmpName = null;
            int flag = 0;
-        ArrayList<GSInfo> list = new ArrayList<GSInfo>();
+        ArrayList<GasStand> list = new ArrayList<GasStand>();
         String value = new String();
 
         if (is == null) {
@@ -65,7 +67,7 @@ public class XmlParserFromUrl {
                 case XmlPullParser.START_TAG:
                        if (xpp.getName().compareTo("Item") == 0) {
                            flag = 1;
-                           ret = new GSInfo();
+                           ret = new GasStand();
                            ret.setData("Member", member);
                        }
                     tmpName = xpp.getName();
@@ -424,9 +426,9 @@ public class XmlParserFromUrl {
      * @param is
      * @return
      */
-    public GSInfo getShopInfo(String is) {
+    public GasStand getShopInfo(String is) {
         String key = null;
-        GSInfo item = new GSInfo();
+        GasStand item = new GasStand();
 
         try {
             initXmlPullParser(is);

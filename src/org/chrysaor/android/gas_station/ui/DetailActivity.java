@@ -4,10 +4,10 @@ import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 import org.chrysaor.android.gas_station.util.DetailAsyncTask;
 import org.chrysaor.android.gas_station.util.DetailTaskCallback;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
-import org.chrysaor.android.gas_station.util.GSInfo;
 import org.chrysaor.android.gas_station.util.Utils;
 
 import android.app.Activity;
@@ -40,7 +40,7 @@ public class DetailActivity extends Activity implements DetailTaskCallback {
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
     private StandsDao standsDao = null;
-    public GSInfo info = null;
+    public GasStand info = null;
     private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
     GoogleAnalyticsTracker tracker;
     private Integer favState = 0;
@@ -253,7 +253,7 @@ public class DetailActivity extends Activity implements DetailTaskCallback {
     }
 
     @Override
-    public void onSuccess(GSInfo info) {
+    public void onSuccess(GasStand info) {
         this.info = info;
 
         setButtonEvent();

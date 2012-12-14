@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 
 import android.R;
 import android.app.Service;
@@ -31,7 +32,7 @@ public class UpdateFavoritesService extends Service {
     private SQLiteDatabase db = null;
     private FavoritesDao favoritesDao = null;
     private static String mode = "none";
-    private ArrayList<GSInfo> list = null;
+    private ArrayList<GasStand> list = null;
     private Handler mHandler = new Handler();
     private Intent intent;
     SharedPreferences pref;
@@ -111,7 +112,7 @@ public class UpdateFavoritesService extends Service {
             try {
                 String sids = "";
                 for (int i = 0; i < list.size(); i++) {
-                    GSInfo item = list.get(i);
+                    GasStand item = list.get(i);
                     
                     sids += item.ShopCode;
                     
@@ -141,7 +142,7 @@ public class UpdateFavoritesService extends Service {
                 
                 HashMap<String,HashMap<String,String>> res = xml.getShopPrices4Fav(data);
                 
-                for (GSInfo item : list) {
+                for (GasStand item : list) {
                     
                     if (res.containsKey(item.ShopCode)) {
                         HashMap<String,String> resItem = res.get(item.ShopCode);

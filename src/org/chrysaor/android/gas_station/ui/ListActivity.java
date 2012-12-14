@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
-import org.chrysaor.android.gas_station.util.GSInfo;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.Utils;
 
@@ -34,7 +34,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class ListActivity extends Activity {
-    private ArrayList<GSInfo> list = null;
+    private ArrayList<GasStand> list = null;
     private StandAdapter adapter = null;
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
@@ -139,7 +139,7 @@ public class ListActivity extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> adapter, View view,
                         int position, long id) {
-                    final GSInfo item = list.get(position);
+                    final GasStand item = list.get(position);
 
                     // イベントトラック（GSタップ）
                     tracker.trackEvent("List", // Category

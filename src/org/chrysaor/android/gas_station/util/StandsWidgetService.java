@@ -3,6 +3,7 @@ package org.chrysaor.android.gas_station.util;
 import java.util.ArrayList;
 
 import org.chrysaor.android.gas_station.MainActivity;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 
 import com.google.android.maps.GeoPoint;
 
@@ -40,7 +41,7 @@ public class StandsWidgetService extends Service {
             String url = url_string + "&sort=d";
      		//Toast.makeText(this, url, Toast.LENGTH_LONG).show();
 
-            GSInfo gsInfo = new GSInfo();
+            GasStand gsInfo = new GasStand();
             String urls[] = {url};
 	    	gsInfo.setGSInfoList(urls);
 
@@ -48,14 +49,14 @@ public class StandsWidgetService extends Service {
 //        	db = dbHelper.getWritableDatabase();
 //        	StandsWidgetDao standsWidgetDao = new StandsWidgetDao(db);
 //        	standsWidgetDao.deleteAll();
-        	ArrayList<GSInfo> lists = gsInfo.getGSInfoList();
+        	ArrayList<GasStand> lists = gsInfo.getGSInfoList();
 
             Intent retIntent = new Intent();
             retIntent.setAction("org.chrysaor.StandsWidgetService.VIEW");
             String uri_str = "stands:///result?info=1";
 
             int cnt = 0;
-        	for(GSInfo row : lists) {
+        	for(GasStand row : lists) {
 //    	        standsWidgetDao.insert(row);
     	        
     	        uri_str +=  "," + row.Price;

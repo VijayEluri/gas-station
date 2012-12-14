@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 import org.chrysaor.android.gas_station.ui.DetailActivity;
 
 import android.content.Context;
@@ -24,17 +25,17 @@ import android.widget.Toast;
 
 public class StandAdapter extends ArrayAdapter {
   
-    private ArrayList<GSInfo> items;
+    private ArrayList<GasStand> items;
     private LayoutInflater inflater;
     private Context context;
-    private GSInfo item;
+    private GasStand item;
     private String[] favList;
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
     private Integer[] favStates;
 
     
-    public StandAdapter(Context context, int textViewResourceId, ArrayList<GSInfo> items) {
+    public StandAdapter(Context context, int textViewResourceId, ArrayList<GasStand> items) {
         super(context, textViewResourceId, items);
         this.items = items;
         this.context = context;
@@ -77,7 +78,7 @@ public class StandAdapter extends ArrayAdapter {
         }
 
         // 表示すべきデータの取得
-        item = (GSInfo)items.get(position);
+        item = (GasStand)items.get(position);
       
         if (item != null) {
             // スクリーンネームをビューにセット
@@ -127,7 +128,7 @@ public class StandAdapter extends ArrayAdapter {
                 @Override
                 public void onClick(View v) {
                     
-                    GSInfo item = (GSInfo)items.get(position);
+                    GasStand item = (GasStand)items.get(position);
                     
                     db = dbHelper.getReadableDatabase();
                     FavoritesDao favoritesDao = new FavoritesDao(db);

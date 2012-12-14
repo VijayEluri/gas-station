@@ -3,7 +3,7 @@ package org.chrysaor.android.gas_station.lib.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.chrysaor.android.gas_station.util.GSInfo;
+import org.chrysaor.android.gas_station.lib.dto.GasStand;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -36,7 +36,7 @@ public class StandsWidgetDao {
 		this.db = db;
 	}
 	
-	public long insert(GSInfo info) {
+	public long insert(GasStand info) {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_SHOP_CD,   info.ShopCode);
 		values.put(COLUMN_BRAND,     info.Brand);
@@ -62,13 +62,13 @@ public class StandsWidgetDao {
 	}
 
 	
-	public ArrayList<GSInfo> findAll() {
-		ArrayList<GSInfo> gsList = new ArrayList<GSInfo>();
+	public ArrayList<GasStand> findAll() {
+		ArrayList<GasStand> gsList = new ArrayList<GasStand>();
 		
 		Cursor cursor = db.query(TABLE_NAME, COLUMNS, null, null, null, null, COLUMN_ID);
 		
 		while(cursor.moveToNext()) {
-			GSInfo gsInfo = new GSInfo();
+			GasStand gsInfo = new GasStand();
 			
 //			gsInfo.RowId = Integer.parseInt(cursor.getString(0));
 			gsInfo.ShopCode  = cursor.getString(1);
@@ -89,12 +89,12 @@ public class StandsWidgetDao {
 		return gsList;
 	}
 	
-	public GSInfo findByShopCd(String shop_cd) {
+	public GasStand findByShopCd(String shop_cd) {
         String selection = "shop_cd = " + shop_cd;		
 		Cursor cursor = db.query(TABLE_NAME, COLUMNS, selection, null, null, null, null);
 		
 		while(cursor.moveToNext()) {
-			GSInfo gsInfo = new GSInfo();
+			GasStand gsInfo = new GasStand();
 			
 //			gsInfo.RowId = Integer.parseInt(cursor.getString(0));
 			gsInfo.ShopCode  = cursor.getString(1);
