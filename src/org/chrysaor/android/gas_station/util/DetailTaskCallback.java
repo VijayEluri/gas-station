@@ -1,6 +1,6 @@
 package org.chrysaor.android.gas_station.util;
 
-import org.chrysaor.android.gas_station.lib.dto.GasStand;
+import org.chrysaor.android.gas_station.lib.dto.Stand;
 
 import android.graphics.Bitmap;
 
@@ -17,7 +17,7 @@ public interface DetailTaskCallback {
    * @param image
    *          ダウンロードした画像
    */
-  void onSuccess(GasStand info);
+  void onSuccess(Stand info);
 
   /**
    * 画像のダウンロードが失敗した時に呼ばれるメソッド

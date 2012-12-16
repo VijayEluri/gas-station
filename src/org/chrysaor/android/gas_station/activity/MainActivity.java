@@ -1,23 +1,20 @@
-package org.chrysaor.android.gas_station;
+package org.chrysaor.android.gas_station.activity;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.commons.lang.StringUtils;
+import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
-import org.chrysaor.android.gas_station.lib.dto.GasStand;
-import org.chrysaor.android.gas_station.ui.AboutActivity;
-import org.chrysaor.android.gas_station.ui.DetailActivity;
-import org.chrysaor.android.gas_station.ui.FavoriteListActivity;
-import org.chrysaor.android.gas_station.ui.ListActivity;
-import org.chrysaor.android.gas_station.ui.SettingsActivity;
+import org.chrysaor.android.gas_station.lib.dto.Stand;
 import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
-import org.chrysaor.android.gas_station.util.ErrorReporter;
-import org.chrysaor.android.gas_station.util.InfoController;
 import org.chrysaor.android.gas_station.util.LocationOverlay;
+import org.chrysaor.android.gas_station.util.SearchThread;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
 import org.chrysaor.android.gas_station.util.StandsHelper;
 import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
@@ -28,9 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
@@ -40,47 +34,44 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class MainActivity extends MapActivity implements Runnable {
+public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
     private static final int E6 = 1000000;
+    private static final long LOCATION_MIN_TIME = 10000 * 1;
+    private static final float LOCATION_MIN_DISTANCE = 5.0F;
+    public static final String ACTION_FAVORITE = "org.chrysaor.android.intent.receive.FAVORITE";
+
     private MapController mMapController = null;
     private MapView mMapView = null;
     private LocationManager mLocationManager;
-    private static final long LOCATION_MIN_TIME = 10000 * 1;
-    private static final float LOCATION_MIN_DISTANCE = 5.0F;
     public static Location myLocation = null;
     private static Boolean donate = false;
     protected InputStream is;
@@ -88,25 +79,16 @@ public class MainActivity extends MapActivity implements Runnable {
     private Resources resource;
     private LocationOverlay overlay;
     private SQLiteDatabase db;
-    public ArrayList<GasStand> list;
-    public static final String DONATE_PACKAGE = "org.chrysaor.android.gas_station.plus";
-    public static final String ACTION_FAVORITE = "org.chrysaor.android.intent.receive.FAVORITE";
-    private static final Integer pressed_color = Color.argb(80, 255, 255, 255);
-    GoogleAnalyticsTracker tracker;
+    private ArrayList<Stand> dtoStandList;
     private static Typeface tf;
     public static Display display;
     private SharedPreferences sp;
+    private GestureDetector gestureDetector;
+    private Timer mTimer = null;
+    private Handler mHandler = new Handler();
 
-    /** ブランドID定数 */
-    public static final String[] brands = { "1", "2", "3", "4", "6", "7", "8",
-            "9", "10", "11", "12", "13", "14", "99" };
-
-    /** ブランド名定数 */
-    public static final String[] brands_value = { "JOMO", "ESSO", "ENEOS",
-            "KYGNUS", "COSMO", "SHELL", "IDEMITSU", "MITSUI", "MOBIL",
-            "SOLATO", "JA-SS", "GENERAL", "ITOCHU", "OTHER" };
-
-    private InfoController infoController;
+    /** ガソリンスタンド検索スレッド */
+    private SearchThread searchThread;
 
     private final Handler handler = new Handler();
 
@@ -115,21 +97,7 @@ public class MainActivity extends MapActivity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        ErrorReporter.setup(this);
-        ErrorReporter.bugreport(MainActivity.this);
-
-        tracker = GoogleAnalyticsTracker.getInstance();
-
-        // Start the tracker in manual dispatch mode...
-        tracker.start("UA-20090562-2", 20, this);
-        tracker.trackPageView("/MainActivity");
-        tracker.setCustomVar(1, "Model", Build.MODEL, 1);
-        try {
-            tracker.setCustomVar(2, "Version", getPackageManager()
-                    .getPackageInfo(getPackageName(), 1).versionName, 1);
-        } catch (NameNotFoundException e) {
-        }
-
+        gestureDetector = new GestureDetector(this, simpleOnGestureListener);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         // ダイアログの初期化
@@ -144,7 +112,7 @@ public class MainActivity extends MapActivity implements Runnable {
         setPenetration();
 
         // Donateの確認
-        checkDonate();
+        donate = Utils.isDonate(getApplicationContext());
 
         // ガソリン価格のフォント読み込み
         tf = Typeface.createFromAsset(getAssets(), "fonts/7barPBd.TTF");
@@ -161,7 +129,9 @@ public class MainActivity extends MapActivity implements Runnable {
         mMapView = (MapView) inflated;
 
         mMapView = (MapView) findViewById(R.id.main_map);
-        // mMapView.setBuiltInZoomControls(true);
+        mMapView.setBuiltInZoomControls(true);
+        mMapView.getZoomButtonsController().getZoomControls()
+                .setPadding(0, 0, 0, 85);
 
         mMapController = mMapView.getController();
 
@@ -177,13 +147,16 @@ public class MainActivity extends MapActivity implements Runnable {
         overlay.enableCompass();
         overlay.setTraceToggle(toggle);
 
-        // GPS取得が可能な状態になり、GPS初取得時の動作を決定（らしい）
+        // GPS取得が可能な状態になり、GPS初取得時の動作を決定
         overlay.runOnFirstFix(new Runnable() {
             public void run() {
                 try {
                     // animateTo(GeoPoint)で指定GeoPoint位置に移動
                     // この場合、画面中央がGPS取得による現在位置になる
                     mMapView.getController().animateTo(overlay.getMyLocation());
+
+                    // 検索
+                    setTimer();
                 } catch (Exception e) {
 
                 }
@@ -199,14 +172,12 @@ public class MainActivity extends MapActivity implements Runnable {
 
         // Overlayとして登録
         mMapView.getOverlays().add(overlay);
-
         mMapView.invalidate();
 
         // お気に入り更新サービスの起動
         Intent service = new Intent(this, UpdateFavoritesService.class);
         service.setAction(UpdateFavoritesService.START_ACTION);
         startService(service);
-
     }
 
     /**
@@ -265,10 +236,11 @@ public class MainActivity extends MapActivity implements Runnable {
         });
         // 24H ONLY処理 START
 
-        if (donate == false) {
+        if (donate == true) {
+            // ADの非表示
             LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
-            head.setVisibility(View.VISIBLE);
-        } else {
+            head.setVisibility(View.GONE);
+
             View header = (View) findViewById(R.id.header);
             header.setVisibility(View.VISIBLE);
         }
@@ -279,95 +251,116 @@ public class MainActivity extends MapActivity implements Runnable {
      */
     private void setFooterView() {
         // 検索ボタンのonClick設定
-        ImageView search_img = (ImageView) findViewById(R.id.search_img);
-        search_img.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN
-                        || event.getAction() == MotionEvent.ACTION_MOVE) {
-                    v.setBackgroundColor(pressed_color);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundColor(Color.TRANSPARENT);
-                    MainActivity.this.searchAction();
-                }
-                return true;
+        ImageView imgSsearch = (ImageView) findViewById(R.id.search_img);
+        imgSsearch.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                MainActivity.this.searchAction();
             }
         });
 
         // リストボタンのonClick設定
-        ImageView list = (ImageView) findViewById(R.id.main_list);
-        list.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN
-                        || event.getAction() == MotionEvent.ACTION_MOVE) {
-                    v.setBackgroundColor(pressed_color);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundColor(Color.TRANSPARENT);
-                    // イベントトラック（リスト）
-                    tracker.trackEvent("Main", // Category
-                            "List", // Action
-                            null, // Label
-                            0);
+        ImageView imgList = (ImageView) findViewById(R.id.main_list);
+        imgList.setOnClickListener(new OnClickListener() {
 
-                    Intent intent = new Intent(MainActivity.this,
-                            ListActivity.class);
-                    startActivityForResult(intent, 0);
-                }
-                return true;
+            @Override
+            public void onClick(View v) {
+                // イベントトラック（リスト）
+                tracker.trackEvent("Main", "List", null, 0);
+
+                Intent intent = new Intent(getApplicationContext(),
+                        ListActivity.class);
+                startActivityForResult(intent, 0);
             }
         });
 
-        // リストボタンのonClick設定
-        ImageView favList = (ImageView) findViewById(R.id.favorite);
-        favList.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN
-                        || event.getAction() == MotionEvent.ACTION_MOVE) {
-                    v.setBackgroundColor(pressed_color);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundColor(Color.TRANSPARENT);
-                    // イベントトラック（リスト）
-                    tracker.trackEvent("Main", // Category
-                            "FavoriteList", // Action
-                            null, // Label
-                            0);
+        // お気に入りボタンのonClick設定
+        ImageView imgFav = (ImageView) findViewById(R.id.favorite);
+        imgFav.setOnClickListener(new OnClickListener() {
 
-                    Intent intent = new Intent(MainActivity.this,
-                            FavoriteListActivity.class);
-                    startActivityForResult(intent, 0);
-                }
-                return true;
+            @Override
+            public void onClick(View v) {
+                // イベントトラック（リスト）
+                tracker.trackEvent("Main", "FavoriteList", null, 0);
+
+                Intent intent = new Intent(getApplicationContext(),
+                        FavoriteListActivity.class);
+                startActivityForResult(intent, 0);
             }
         });
 
-        // ズームアウトボタンのonClick設定
-        ImageView zoomout_img = (ImageView) findViewById(R.id.zoomout);
-        zoomout_img.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN
-                        || event.getAction() == MotionEvent.ACTION_MOVE) {
-                    v.setBackgroundColor(pressed_color);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundColor(Color.TRANSPARENT);
-                    mMapController.zoomOut();
+        // 現在地ボタンのonClick設定
+        ImageView imgMyLocation = (ImageView) findViewById(R.id.imgMyLocation);
+        imgMyLocation.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                GeoPoint l = overlay.getMyLocation();
+
+                if (l == null) {
+                    Toast.makeText(getApplicationContext(), "現在地を特定できません",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    // 取得した位置をマップの中心に設定
+                    mMapController.animateTo(l);
                 }
-                return true;
             }
         });
 
-        // ズームインボタンのonClick設定
-        ImageView zoomin_img = (ImageView) findViewById(R.id.zoomin);
-        zoomin_img.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN
-                        || event.getAction() == MotionEvent.ACTION_MOVE) {
-                    v.setBackgroundColor(pressed_color);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundColor(Color.TRANSPARENT);
-                    mMapController.zoomIn();
-                }
-                return true;
+        // 設定ボタンのonClick設定
+        ImageView imgSetting = (ImageView) findViewById(R.id.imgSetting);
+        imgSetting.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),
+                        SettingsActivity.class);
+                startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+
+        switch (event.getAction()) {
+        case MotionEvent.ACTION_UP:
+            if (lastEvent == "onFling" || lastEvent == "onScroll") {
+                setTimer();
+            } else {
+                if (mTimer != null) {
+                    mTimer.cancel();
+                }
+            }
+            break;
+        default:
+            if (mTimer != null) {
+                mTimer.cancel();
+            }
+            break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    /**
+     * 検索のタイマーセット
+     */
+    private void setTimer() {
+
+        mTimer = new Timer(true);
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // mHandlerを通じてUI Threadへ処理をキューイング
+                mHandler.post(new Runnable() {
+                    public void run() {
+                        searchAction();
+                    }
+                });
+            }
+        }, 750);
     }
 
     // アクティビティ呼び出し結果の取得
@@ -395,7 +388,7 @@ public class MainActivity extends MapActivity implements Runnable {
         overlay.enableMyLocation();
 
         // Donateの確認
-        checkDonate();
+        donate = Utils.isDonate(getApplicationContext());
 
         if (donate == true) {
             View header = (View) findViewById(R.id.header);
@@ -426,6 +419,8 @@ public class MainActivity extends MapActivity implements Runnable {
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
+
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -433,16 +428,9 @@ public class MainActivity extends MapActivity implements Runnable {
         standsDao.deleteAll();
         db.close();
 
-        // Stop the tracker when it is no longer needed.
-        tracker.stop();
-
-        super.onDestroy();
-
         Intent service = new Intent(this, UpdateFavoritesService.class);
         service.setAction(UpdateFavoritesService.START_ACTION);
         stopService(service);
-
-        cleanupView(findViewById(R.id.screen));
     }
 
     @Override
@@ -458,22 +446,6 @@ public class MainActivity extends MapActivity implements Runnable {
             break;
         }
         return true;
-    }
-
-    /**
-     * 有料版の確認
-     */
-    protected void checkDonate() {
-        // PackageManagerの取得
-        PackageManager manager = getPackageManager();
-
-        // 特定のパッケージがインストールされているか判定
-        try {
-            ApplicationInfo ai = manager.getApplicationInfo(DONATE_PACKAGE, 0);
-            donate = true;
-        } catch (NameNotFoundException e) {
-
-        }
     }
 
     protected void setPenetration() {
@@ -549,6 +521,11 @@ public class MainActivity extends MapActivity implements Runnable {
         return false;
     }
 
+    /**
+     * 検索処理
+     * 
+     * @return
+     */
     public Boolean searchAction() {
         try {
             SharedPreferences pref = PreferenceManager
@@ -587,6 +564,7 @@ public class MainActivity extends MapActivity implements Runnable {
 
             String url4all = "";
 
+            // 価格登録のないガソリンスタンドの取得
             if (pref.getBoolean(
                     "settings_no_postdata",
                     Boolean.valueOf(resource.getText(
@@ -603,7 +581,7 @@ public class MainActivity extends MapActivity implements Runnable {
                         + "&pm=" + pref.getString("settings_kind", "0")
                         + "&n=100";
 
-                ArrayList maker = new ArrayList();
+                ArrayList<String> maker = new ArrayList<String>();
 
                 for (int i = 0; i < brands.length; i++) {
 
@@ -619,15 +597,9 @@ public class MainActivity extends MapActivity implements Runnable {
 
             Utils.logging(url4all);
 
-            // マップ中心の周辺にあるガソリンスタンド情報を取得する
-            infoController = new InfoController(handler, this, url, url4all);
-
-            // プログレスダイアログを表示
-            dialog = new ProgressDialog(this);
-            dialog.setIndeterminate(true);
-            dialog.setMessage(resource
+            TextView txtMessage = (TextView) findViewById(R.id.txt_message);
+            txtMessage.setText(resource
                     .getText(R.string.dialog_message_getting_data));
-            dialog.show();
 
             mMapView.getOverlays().clear();
             CenterCircleOverlay location = new CenterCircleOverlay(this);
@@ -636,7 +608,9 @@ public class MainActivity extends MapActivity implements Runnable {
             // Overlayとして登録
             mMapView.getOverlays().add(overlay);
 
-            infoController.start();
+            // マップ中心の周辺にあるガソリンスタンド情報を取得する
+            searchThread = new SearchThread(handler, this, url, url4all);
+            searchThread.start();
         } catch (Exception e) {
             Utils.logging(e.getMessage());
         }
@@ -648,7 +622,7 @@ public class MainActivity extends MapActivity implements Runnable {
         // プログレスダイアログを閉じる
         dialog.dismiss();
 
-        list = infoController.getGSInfoList();
+        dtoStandList = searchThread.getGSInfoList();
         PinItemizedOverlay pinOverlay = null;
 
         DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
@@ -657,11 +631,8 @@ public class MainActivity extends MapActivity implements Runnable {
         StandsDao standsDao = new StandsDao(db);
         standsDao.deleteAll();
 
-        ImageView btn = (ImageView) findViewById(R.id.main_list);
-
         // 取得に失敗
-        if (list == null || list.size() <= 0) {
-            btn.setVisibility(View.INVISIBLE);
+        if (dtoStandList == null || dtoStandList.size() <= 0) {
             Toast.makeText(this,
                     resource.getText(R.string.dialog_message_out_of_range),
                     Toast.LENGTH_LONG).show();
@@ -673,12 +644,11 @@ public class MainActivity extends MapActivity implements Runnable {
             String pin_type = PreferenceManager.getDefaultSharedPreferences(
                     this).getString("settings_pin_type", "price");
             ArrayList<PinItemizedOverlay> pins = new ArrayList<PinItemizedOverlay>();
-            ;
 
             StandsHelper helper = StandsHelper.getInstance();
 
             db.beginTransaction();
-            int data_size = 0;
+            int dataSize = 0;
 
             try {
                 SharedPreferences pref = PreferenceManager
@@ -692,29 +662,29 @@ public class MainActivity extends MapActivity implements Runnable {
                     }
                 }
 
-                int size = list.size();
+                int size = dtoStandList.size();
 
                 for (int i = 0; i < size; i++) {
 
-                    GasStand info = list.get(i);
+                    Stand dto = dtoStandList.get(i);
 
                     // 24時間営業のGSかチェックする
                     if (pref.getBoolean("settings_rtc", false) == true
-                            && info.Rtc.compareTo("24H") != 0) {
+                            && dto.rtc.compareTo("24H") != 0) {
                         continue;
                     }
 
                     // 検索対象のブランドかチェックする
-                    if (maker.containsValue(info.Brand) == false) {
+                    if (maker.containsValue(dto.brand) == false) {
                         continue;
                     }
 
-                    data_size++;
+                    dataSize++;
 
-                    standsDao.insert(info);
+                    standsDao.insert(dto);
 
                     if (pin_type.compareTo("price") == 0) {
-                        int price = Integer.parseInt(info.Price);
+                        int price = Integer.parseInt(dto.price);
                         if (price == 9999) {
                             pinOverlay = new PinItemizedOverlay(nodata);
                         } else {
@@ -723,21 +693,20 @@ public class MainActivity extends MapActivity implements Runnable {
                     } else {
                         pinOverlay = new PinItemizedOverlay(getResources()
                                 .getDrawable(
-                                        helper.getBrandImage(info.Brand,
-                                                Integer.valueOf(info.Price))));
+                                        helper.getBrandImage(dto.brand,
+                                                Integer.valueOf(dto.price))));
                     }
 
                     GeoPoint point = new GeoPoint(
-                            (int) ((double) info.getLatitude() * E6),
-                            (int) (Double.parseDouble(info.getLongitude()) * E6));
+                            (int) ((double) dto.latitude * E6),
+                            (int) ((double) dto.longitude * E6));
 
                     pinOverlay.addPoint(point);
-                    pinOverlay.setMsg(info.ShopName + "\n" + info.Brand + "\n"
-                            + info.Address + "\n" + info.Price + "円");
-                    pinOverlay.setPrice(info.Price);
+                    pinOverlay.setMsg(dto.shopName + "\n" + dto.brand + "\n"
+                            + dto.address + "\n" + dto.price + "円");
+                    pinOverlay.setPrice(dto.price);
                     pinOverlay.setPinType(pin_type);
-                    pinOverlay.setGSInfo(info);
-                    // mMapView.getOverlays().add(pinOverlay);
+                    pinOverlay.setStandData(dto);
                     pins.add(pinOverlay);
 
                 }
@@ -748,9 +717,8 @@ public class MainActivity extends MapActivity implements Runnable {
             mMapView.getOverlays().addAll(pins);
             mMapView.invalidate();
 
-            btn.setVisibility(View.VISIBLE);
-            Toast.makeText(this, String.valueOf(data_size) + "件のスタンドが見つかりました",
-                    Toast.LENGTH_SHORT).show();
+            TextView txtMessge = (TextView) findViewById(R.id.txt_message);
+            txtMessge.setText(String.valueOf(dataSize) + "件のスタンドが見つかりました");
         }
         db.close();
     }
@@ -762,7 +730,7 @@ public class MainActivity extends MapActivity implements Runnable {
         private List<String> msgs = new ArrayList<String>();
         private List<String> prices = new ArrayList<String>();
         private List<String> pinTypes = new ArrayList<String>();
-        private List<GasStand> gsInfo = new ArrayList<GasStand>();
+        private List<Stand> standList = new ArrayList<Stand>();
         private int fontSize = 12;
         private int additionHeight = 12;
 
@@ -809,8 +777,8 @@ public class MainActivity extends MapActivity implements Runnable {
             this.prices.add(title);
         }
 
-        public void setGSInfo(GasStand info) {
-            this.gsInfo.add(info);
+        public void setStandData(Stand info) {
+            this.standList.add(info);
         }
 
         /**
@@ -819,16 +787,16 @@ public class MainActivity extends MapActivity implements Runnable {
         @Override
         protected boolean onTap(int index) {
 
-            GasStand info = gsInfo.get(index);
+            Stand info = standList.get(index);
 
             // イベントトラック（GSタップ）
             tracker.trackEvent("Main", // Category
                     "Stand", // Action
-                    info.ShopCode, // Label
+                    info.shopCode, // Label
                     0);
 
             Intent intent1 = new Intent(MainActivity.this, DetailActivity.class);
-            intent1.putExtra("shopcode", info.ShopCode);
+            intent1.putExtra("shopcode", info.shopCode);
             startActivity(intent1);
             return true;
         }
@@ -890,33 +858,6 @@ public class MainActivity extends MapActivity implements Runnable {
 
         public PinOverlayItem(GeoPoint point) {
             super(point, "", "");
-        }
-    }
-
-    /**
-     * 指定したビュー階層内のドローワブルをクリアする。 （ドローワブルをのコールバックメソッドによるアクティビティのリークを防ぐため）
-     * 
-     * @param view
-     */
-    public static final void cleanupView(View view) {
-        if (view instanceof ImageButton) {
-            ImageButton ib = (ImageButton) view;
-            ib.setImageDrawable(null);
-        } else if (view instanceof ImageView) {
-            ImageView iv = (ImageView) view;
-            iv.setImageDrawable(null);
-        } else if (view instanceof SeekBar) {
-            SeekBar sb = (SeekBar) view;
-            sb.setProgressDrawable(null);
-            sb.setThumb(null);
-        }
-        view.setBackgroundDrawable(null);
-        if (view instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup) view;
-            int size = vg.getChildCount();
-            for (int i = 0; i < size; i++) {
-                cleanupView(vg.getChildAt(i));
-            }
         }
     }
 }

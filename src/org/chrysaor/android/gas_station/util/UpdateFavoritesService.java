@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.chrysaor.android.gas_station.MainActivity;
+import org.chrysaor.android.gas_station.activity.MainActivity;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
-import org.chrysaor.android.gas_station.lib.dto.GasStand;
+import org.chrysaor.android.gas_station.lib.dto.Stand;
 
 import android.R;
 import android.app.Service;
@@ -32,7 +32,7 @@ public class UpdateFavoritesService extends Service {
     private SQLiteDatabase db = null;
     private FavoritesDao favoritesDao = null;
     private static String mode = "none";
-    private ArrayList<GasStand> list = null;
+    private ArrayList<Stand> list = null;
     private Handler mHandler = new Handler();
     private Intent intent;
     SharedPreferences pref;
@@ -112,9 +112,9 @@ public class UpdateFavoritesService extends Service {
             try {
                 String sids = "";
                 for (int i = 0; i < list.size(); i++) {
-                    GasStand item = list.get(i);
+                    Stand item = list.get(i);
                     
-                    sids += item.ShopCode;
+                    sids += item.shopCode;
                     
                     if (i < list.size() - 1) {
                         sids += ",";
@@ -142,26 +142,26 @@ public class UpdateFavoritesService extends Service {
                 
                 HashMap<String,HashMap<String,String>> res = xml.getShopPrices4Fav(data);
                 
-                for (GasStand item : list) {
+                for (Stand item : list) {
                     
-                    if (res.containsKey(item.ShopCode)) {
-                        HashMap<String,String> resItem = res.get(item.ShopCode);
+                    if (res.containsKey(item.shopCode)) {
+                        HashMap<String,String> resItem = res.get(item.shopCode);
 //                    if (res.containsKey("date") && res.containsKey("price")) {
                         // 最新の価格を取得する。
                         Date date = new Date(TimeUnit.SECONDS.toMillis(Long.valueOf(resItem.get("date"))));
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
                         Utils.logging(simpleDateFormat.format(date));
 
-                        item.Price = resItem.get("price");
-                        item.Date  = simpleDateFormat.format(date);
+                        item.price = resItem.get("price");
+                        item.date  = simpleDateFormat.format(date);
 
                     } else {
                         // 最新の価格を取得する。
-                        item.Price = "9999";
-                        item.Date  = "";
+                        item.price = "9999";
+                        item.date  = "";
                     }
                     
-                    item.Member = member;
+                    item.member = member;
                     
 //                    db = dbHelper.getWritableDatabase();
 //                    favoritesDao = new FavoritesDao(db);

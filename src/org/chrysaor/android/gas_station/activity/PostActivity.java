@@ -1,4 +1,4 @@
-package org.chrysaor.android.gas_station.ui;
+package org.chrysaor.android.gas_station.activity;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -9,19 +9,16 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.chrysaor.android.gas_station.R;
+import org.chrysaor.android.gas_station.lib.data.PostItem;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
-import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.lib.database.PostHistoriesDao;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
-import org.chrysaor.android.gas_station.lib.dto.GasStand;
-import org.chrysaor.android.gas_station.util.ErrorReporter;
+import org.chrysaor.android.gas_station.lib.dto.Stand;
 import org.chrysaor.android.gas_station.util.GoGoGsApi;
-import org.chrysaor.android.gas_station.util.PostItem;
 import org.chrysaor.android.gas_station.util.StandsHelper;
 import org.chrysaor.android.gas_station.util.Utils;
 import org.chrysaor.android.gas_station.util.XmlParserFromUrl;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,21 +43,25 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
-public class PostActivity extends Activity {
+/**
+ * 投稿画面
+ * 
+ * @author Shinichi Matsuo
+ *
+ */
+public class PostActivity extends AbstractMyActivity {
 
     private Handler mHandler = new Handler();
     private ProgressDialog dialog;
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
     private StandsDao standsDao = null;
-    private GasStand info = null;
+    private Stand info = null;
     private Spinner price_kind;
     private Spinner check;
     private EditText regular;
@@ -78,7 +79,6 @@ public class PostActivity extends Activity {
     private static String ss_id;
     private SharedPreferences sp;
     private static boolean tweetFlg = false;
-    GoogleAnalyticsTracker tracker;
     View loginView;
 
     @Override
@@ -87,15 +87,6 @@ public class PostActivity extends Activity {
         this.getWindow().setSoftInputMode(
                 LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.post);
-
-        ErrorReporter.setup(this);
-        ErrorReporter.bugreport(PostActivity.this);
-
-        tracker = GoogleAnalyticsTracker.getInstance();
-
-        // Start the tracker in manual dispatch mode...
-        tracker.start("UA-20090562-2", 20, this);
-        tracker.trackPageView("/PostActivity");
 
         dbHelper = new DatabaseHelper(this);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -287,12 +278,12 @@ public class PostActivity extends Activity {
             // ブランド
             ImageView imgBrand = (ImageView) findViewById(R.id.brand_image);
             StandsHelper helper = StandsHelper.getInstance();
-            imgBrand.setImageResource(helper.getBrandImage(info.Brand,
-                    Integer.valueOf(info.Price)));
+            imgBrand.setImageResource(helper.getBrandImage(info.brand,
+                    Integer.valueOf(info.price)));
 
             // 店名
             TextView textShopName = (TextView) findViewById(R.id.shop_text);
-            textShopName.setText(info.ShopName);
+            textShopName.setText(info.shopName);
         }
 
         // 戻るボタン
@@ -749,13 +740,6 @@ public class PostActivity extends Activity {
 
         throw new PostException(
                 "サーバーに接続できませんでした。時間をおいて再度お試しください。\nエラーコード[0001]");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Stop the tracker when it is no longer needed.
-        tracker.stop();
     }
 
     public class AuthException extends Exception {

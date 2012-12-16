@@ -1,4 +1,4 @@
-package org.chrysaor.android.gas_station.util;
+package org.chrysaor.android.gas_station.lib.data;
 
 public class PostItem {
     public String ssid;

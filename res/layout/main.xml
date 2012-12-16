@@ -4,36 +4,61 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <ViewStub
-        android:id="@+id/mapview_stub"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <LinearLayout
         android:id="@+id/header_ad"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:visibility="gone" >
+        android:gravity="center" >
 
         <net.nend.android.NendAdView
             android:id="@+id/nend"
             android:layout_width="fill_parent"
-            android:gravity="center"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             NendApiKey="348928903ae5e067a2259d63a1cfe916f3e465ad"
-            NendSpotId="6027" />
+            NendSpotId="6027"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/header_ad"
+        android:orientation="vertical" >
+
+        <ViewStub
+            android:id="@+id/mapview_stub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/header2"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/header_ad"
+        android:background="#99000000"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="4dip"
+        android:paddingTop="4dip" >
+
+        <TextView
+            android:id="@+id/txt_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/header2"
         android:background="#99000000"
         android:gravity="right|center"
-        android:padding="5px"
+        android:padding="5dp"
         android:visibility="gone" >
 
         <LinearLayout
@@ -198,7 +223,7 @@
         android:layout_gravity="center"
         android:background="#99000000"
         android:orientation="horizontal"
-        android:padding="5px" >
+        android:padding="5dp" >
 
         <LinearLayout
             android:id="@+id/LinearLayout01"
@@ -211,8 +236,9 @@
                 android:id="@+id/search_img"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="1px"
-                android:layout_marginRight="1px"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/button_footer_background"
                 android:scaleType="center"
                 android:src="@drawable/search" >
             </ImageView>
@@ -229,11 +255,11 @@
                 android:id="@+id/main_list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="1px"
-                android:layout_marginRight="1px"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/button_footer_background"
                 android:scaleType="center"
-                android:src="@drawable/list"
-                android:visibility="invisible" >
+                android:src="@drawable/list" >
             </ImageView>
         </LinearLayout>
 
@@ -248,8 +274,9 @@
                 android:id="@+id/favorite"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="1px"
-                android:layout_marginRight="1px"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/button_footer_background"
                 android:scaleType="center"
                 android:src="@drawable/favorite" >
             </ImageView>
@@ -264,12 +291,13 @@
             android:gravity="center" >
 
             <ImageView
-                android:id="@+id/zoomout"
+                android:id="@+id/imgMyLocation"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="1px"
-                android:layout_marginRight="1px"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/button_footer_background"
                 android:scaleType="center"
                 android:src="@drawable/zoomout" >
             </ImageView>
@@ -283,13 +311,14 @@
             android:gravity="center" >
 
             <ImageView
-                android:id="@+id/zoomin"
+                android:id="@+id/imgSetting"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="1px"
-                android:layout_marginRight="1px"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/button_footer_background"
                 android:scaleType="center"
-                android:src="@drawable/zoomin" >
+                android:src="@drawable/tool" >
             </ImageView>
         </LinearLayout>
     </LinearLayout>

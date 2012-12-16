@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.lib.data.Price;
-import org.chrysaor.android.gas_station.lib.dto.GasStand;
+import org.chrysaor.android.gas_station.lib.dto.Stand;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class DetailAsyncTask extends
-        AbstractLoadingTask<String, Void, AsyncTaskResult<GasStand>> {
+        AbstractLoadingTask<String, Void, AsyncTaskResult<Stand>> {
 
     private Handler mHandler = new Handler();
     private static Typeface tf;
@@ -38,7 +38,7 @@ public class DetailAsyncTask extends
     public TextView txtMemHighocDate = null;
     public TextView txtMemDieselDate = null;
     public TextView txtMemLampDate = null;
-    private GasStand info = null;
+    private Stand info = null;
     private DetailTaskCallback callback;
 
     public DetailAsyncTask(Context context, View viewLoading, View viewMain) {
@@ -56,9 +56,9 @@ public class DetailAsyncTask extends
     }
 
     @Override
-    protected AsyncTaskResult<GasStand> doInBackground(String... params) {
+    protected AsyncTaskResult<Stand> doInBackground(String... params) {
         StandsHelper helper = StandsHelper.getInstance();
-        GasStand info = helper.getGsInfo(context, params[0]);
+        Stand info = helper.getGsInfo(context, params[0]);
 
         if (info == null) {
             return AsyncTaskResult.createErrorResult(0);
@@ -72,7 +72,7 @@ public class DetailAsyncTask extends
         showLoading();
     }
 
-    protected void onPostExecute(AsyncTaskResult<GasStand> result) {
+    protected void onPostExecute(AsyncTaskResult<Stand> result) {
 
         hideLoading();
 
@@ -88,17 +88,17 @@ public class DetailAsyncTask extends
         ImageView imgBrand = (ImageView) viewMain
                 .findViewById(R.id.brand_image);
         StandsHelper helper = StandsHelper.getInstance();
-        imgBrand.setImageResource(helper.getBrandImage(info.Brand,
-                Integer.valueOf(info.Price)));
+        imgBrand.setImageResource(helper.getBrandImage(info.brand,
+                Integer.valueOf(info.price)));
 
         // セルフ
-        if (info.Self != null && info.Self.compareTo("SELF") != 0) {
+        if (info.self != null && info.self.compareTo("SELF") != 0) {
             ImageView imgSelf = (ImageView) viewMain.findViewById(R.id.self);
             imgSelf.setVisibility(View.INVISIBLE);
         }
 
         // 24時間営業
-        if (info.Rtc != null && info.Rtc.compareTo("24H") != 0) {
+        if (info.rtc != null && info.rtc.compareTo("24H") != 0) {
             ImageView imgRtc = (ImageView) viewMain.findViewById(R.id.rtc);
             imgRtc.setVisibility(View.INVISIBLE);
         }
@@ -106,18 +106,18 @@ public class DetailAsyncTask extends
         // 店名
         TextView textShopName = (TextView) viewMain
                 .findViewById(R.id.shop_text);
-        textShopName.setText(info.ShopName);
+        textShopName.setText(info.shopName);
 
         // 住所
         TextView textAddress = (TextView) viewMain
                 .findViewById(R.id.address_text);
-        textAddress.setText(info.Address);
+        textAddress.setText(info.address);
 
         // 距離
         TextView textDistance = (TextView) viewMain
                 .findViewById(R.id.distance_text);
-        if (info.Distance != null) {
-            Float dist = Float.parseFloat(info.Distance) / 1000;
+        if (info.distance != null) {
+            Float dist = Float.parseFloat(info.distance) / 1000;
             textDistance.setText(dist.toString() + "km");
         }
 
@@ -131,7 +131,7 @@ public class DetailAsyncTask extends
                 final ProgressBar progressBar = (ProgressBar) viewMain
                         .findViewById(R.id.ProgressBar01);
                 final String url = "http://gogo.gs/images/rally/"
-                        + info.ShopCode + "-" + info.Photo + ".jpg";
+                        + info.shopCode + "-" + info.photo + ".jpg";
 
                 BitmapFactory.Options bfo = new BitmapFactory.Options();
                 InputStream in = null;
@@ -228,10 +228,10 @@ public class DetailAsyncTask extends
                 try {
                     final Price[] prices;
 
-                    if (info.Prices == null) {
-                        prices = GoGoGsApi.getPrices(info.ShopCode);
+                    if (info.priceList == null) {
+                        prices = GoGoGsApi.getPrices(info.shopCode);
                     } else {
-                        prices = info.Prices;
+                        prices = info.priceList;
                     }
 
                     mHandler.post(new Runnable() {

@@ -1,7 +1,7 @@
 package org.chrysaor.android.gas_station.util;
 
 import org.chrysaor.android.gas_station.lib.data.Price;
-import org.chrysaor.android.gas_station.lib.dto.GasStand;
+import org.chrysaor.android.gas_station.lib.dto.Stand;
 
 public class GoGoGsApi {
 
@@ -50,7 +50,7 @@ public class GoGoGsApi {
         return xml.getShopPrices(data);
     }
 
-    public static GasStand getShopInfoAndPrices(String ssId) {
+    public static Stand getShopInfoAndPrices(String ssId) {
 
         XmlParserFromUrl xml = new XmlParserFromUrl();
 
@@ -62,8 +62,8 @@ public class GoGoGsApi {
         }
         String data = new String(byteArray);
 
-        GasStand info = xml.getShopInfo(data);
-        info.Prices = xml.getShopPrices(data);
+        Stand info = xml.getStand(data);
+        info.priceList = xml.getShopPrices(data);
         return info;
     }
 

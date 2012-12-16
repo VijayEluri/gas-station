@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">ガススタ!</string>
     <string name="title">サンプル</string>
@@ -9,14 +10,13 @@
     <string name="settings_search_title">検索条件</string>
     <string name="settings_etc_title">その他</string>
     <string name="settings_user_title">gogo.gsアカウント</string>
- 	<string name="settings_pin_type_key">settings_pin_type</string>
+    <string name="settings_pin_type_key">settings_pin_type</string>
     <string name="settings_pin_type_title">ピンの種類</string>
     <string name="settings_pin_type_summary">地図上に表示するピンの種類を設定します</string>
     <string name="settings_pin_type_dialogtitle">ピンの種類</string>
- 	<string name="settings_penetration_key">settings_penetration</string>
+    <string name="settings_penetration_key">settings_penetration</string>
     <string name="settings_penetration_title">操作パネルの透過率</string>
     <string name="settings_penetration_summary">操作パネルの透過率を設定します</string>
-    
     <string name="settings_dist_key">settings_dist</string>
     <string name="settings_dist_title">中心からの距離</string>
     <string name="settings_dist_summary">指定された半径にあるガソリンスタンドを検索します</string>
@@ -64,15 +64,14 @@
     <string name="settings_favorite_sort_summary">検索結果の並び順を設定します</string>
     <string name="settings_favorite_sort_title">並び順</string>
     <string name="settings_favorite_sort_default">create_date</string>
-    
     <string name="dialog_title_err">エラー</string>
-	<string name="dialog_message_out_of_range">データがありません</string>
+    <string name="dialog_message_out_of_range">データがありません</string>
     <string name="dialog_message_getting_data">データ取得中</string>
     <string name="dialog_message_posting_data">通信中</string>
-    
     <string name="bug_report">バグを報告</string>
     <string name="bug_report_message">申し訳ありません。未知のエラーにより前回は強制終了しました。よろしければ、今後の修正のために開発者に今回のエラーを送信してください。</string>
     <string name="bug_report_positive_button">送信内容を確認</string>
     <string name="bug_report_negative_button">送信しない</string>
-    
+    <string name="tracking_code">UA-20090562-2</string>
+
 </resources>

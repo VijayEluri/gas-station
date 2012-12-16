@@ -2,7 +2,7 @@ package org.chrysaor.android.gas_station.lib.database;
 
 import java.util.ArrayList;
 
-import org.chrysaor.android.gas_station.lib.dto.GasStand;
+import org.chrysaor.android.gas_station.lib.dto.Stand;
 import org.chrysaor.android.gas_station.util.Utils;
 
 import android.content.ContentValues;
@@ -44,21 +44,21 @@ public class StandsDao {
         this.db = db;
     }
 
-    public long insert(GasStand info) {
+    public long insert(Stand info) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_SHOP_CD, info.ShopCode);
-        values.put(COLUMN_BRAND, info.Brand);
-        values.put(COLUMN_SHOP_NAME, info.ShopName);
-        values.put(COLUMN_LATITUDE, info.Latitude);
-        values.put(COLUMN_LONGITUDE, info.Longitude);
-        values.put(COLUMN_DISTANCE, info.Distance);
-        values.put(COLUMN_ADDRESS, info.Address);
-        values.put(COLUMN_PRICE, info.Price);
-        values.put(COLUMN_DATE, info.Date);
-        values.put(COLUMN_PHOTO, info.Photo);
-        values.put(COLUMN_RTC, info.Rtc);
-        values.put(COLUMN_SELF, info.Self);
-        values.put(COLUMN_MEMBER, info.Member);
+        values.put(COLUMN_SHOP_CD, info.shopCode);
+        values.put(COLUMN_BRAND, info.brand);
+        values.put(COLUMN_SHOP_NAME, info.shopName);
+        values.put(COLUMN_LATITUDE, info.latitude);
+        values.put(COLUMN_LONGITUDE, info.longitude);
+        values.put(COLUMN_DISTANCE, info.distance);
+        values.put(COLUMN_ADDRESS, info.address);
+        values.put(COLUMN_PRICE, info.price);
+        values.put(COLUMN_DATE, info.date);
+        values.put(COLUMN_PHOTO, info.photo);
+        values.put(COLUMN_RTC, info.rtc);
+        values.put(COLUMN_SELF, info.self);
+        values.put(COLUMN_MEMBER, info.member);
         return db.insert(TABLE_NAME, null, values);
     }
 
@@ -66,8 +66,8 @@ public class StandsDao {
         return db.delete(TABLE_NAME, "rowid = " + rowid, null);
     }
 
-    public ArrayList<GasStand> findAll(String sortColumn) {
-        ArrayList<GasStand> gsList = new ArrayList<GasStand>();
+    public ArrayList<Stand> findAll(String sortColumn) {
+        ArrayList<Stand> gsList = new ArrayList<Stand>();
 
         if (sortColumn.equals("price")) {
             sortColumn = COLUMN_PRICE;
@@ -83,7 +83,7 @@ public class StandsDao {
                 sortColumn);
 
         while (cursor.moveToNext()) {
-            GasStand gsInfo = cursor2Object(cursor);
+            Stand gsInfo = cursor2Object(cursor);
 
             gsList.add(gsInfo);
         }
@@ -91,7 +91,7 @@ public class StandsDao {
         return gsList;
     }
 
-    public GasStand findByShopCd(String shop_cd) {
+    public Stand findByShopCd(String shop_cd) {
         String selection = "shop_cd = '" + shop_cd + "'";
         Cursor cursor = db.query(TABLE_NAME, COLUMNS, selection, null, null,
                 null, null);
@@ -117,25 +117,25 @@ public class StandsDao {
      * @param cursor
      * @return
      */
-    private GasStand cursor2Object(Cursor cursor) {
+    private Stand cursor2Object(Cursor cursor) {
 
-        GasStand gasStandDto = new GasStand();
+        Stand gasStandDto = new Stand();
         Utils.logging(cursor.getString(13));
 
         // gasStandDto.RowId = Integer.parseInt(cursor.getString(0));
-        gasStandDto.ShopCode = cursor.getString(1);
-        gasStandDto.Brand = cursor.getString(2);
-        gasStandDto.ShopName = cursor.getString(3);
-        gasStandDto.Latitude = Double.parseDouble(cursor.getString(4));
-        gasStandDto.Longitude = cursor.getString(5);
-        gasStandDto.Distance = cursor.getString(6);
-        gasStandDto.Address = cursor.getString(7);
-        gasStandDto.Price = cursor.getString(8);
-        gasStandDto.Date = cursor.getString(9);
-        gasStandDto.Photo = cursor.getString(10);
-        gasStandDto.Rtc = cursor.getString(11);
-        gasStandDto.Self = cursor.getString(12);
-        gasStandDto.Member = (cursor.getString(13).equals("1") ? true : false);
+        gasStandDto.shopCode = cursor.getString(1);
+        gasStandDto.brand = cursor.getString(2);
+        gasStandDto.shopName = cursor.getString(3);
+        gasStandDto.latitude = Double.parseDouble(cursor.getString(4));
+        gasStandDto.longitude = Double.parseDouble(cursor.getString(5));
+        gasStandDto.distance = cursor.getString(6);
+        gasStandDto.address = cursor.getString(7);
+        gasStandDto.price = cursor.getString(8);
+        gasStandDto.date = cursor.getString(9);
+        gasStandDto.photo = cursor.getString(10);
+        gasStandDto.rtc = cursor.getString(11);
+        gasStandDto.self = cursor.getString(12);
+        gasStandDto.member = (cursor.getString(13).equals("1") ? true : false);
 
         return gasStandDto;
     }
