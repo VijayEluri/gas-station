@@ -48,6 +48,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
@@ -90,12 +94,18 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
     /** ガソリンスタンド検索スレッド */
     private SearchThread searchThread;
 
+    /** ローディングレイアウト */
+    private LinearLayout layoutHeader2;
+
     private final Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        // ローディングレイアウト
+        layoutHeader2 = (LinearLayout) findViewById(R.id.header2);
 
         gestureDetector = new GestureDetector(this, simpleOnGestureListener);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -448,17 +458,23 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         return true;
     }
 
+    /**
+     * レイアウトの透過設定
+     */
     protected void setPenetration() {
         int penetration = PreferenceManager.getDefaultSharedPreferences(this)
                 .getInt("settings_penetration",
                         SeekBarPreference.OPT_SEEKBAR_DEF);
+        int color = Color.argb((int) ((100 - penetration) * 2.55), 0, 0, 0);
+
         View header = (View) findViewById(R.id.header);
-        header.setBackgroundColor(Color.argb(
-                (int) ((100 - penetration) * 2.55), 0, 0, 0));
+        header.setBackgroundColor(color);
+
+        View header2 = (View) findViewById(R.id.header2);
+        header2.setBackgroundColor(color);
 
         View footer = (View) findViewById(R.id.footer);
-        footer.setBackgroundColor(Color.argb(
-                (int) ((100 - penetration) * 2.55), 0, 0, 0));
+        footer.setBackgroundColor(color);
     }
 
     @Override
@@ -527,6 +543,9 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
      * @return
      */
     public Boolean searchAction() {
+
+        showLoadingView();
+
         try {
             SharedPreferences pref = PreferenceManager
                     .getDefaultSharedPreferences(MainActivity.this);
@@ -615,6 +634,63 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             Utils.logging(e.getMessage());
         }
         return true;
+    }
+
+    /**
+     * ローディングViewの表示
+     */
+    private void showLoadingView() {
+        Animation animation = AnimationUtils.loadAnimation(this,
+                R.anim.open_header);
+        animation.setAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO 自動生成されたメソッド・スタブ
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO 自動生成されたメソッド・スタブ
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                layoutHeader2.setVisibility(View.VISIBLE);
+            }
+        });
+        layoutHeader2.startAnimation(animation);
+    }
+
+    /**
+     * ローディングViewの非表示
+     */
+    private void hideLoadingView() {
+        Animation animation = AnimationUtils.loadAnimation(this,
+                R.anim.close_header);
+        animation.setStartOffset(2000);
+        animation.setAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO 自動生成されたメソッド・スタブ
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO 自動生成されたメソッド・スタブ
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                layoutHeader2.setVisibility(View.INVISIBLE);
+            }
+        });
+        layoutHeader2.startAnimation(animation);
     }
 
     @Override
@@ -719,6 +795,8 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
             TextView txtMessge = (TextView) findViewById(R.id.txt_message);
             txtMessge.setText(String.valueOf(dataSize) + "件のスタンドが見つかりました");
+
+            hideLoadingView();
         }
         db.close();
     }

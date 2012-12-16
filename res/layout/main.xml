@@ -5,21 +5,6 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:id="@+id/header_ad"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" >
-
-        <net.nend.android.NendAdView
-            android:id="@+id/nend"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            NendApiKey="348928903ae5e067a2259d63a1cfe916f3e465ad"
-            NendSpotId="6027"
-            android:gravity="center" />
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/header_ad"
@@ -40,7 +25,8 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="4dip"
-        android:paddingTop="4dip" >
+        android:paddingTop="4dip"
+        android:visibility="invisible" >
 
         <TextView
             android:id="@+id/txt_message"
@@ -48,7 +34,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:shadowColor="#000000"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="1.2"
             android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/header_ad"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <net.nend.android.NendAdView
+            android:id="@+id/nend"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            NendApiKey="348928903ae5e067a2259d63a1cfe916f3e465ad"
+            NendSpotId="6027"
+            android:gravity="center" />
     </LinearLayout>
 
     <LinearLayout
