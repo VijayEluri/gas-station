@@ -13,8 +13,8 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 
-public class LocationOverlay extends MyLocationOverlay {  
-      
+public class LocationOverlay extends MyLocationOverlay {
+
     private static final int E6 = 1000000;
     public boolean myLocationFlag = false;
     private MapView mv;
@@ -23,11 +23,11 @@ public class LocationOverlay extends MyLocationOverlay {
     private int lastHeading = 0;
     private double variation;
     private ToggleButton toggle;
-    
+
     public LocationOverlay(Context context, MapView mapView) {
         super(context, mapView);
         this.mv = mapView;
-        
+
         arrow[0] = context.getResources().getDrawable(R.drawable.arrow_0);
         arrow[1] = context.getResources().getDrawable(R.drawable.arrow_20);
         arrow[2] = context.getResources().getDrawable(R.drawable.arrow_40);
@@ -51,27 +51,27 @@ public class LocationOverlay extends MyLocationOverlay {
         for (int i = 0; i <= 17; i++) {
             arrow[i].setBounds(0, 0, arrowWidth, arrowHeight);
         }
-    }  
-  
-    public void setMyLocationFlag(boolean flag){
+    }
+
+    public void setMyLocationFlag(boolean flag) {
         myLocationFlag = flag;
     }
-    
+
     @Override
-    public synchronized boolean draw(Canvas canvas, MapView mapView, boolean shadow, long when) {
+    public synchronized boolean draw(Canvas canvas, MapView mapView,
+            boolean shadow, long when) {
         boolean ret = super.draw(canvas, mapView, shadow, when);
-        
+
         if (myLocationFlag) {
             drawMyLocation(canvas, mv, getLastFix(), getMyLocation(), 5000);
         }
-        
+
         return ret;
     }
-    
 
     /**
      * Sets the pointer heading in degrees (will be drawn on next invalidate).
-     *
+     * 
      * @return true if the visible heading changed (i.e. a redraw of pointer is
      *         potentially necessary)
      */
@@ -88,7 +88,7 @@ public class LocationOverlay extends MyLocationOverlay {
             return false;
         }
     }
-    
+
     public void setVariation(Location location) {
         long timestamp = location.getTime();
         if (timestamp == 0) {
@@ -97,39 +97,38 @@ public class LocationOverlay extends MyLocationOverlay {
         }
 
         GeomagneticField field = new GeomagneticField(
-            (float) location.getLatitude(),
-            (float) location.getLongitude(),
-            (float) location.getAltitude(),
-            timestamp);
+                (float) location.getLatitude(),
+                (float) location.getLongitude(),
+                (float) location.getAltitude(), timestamp);
         variation = field.getDeclination();
     }
-    
+
     public void onLocationChanged(Location location) {
         super.onLocationChanged(location);
-        
-        if (toggle.isChecked() == true) {
-            GeoPoint center = mv.getMapCenter();
-            int top = center.getLatitudeE6() - mv.getLatitudeSpan()/2; // 画面上に見える範囲
-            int bottom = center.getLatitudeE6() + mv.getLatitudeSpan()/2;
-            int left = center.getLongitudeE6() - mv.getLongitudeSpan()/2;
-            int right = center.getLongitudeE6() + mv.getLongitudeSpan()/2;
-        
-            // 画面外に移動した場合、現在値を中央に表示する
-            if (   location.getLatitude() * E6 < top
-                || location.getLatitude() * E6 > bottom 
-                || location.getLongitude() * E6 < left
-                || location.getLongitude() * E6 > right) {
-            
-                GeoPoint point = new GeoPoint(
-                    (int) ((double) location.getLatitude() * E6),
-                    (int) ((double) location.getLongitude() * E6));
 
-                mv.getController().animateTo(point);
-                setVariation(location);
-            }
-        }
+//        if (toggle.isChecked() == true) {
+//            GeoPoint center = mv.getMapCenter();
+//            int top = center.getLatitudeE6() - mv.getLatitudeSpan() / 2; // 画面上に見える範囲
+//            int bottom = center.getLatitudeE6() + mv.getLatitudeSpan() / 2;
+//            int left = center.getLongitudeE6() - mv.getLongitudeSpan() / 2;
+//            int right = center.getLongitudeE6() + mv.getLongitudeSpan() / 2;
+//
+//            // 画面外に移動した場合、現在値を中央に表示する
+//            if (location.getLatitude() * E6 < top
+//                    || location.getLatitude() * E6 > bottom
+//                    || location.getLongitude() * E6 < left
+//                    || location.getLongitude() * E6 > right) {
+//
+//                GeoPoint point = new GeoPoint(
+//                        (int) ((double) location.getLatitude() * E6),
+//                        (int) ((double) location.getLongitude() * E6));
+//
+//                mv.getController().animateTo(point);
+//                setVariation(location);
+//            }
+//        }
     }
-    
+
     public void onSensorChanged(int sensor, float[] values) {
         float magneticHeading = values[0];
         double heading = magneticHeading + variation;
@@ -137,7 +136,7 @@ public class LocationOverlay extends MyLocationOverlay {
             mv.invalidate();
         }
     }
-    
+
     public void setTraceToggle(ToggleButton toggle) {
         this.toggle = toggle;
     }

@@ -40,9 +40,13 @@ public class DetailAsyncTask extends
     public TextView txtMemLampDate = null;
     private Stand info = null;
     private DetailTaskCallback callback;
+    private LoadingManager loading;
 
     public DetailAsyncTask(Context context, View viewLoading, View viewMain) {
         super(context, viewLoading, viewMain);
+
+        loading = new LoadingManager(context, LoadingManager.MODE_PAGE);
+        loading.setLoadingViews(viewLoading, viewMain);
 
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/7barPBd.TTF");
     }
@@ -51,6 +55,9 @@ public class DetailAsyncTask extends
             DetailTaskCallback callback) {
         super(context, viewLoading, viewMain);
         this.callback = callback;
+
+        loading = new LoadingManager(context, LoadingManager.MODE_PAGE);
+        loading.setLoadingViews(viewLoading, viewMain);
 
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/7barPBd.TTF");
     }
@@ -69,12 +76,14 @@ public class DetailAsyncTask extends
 
     @Override
     protected void onPreExecute() {
-        showLoading();
+        loading.showLoading();
+        // showLoading();
     }
 
     protected void onPostExecute(AsyncTaskResult<Stand> result) {
 
-        hideLoading();
+        loading.hideLoading();
+        // hideLoading();
 
         if (result.isError()) {
             // エラーをコールバックで返す

@@ -25,12 +25,12 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * 設定画面
  * 
  * @author Shinichi Matsuo
- *
+ * 
  */
 public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
 
-    private boolean settings_penetration_key = false;
+//    private boolean settings_penetration_key = false;
     private boolean settings_member_key = false;
     GoogleAnalyticsTracker tracker;
 
@@ -57,8 +57,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
             if (key.equals("settings_member")) {
                 settings_member_key = true;
-            } else if (key.equals("settings_penetration")) {
-                settings_penetration_key = true;
+//            } else if (key.equals("settings_penetration")) {
+//                settings_penetration_key = true;
             }
         }
 
@@ -68,11 +68,11 @@ public class SettingsActivity extends PreferenceActivity implements
             setSummaryAll("settings_member");
         }
 
-        if (settings_penetration_key == false) {
-            getPreferenceScreen().findPreference("settings_penetration")
-                    .setDefaultValue(SeekBarPreference.DEFAULT_ORDER);
-            setSummaryAll("settings_penetration");
-        }
+//        if (settings_penetration_key == false) {
+//            getPreferenceScreen().findPreference("settings_penetration")
+//                    .setDefaultValue(SeekBarPreference.DEFAULT_ORDER);
+//            setSummaryAll("settings_penetration");
+//        }
 
         // パスワード
         Preference passwd = findPreference("settings_passwd");
@@ -116,6 +116,11 @@ public class SettingsActivity extends PreferenceActivity implements
                 || key.equals("save_select_item") || key.indexOf("brand") != -1) {
             return;
         }
+
+        if (getPreferenceScreen().findPreference(key) == null) {
+            return;
+        }
+
         String class_name = getPreferenceScreen().findPreference(key)
                 .getClass().toString();
 
@@ -222,6 +227,12 @@ public class SettingsActivity extends PreferenceActivity implements
         super.onDestroy();
         // Stop the tracker when it is no longer needed.
         tracker.stop();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
 }

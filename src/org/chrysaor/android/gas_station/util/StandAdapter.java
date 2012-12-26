@@ -4,41 +4,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.chrysaor.android.gas_station.R;
-import org.chrysaor.android.gas_station.activity.DetailActivity;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.lib.dto.Stand;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class StandAdapter extends ArrayAdapter {
+@SuppressWarnings("rawtypes")
+public class StandAdapter<T> extends ArrayAdapter {
 
     private ArrayList<Stand> items;
     private LayoutInflater inflater;
     private Context context;
-    private Stand item;
+    private int resource;
     private String[] favList;
     private DatabaseHelper dbHelper = null;
     private SQLiteDatabase db = null;
     private Integer[] favStates;
 
-    public StandAdapter(Context context, int textViewResourceId,
-            ArrayList<Stand> items) {
-        super(context, textViewResourceId, items);
+    @SuppressWarnings("unchecked")
+    public StandAdapter(Context context, int resource, ArrayList<Stand> items) {
+        super(context, resource, items);
         this.items = items;
         this.context = context;
+        this.resource = resource;
         this.inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         favStates = new Integer[items.size()];
@@ -61,9 +58,7 @@ public class StandAdapter extends ArrayAdapter {
 
         if (convertView == null) {
             // 受け取ったビューがnullなら新しくビューを生成
-            convertView = inflater.inflate(R.layout.list_row, null);
-            // 背景画像をセットする
-            convertView.setBackgroundResource(R.drawable.button_shop);
+            convertView = inflater.inflate(resource, null);
 
             holder = new ViewHolder();
             holder.screenName = (TextView) convertView
@@ -81,7 +76,7 @@ public class StandAdapter extends ArrayAdapter {
         }
 
         // 表示すべきデータの取得
-        item = (Stand) items.get(position);
+        Stand item = (Stand) items.get(position);
 
         if (item != null) {
             // スクリーンネームをビューにセット

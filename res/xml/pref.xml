@@ -1,127 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
-  <PreferenceCategory android:title="@string/settings_title">
-    <ListPreference
-      android:key="settings_pin_type"
-      android:title="@string/settings_pin_type_title"
-      android:summary="@string/settings_pin_type_summary"
-      android:dialogTitle="@string/settings_pin_type_dialogtitle"
-      android:entries="@array/settings_list_pin_type"
-      android:entryValues="@array/settings_list_pin_typevalues"
-      android:defaultValue="price" />
-    <org.chrysaor.android.gas_station.util.SeekBarPreference
-        android:id="@+id/seekbar"
-        android:key="@string/settings_penetration_key"
-        android:title="@string/settings_penetration_title"
-        android:summary="@string/settings_penetration_summary" />
-  </PreferenceCategory>  
-  <PreferenceCategory android:title="@string/settings_search_title">
-    <ListPreference
-      android:key="settings_dist"
-      android:title="@string/settings_dist_title"
-      android:summary="@string/settings_dist_summary"
-      android:dialogTitle="@string/settings_dist_dialogtitle"
-      android:entries="@array/settings_list_dist"
-      android:entryValues="@array/settings_list_distvalues"
-      android:defaultValue="10" />
-    <ListPreference
-      android:key="settings_num"
-      android:title="@string/settings_num_title"
-      android:summary="@string/settings_num_summary"
-      android:dialogTitle="@string/settings_num_dialogtitle"
-      android:entries="@array/settings_list_num"
-      android:entryValues="@array/settings_list_numvalues"
-      android:defaultValue="50" />
-    <ListPreference
-      android:key="settings_span"
-      android:title="@string/settings_span_title"
-      android:summary="@string/settings_span_summary"
-      android:dialogTitle="@string/settings_span_dialogtitle"
-      android:entries="@array/settings_list_span"
-      android:entryValues="@array/settings_list_spanvalues"
-      android:defaultValue="30" />
-    <PreferenceScreen android:title="ブランド">
-       <intent  
-          android:action="android.intent.action.MAIN"  
-          android:targetPackage="org.chrysaor.android.gas_station"  
-          android:targetClass="org.chrysaor.android.gas_station.ui.SettingsCategoryActivity" >  
-       </intent>    
-    </PreferenceScreen>
-    <ListPreference
-      android:key="settings_kind"
-      android:title="@string/settings_kind_title"
-      android:summary="@string/settings_kind_summary"
-      android:dialogTitle="@string/settings_kind_dialogtitle"
-      android:entries="@array/settings_list_kind"
-      android:entryValues="@array/settings_list_kindvalues"
-      android:defaultValue="0" />
-    <CheckBoxPreference
-      android:key="settings_member"
-      android:title="@string/settings_member_title"
-      android:summary="@string/settings_member_summary" />
-    <CheckBoxPreference
-      android:key="settings_rtc"
-      android:title="@string/settings_rtc_title"
-      android:summary="@string/settings_rtc_summary" />
-    <ListPreference
-      android:key="settings_sort"
-      android:title="@string/settings_sort_title"
-      android:summary="@string/settings_sort_summary"
-      android:dialogTitle="@string/settings_sort_dialogtitle"
-      android:entries="@array/settings_sort_kind"
-      android:entryValues="@array/settings_sort_kindvalues"
-      android:defaultValue="@string/settings_sort_default" />
-    <CheckBoxPreference
-      android:key="settings_no_postdata"
-      android:title="@string/settings_no_postdata_title"
-      android:summary="@string/settings_no_postdata_summary" />
-  </PreferenceCategory>
-  <PreferenceCategory android:title="@string/settings_user_title">
-    <EditTextPreference
-      android:key="settings_user_id"
-      android:title="@string/settings_user_id_title"
-      android:summary="@string/settings_user_id_summary"
-      android:dialogTitle="@string/settings_user_id_dialogtitle" />
-    <EditTextPreference
-      android:key="settings_passwd"
-      android:title="@string/settings_passwd_title"
-      android:summary="@string/settings_passwd_summary"
-      android:dialogTitle="@string/settings_passwd_dialogtitle" />
-    <CheckBoxPreference
-      android:key="settings_twitter"
-      android:title="@string/settings_twitter_title"
-      android:summary="@string/settings_twitter_summary" />
-      
-  </PreferenceCategory>  
-  <PreferenceCategory android:title="@string/settings_favorite_title">
-    <ListPreference
-      android:key="settings_favorite_interval"
-      android:title="@string/settings_favorite_interval_title"
-      android:summary="@string/settings_favorite_interval_summary"
-      android:dialogTitle="@string/settings_favorite_interval_dialogtitle"
-      android:entries="@array/settings_favorite_interval_kind"
-      android:entryValues="@array/settings_favorite_interval_kindvalues"
-      android:defaultValue="@string/settings_favorite_interval_default" />
-    <CheckBoxPreference
-      android:key="settings_favorite_notification"
-      android:title="@string/settings_favorite_notification_title"
-      android:summary="@string/settings_favorite_notification_summary" />
-    <ListPreference
-      android:key="settings_favorite_sort"
-      android:title="@string/settings_favorite_sort_title"
-      android:summary="@string/settings_favorite_sort_summary"
-      android:dialogTitle="@string/settings_favorite_sort_dialogtitle"
-      android:entries="@array/settings_favorite_sort_kind"
-      android:entryValues="@array/settings_favorite_sort_kindvalues"
-      android:defaultValue="@string/settings_favorite_sort_default" />
-  </PreferenceCategory>  
-  <PreferenceCategory android:title="@string/settings_etc_title">
-    <EditTextPreference
-      android:key="settings_sharemsg"
-      android:title="@string/settings_sharemsg_title"
-      android:summary="@string/settings_sharemsg_summary"
-      android:dialogTitle="@string/settings_sharemsg_dialogtitle"
-      android:defaultValue="@string/settings_sharemsg_default" />
-  </PreferenceCategory>  
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/settings_search_title" >
+        <ListPreference
+            android:defaultValue="10"
+            android:dialogTitle="@string/settings_dist_dialogtitle"
+            android:entries="@array/settings_list_dist"
+            android:entryValues="@array/settings_list_distvalues"
+            android:key="settings_dist"
+            android:summary="@string/settings_dist_summary"
+            android:title="@string/settings_dist_title" />
+        <ListPreference
+            android:defaultValue="50"
+            android:dialogTitle="@string/settings_num_dialogtitle"
+            android:entries="@array/settings_list_num"
+            android:entryValues="@array/settings_list_numvalues"
+            android:key="settings_num"
+            android:summary="@string/settings_num_summary"
+            android:title="@string/settings_num_title" />
+        <ListPreference
+            android:defaultValue="30"
+            android:dialogTitle="@string/settings_span_dialogtitle"
+            android:entries="@array/settings_list_span"
+            android:entryValues="@array/settings_list_spanvalues"
+            android:key="settings_span"
+            android:summary="@string/settings_span_summary"
+            android:title="@string/settings_span_title" />
+
+        <PreferenceScreen android:title="ブランド" >
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="org.chrysaor.android.gas_station.ui.SettingsCategoryActivity"
+                android:targetPackage="org.chrysaor.android.gas_station" >
+            </intent>
+        </PreferenceScreen>
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/settings_kind_dialogtitle"
+            android:entries="@array/settings_list_kind"
+            android:entryValues="@array/settings_list_kindvalues"
+            android:key="settings_kind"
+            android:summary="@string/settings_kind_summary"
+            android:title="@string/settings_kind_title" />
+
+        <CheckBoxPreference
+            android:key="settings_member"
+            android:summary="@string/settings_member_summary"
+            android:title="@string/settings_member_title" />
+        <CheckBoxPreference
+            android:key="settings_rtc"
+            android:summary="@string/settings_rtc_summary"
+            android:title="@string/settings_rtc_title" />
+
+        <ListPreference
+            android:defaultValue="@string/settings_sort_default"
+            android:dialogTitle="@string/settings_sort_dialogtitle"
+            android:entries="@array/settings_sort_kind"
+            android:entryValues="@array/settings_sort_kindvalues"
+            android:key="settings_sort"
+            android:summary="@string/settings_sort_summary"
+            android:title="@string/settings_sort_title" />
+
+        <CheckBoxPreference
+            android:key="settings_no_postdata"
+            android:summary="@string/settings_no_postdata_summary"
+            android:title="@string/settings_no_postdata_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_user_title" >
+        <EditTextPreference
+            android:dialogTitle="@string/settings_user_id_dialogtitle"
+            android:key="settings_user_id"
+            android:summary="@string/settings_user_id_summary"
+            android:title="@string/settings_user_id_title" />
+        <EditTextPreference
+            android:dialogTitle="@string/settings_passwd_dialogtitle"
+            android:key="settings_passwd"
+            android:summary="@string/settings_passwd_summary"
+            android:title="@string/settings_passwd_title" />
+
+        <CheckBoxPreference
+            android:key="settings_twitter"
+            android:summary="@string/settings_twitter_summary"
+            android:title="@string/settings_twitter_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_favorite_title" >
+        <ListPreference
+            android:defaultValue="@string/settings_favorite_interval_default"
+            android:dialogTitle="@string/settings_favorite_interval_dialogtitle"
+            android:entries="@array/settings_favorite_interval_kind"
+            android:entryValues="@array/settings_favorite_interval_kindvalues"
+            android:key="settings_favorite_interval"
+            android:summary="@string/settings_favorite_interval_summary"
+            android:title="@string/settings_favorite_interval_title" />
+
+        <CheckBoxPreference
+            android:key="settings_favorite_notification"
+            android:summary="@string/settings_favorite_notification_summary"
+            android:title="@string/settings_favorite_notification_title" />
+
+        <ListPreference
+            android:defaultValue="@string/settings_favorite_sort_default"
+            android:dialogTitle="@string/settings_favorite_sort_dialogtitle"
+            android:entries="@array/settings_favorite_sort_kind"
+            android:entryValues="@array/settings_favorite_sort_kindvalues"
+            android:key="settings_favorite_sort"
+            android:summary="@string/settings_favorite_sort_summary"
+            android:title="@string/settings_favorite_sort_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_etc_title" >
+        <EditTextPreference
+            android:defaultValue="@string/settings_sharemsg_default"
+            android:dialogTitle="@string/settings_sharemsg_dialogtitle"
+            android:key="settings_sharemsg"
+            android:summary="@string/settings_sharemsg_summary"
+            android:title="@string/settings_sharemsg_title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

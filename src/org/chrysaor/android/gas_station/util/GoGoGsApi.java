@@ -42,7 +42,7 @@ public class GoGoGsApi {
         byte[] byteArray = Utils.getByteArrayFromURL(SHOP_PRICE_URL + ssId,
                 "GET");
         if (byteArray == null) {
-            Utils.logging("URLの取得に失敗");
+            Utils.logging("URLの取得に失敗:" + SHOP_PRICE_URL + ssId);
             return null;
         }
         String data = new String(byteArray);
@@ -57,7 +57,7 @@ public class GoGoGsApi {
         byte[] byteArray = Utils.getByteArrayFromURL(SHOP_PRICE_URL + ssId,
                 "GET");
         if (byteArray == null) {
-            Utils.logging("URLの取得に失敗");
+            Utils.logging("URLの取得に失敗:" + SHOP_PRICE_URL + ssId);
             return null;
         }
         String data = new String(byteArray);

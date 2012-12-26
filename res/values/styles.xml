@@ -1,40 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Animations" />
 
-	<!-- PopDownMenu -->
-	<style name="Animations.PopDownMenu" />
-	
-	<style name="Animations.PopDownMenu.Left">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
-	</style>
-	
-	<style name="Animations.PopDownMenu.Right">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_topright_to_bottomleft</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomleft_to_topright</item>
-	</style>
-	
-	<style name="Animations.PopDownMenu.Center">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
-	</style>
-	
-	<!-- PopUpMenu -->
-	<style name="Animations.PopUpMenu" />
-	
-	<style name="Animations.PopUpMenu.Left">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_bottomleft_to_topright</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_topright_to_bottomleft</item>
-	</style>
-	
-	<style name="Animations.PopUpMenu.Right">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_bottomright_to_topleft</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_topleft_to_bottomright</item>
-	</style>
-	
-	<style name="Animations.PopUpMenu.Center">
-		<item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
-		<item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
-	</style>
+    <style name="Animations" />
+
+    <!-- PopDownMenu -->
+    <style name="Animations.PopDownMenu" />
+
+    <style name="Animations.PopDownMenu.Left">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
+    </style>
+
+    <style name="Animations.PopDownMenu.Right">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_topright_to_bottomleft</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomleft_to_topright</item>
+    </style>
+
+    <style name="Animations.PopDownMenu.Center">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
+    </style>
+
+    <!-- PopUpMenu -->
+    <style name="Animations.PopUpMenu" />
+
+    <style name="Animations.PopUpMenu.Left">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomleft_to_topright</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_topright_to_bottomleft</item>
+    </style>
+
+    <style name="Animations.PopUpMenu.Right">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomright_to_topleft</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_topleft_to_bottomright</item>
+    </style>
+
+    <style name="Animations.PopUpMenu.Center">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
+    </style>
+
+    <style name="CustomTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="HomeRegularRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_regular_background</item>
+    </style>
+
+    <style name="HomeHighocRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_highoc_background</item>
+    </style>
+
+    <style name="HomeDieselRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_diesel_background</item>
+    </style>
+
+    <style name="HomeLampRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_lamp_background</item>
+    </style>
+
+    <style name="Home5kmRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_5km_background</item>
+    </style>
+
+    <style name="Home10kmRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_10km_background</item>
+    </style>
+
+    <style name="Home25kmRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_25km_background</item>
+    </style>
+
+    <style name="Home50kmRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:button">@drawable/home_check_50km_background</item>
+    </style>
+
+    <style name="ListNearbyRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">101dp</item>
+        <item name="android:button">@drawable/list_check_nearby_background</item>
+    </style>
+
+    <style name="ListUpdateDateRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">101dp</item>
+        <item name="android:button">@drawable/list_check_update_date_background</item>
+    </style>
+
+    <style name="ListLowPriceRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">101dp</item>
+        <item name="android:button">@drawable/list_check_low_price_background</item>
+    </style>
+
 </resources>

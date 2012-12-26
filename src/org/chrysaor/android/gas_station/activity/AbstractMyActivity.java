@@ -2,6 +2,7 @@ package org.chrysaor.android.gas_station.activity;
 
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
+import org.chrysaor.android.gas_station.util.GasStaApplication;
 
 import android.app.Activity;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -19,12 +20,16 @@ public abstract class AbstractMyActivity extends Activity {
 
     protected GoogleAnalyticsTracker tracker;
 
+    protected GasStaApplication app;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ErrorReporter.setup(this);
         ErrorReporter.bugreport(this);
+
+        app = (GasStaApplication) getApplication();
 
         tracker = GoogleAnalyticsTracker.getInstance();
 

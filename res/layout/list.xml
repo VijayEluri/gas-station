@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout01"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="@color/bg_color" >
 
     <LinearLayout
         android:id="@+id/LinearLayout01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@drawable/button_bar" >
+        android:background="@drawable/header" >
 
         <LinearLayout
             android:id="@+id/LinearLayout04"
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
-                android:background="@drawable/btn_back_states"
+                android:background="@drawable/common_header_btn_background"
                 android:text="戻る"
                 android:textColor="@color/white" >
             </Button>
@@ -36,14 +37,6 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="right|center_vertical" >
-
-            <Spinner
-                android:id="@+id/spin_sort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:entries="@array/settings_sort_kind" >
-            </Spinner>
         </LinearLayout>
     </LinearLayout>
 
@@ -53,12 +46,32 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/header_ad"
         android:layout_below="@+id/LinearLayout01"
-        android:layout_centerInParent="true" >
+        android:layout_centerInParent="true"
+        android:orientation="vertical" >
 
-        <ListView
-            android:id="@+id/savedList"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <ListView
+                android:id="@+id/savedList"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="#00000000"
+                android:divider="#00000000"
+                android:fadingEdge="none"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false"
+                android:listSelector="@color/transrate" >
+            </ListView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/header_shadow_clamp"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout

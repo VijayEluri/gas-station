@@ -66,9 +66,13 @@ public class SearchThread extends Thread {
         XmlParserFromUrl xml = new XmlParserFromUrl();
 
         for (int i = 0; i < urls.length; i++) {
+            if (urls[i].length() == 0) {
+                continue;
+            }
+
             byte[] byteArray = Utils.getByteArrayFromURL(urls[i], "GET");
             if (byteArray == null) {
-                Utils.logging("URLの取得に失敗");
+                Utils.logging("URLの取得に失敗:" + urls[i]);
                 continue;
             }
             String data = new String(byteArray);

@@ -2,6 +2,7 @@ package org.chrysaor.android.gas_station.activity;
 
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
+import org.chrysaor.android.gas_station.util.GasStaApplication;
 
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
@@ -21,6 +22,7 @@ public abstract class AbstractMyMapActivity extends MapActivity {
 
     protected GoogleAnalyticsTracker tracker;
     public static String lastEvent = null;
+    protected GasStaApplication app;
 
     /** ブランドID定数 */
     public static final String[] brands = { "1", "2", "3", "4", "6", "7", "8",
@@ -38,6 +40,7 @@ public abstract class AbstractMyMapActivity extends MapActivity {
         ErrorReporter.setup(this);
         ErrorReporter.bugreport(this);
 
+        app = (GasStaApplication) getApplication();
         tracker = GoogleAnalyticsTracker.getInstance();
 
         // Start the tracker in manual dispatch mode...

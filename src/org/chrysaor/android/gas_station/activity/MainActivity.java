@@ -14,6 +14,8 @@ import org.chrysaor.android.gas_station.lib.database.StandsDao;
 import org.chrysaor.android.gas_station.lib.dto.Stand;
 import org.chrysaor.android.gas_station.util.CenterCircleOverlay;
 import org.chrysaor.android.gas_station.util.LocationOverlay;
+import org.chrysaor.android.gas_station.util.MultiDirectionSlidingDrawer;
+import org.chrysaor.android.gas_station.util.MultiDirectionSlidingDrawer.OnDrawerCloseListener;
 import org.chrysaor.android.gas_station.util.SearchThread;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
 import org.chrysaor.android.gas_station.util.StandsHelper;
@@ -54,8 +56,11 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -94,18 +99,12 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
     /** ガソリンスタンド検索スレッド */
     private SearchThread searchThread;
 
-    /** ローディングレイアウト */
-    private LinearLayout layoutHeader2;
-
     private final Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        // ローディングレイアウト
-        layoutHeader2 = (LinearLayout) findViewById(R.id.header2);
 
         gestureDetector = new GestureDetector(this, simpleOnGestureListener);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -139,9 +138,9 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         mMapView = (MapView) inflated;
 
         mMapView = (MapView) findViewById(R.id.main_map);
-        mMapView.setBuiltInZoomControls(true);
-        mMapView.getZoomButtonsController().getZoomControls()
-                .setPadding(0, 0, 0, 85);
+        mMapView.setBuiltInZoomControls(false);
+        // mMapView.getZoomButtonsController().getZoomControls()
+        // .setPadding(0, 0, 0, 105);
 
         mMapController = mMapView.getController();
 
@@ -149,13 +148,13 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         mMapView.getOverlays().add(location);
 
         // 現在地追跡処理 START
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.trace_mylocation);
+//        ToggleButton toggle = (ToggleButton) findViewById(R.id.trace_mylocation);
 
         // 今回の主役。有効にすることでGPSの取得が可能に
         overlay = new LocationOverlay(getApplicationContext(), mMapView);
         overlay.enableMyLocation();
         overlay.enableCompass();
-        overlay.setTraceToggle(toggle);
+//        overlay.setTraceToggle(toggle);
 
         // GPS取得が可能な状態になり、GPS初取得時の動作を決定
         overlay.runOnFirstFix(new Runnable() {
@@ -177,6 +176,8 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         // ヘッダーViewの設定
         setHeaderView();
 
+        setSlideView();
+
         // フッターViewの設定
         setFooterView();
 
@@ -194,85 +195,10 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
      * ヘッダーViewの設定
      */
     private void setHeaderView() {
-        // 会員価格処理 START
-        ToggleButton toggleMember = (ToggleButton) findViewById(R.id.toggle_member);
-        toggleMember.setChecked(sp.getBoolean("settings_member", false));
-        toggleMember.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                    boolean isChecked) {
-
-                Editor editor = sp.edit();
-
-                if (isChecked) {
-                    editor.putBoolean("settings_member", true);
-                } else {
-                    editor.putBoolean("settings_member", false);
-                }
-                editor.commit();
-
-                // 再検索
-                if (dialog != null && dialog.isShowing() == false) {
-                    searchAction();
-                }
-            }
-        });
-        // 会員価格処理 START
-
-        // 24H ONLY処理 START
-        ToggleButton toggleRtc = (ToggleButton) findViewById(R.id.toggle_rtc);
-        toggleRtc.setChecked(sp.getBoolean("settings_rtc", false));
-        toggleRtc.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,
-                    boolean isChecked) {
-
-                Editor editor = sp.edit();
-
-                if (isChecked) {
-                    editor.putBoolean("settings_rtc", true);
-                } else {
-                    editor.putBoolean("settings_rtc", false);
-                }
-                editor.commit();
-
-                // 再検索
-                if (dialog != null && dialog.isShowing() == false) {
-                    searchAction();
-                }
-            }
-        });
-        // 24H ONLY処理 START
-
-        if (donate == true) {
-            // ADの非表示
-            LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
-            head.setVisibility(View.GONE);
-
-            View header = (View) findViewById(R.id.header);
-            header.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * フッターViewの設定
-     */
-    private void setFooterView() {
-        // 検索ボタンのonClick設定
-        ImageView imgSsearch = (ImageView) findViewById(R.id.search_img);
-        imgSsearch.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                MainActivity.this.searchAction();
-            }
-        });
 
         // リストボタンのonClick設定
-        ImageView imgList = (ImageView) findViewById(R.id.main_list);
-        imgList.setOnClickListener(new OnClickListener() {
+        Button btnList = (Button) findViewById(R.id.btnList);
+        btnList.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -285,24 +211,250 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             }
         });
 
-        // お気に入りボタンのonClick設定
-        ImageView imgFav = (ImageView) findViewById(R.id.favorite);
-        imgFav.setOnClickListener(new OnClickListener() {
+        // 設定ボタン
+        Button btnSetting = (Button) findViewById(R.id.btnSetting);
+        btnSetting.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // イベントトラック（リスト）
-                tracker.trackEvent("Main", "FavoriteList", null, 0);
-
                 Intent intent = new Intent(getApplicationContext(),
-                        FavoriteListActivity.class);
-                startActivityForResult(intent, 0);
+                        SettingsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_right_in,
+                        R.anim.push_right_out);
+            }
+        });
+
+        if (donate == true) {
+            // ADの非表示
+            LinearLayout head = (LinearLayout) findViewById(R.id.header_ad);
+            head.setVisibility(View.GONE);
+
+            View header = (View) findViewById(R.id.header);
+            header.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * スライドViewの設定
+     */
+    private void setSlideView() {
+
+        MultiDirectionSlidingDrawer slidingDrawer = (MultiDirectionSlidingDrawer) findViewById(R.id.drawer);
+        slidingDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+
+            @Override
+            public void onDrawerClosed() {
+                searchAction();
+            }
+        });
+
+        // レギュラー
+        RadioButton radioRegular = (RadioButton) findViewById(R.id.radioRegular);
+        radioRegular
+                .setOnCheckedChangeListener(radioGroupKindOnCheckedChangeListener);
+
+        // ハイオク
+        RadioButton radioHighoc = (RadioButton) findViewById(R.id.radioHighoc);
+        radioHighoc
+                .setOnCheckedChangeListener(radioGroupKindOnCheckedChangeListener);
+
+        // 軽油
+        RadioButton radioDiesel = (RadioButton) findViewById(R.id.radioDiesel);
+        radioDiesel
+                .setOnCheckedChangeListener(radioGroupKindOnCheckedChangeListener);
+
+        // 灯油
+        RadioButton radioLamp = (RadioButton) findViewById(R.id.radioLamp);
+        radioLamp
+                .setOnCheckedChangeListener(radioGroupKindOnCheckedChangeListener);
+
+        int kind = Integer.parseInt(app.getKind());
+        switch (kind) {
+        case 0:
+            radioRegular.setChecked(true);
+            break;
+        case 1:
+            radioHighoc.setChecked(true);
+            break;
+        case 2:
+            radioDiesel.setChecked(true);
+            break;
+        case 3:
+            radioLamp.setChecked(true);
+            break;
+        default:
+            break;
+        }
+
+        // 5km
+        RadioButton radioDistance5km = (RadioButton) findViewById(R.id.radioDistance5km);
+        radioDistance5km
+                .setOnCheckedChangeListener(radioGroupDistanceOnCheckedChangeListener);
+
+        // ハイオク
+        RadioButton radioDistance10km = (RadioButton) findViewById(R.id.radioDistance10km);
+        radioDistance10km
+                .setOnCheckedChangeListener(radioGroupDistanceOnCheckedChangeListener);
+
+        // 軽油
+        RadioButton radioDistance25km = (RadioButton) findViewById(R.id.radioDistance25km);
+        radioDistance25km
+                .setOnCheckedChangeListener(radioGroupDistanceOnCheckedChangeListener);
+
+        // 灯油
+        RadioButton radioDistance50km = (RadioButton) findViewById(R.id.radioDistance50km);
+        radioDistance50km
+                .setOnCheckedChangeListener(radioGroupDistanceOnCheckedChangeListener);
+
+        int distance = Integer.parseInt(app.getDistance());
+        switch (distance) {
+        case 5:
+            radioDistance5km.setChecked(true);
+            break;
+        case 10:
+            radioDistance10km.setChecked(true);
+            break;
+        case 25:
+            radioDistance25km.setChecked(true);
+            break;
+        case 50:
+            radioDistance50km.setChecked(true);
+            break;
+        default:
+            break;
+        }
+
+        // 24時間営業
+        ToggleButton toggle24h = (ToggleButton) findViewById(R.id.toggle24h);
+        toggle24h.setChecked(app.get24h());
+        toggle24h.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                    boolean isChecked) {
+
+                if (isChecked) {
+                    app.set24h(true);
+                } else {
+                    app.set24h(false);
+                }
+            }
+        });
+
+        // セルフ
+        ToggleButton toggleSelf = (ToggleButton) findViewById(R.id.toggleSelf);
+
+        // 会員価格
+        ToggleButton toggleMember = (ToggleButton) findViewById(R.id.toggleMember);
+        toggleMember.setChecked(app.getMember());
+        toggleMember.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                    boolean isChecked) {
+
+                if (isChecked) {
+                    app.setMember(true);
+                } else {
+                    app.setMember(false);
+                }
+            }
+        });
+
+        // 価格のないスタンド
+        ToggleButton toggleNoData = (ToggleButton) findViewById(R.id.toggleNoData);
+        toggleNoData.setChecked(app.getNoData());
+        toggleNoData.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                    boolean isChecked) {
+
+                if (isChecked) {
+                    app.setNoData(true);
+                } else {
+                    app.setNoData(false);
+                }
+            }
+        });
+    }
+
+    OnCheckedChangeListener radioGroupKindOnCheckedChangeListener = new OnCheckedChangeListener() {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView,
+                boolean isChecked) {
+            if (isChecked) {
+                if (buttonView.getId() == R.id.radioRegular) {
+                    app.setKind("0");
+                } else if (buttonView.getId() == R.id.radioHighoc) {
+                    app.setKind("1");
+                } else if (buttonView.getId() == R.id.radioDiesel) {
+                    app.setKind("2");
+                } else if (buttonView.getId() == R.id.radioLamp) {
+                    app.setKind("3");
+                }
+            }
+        }
+    };
+
+    OnCheckedChangeListener radioGroupDistanceOnCheckedChangeListener = new OnCheckedChangeListener() {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView,
+                boolean isChecked) {
+            if (isChecked) {
+                if (buttonView.getId() == R.id.radioDistance5km) {
+                    app.setDistance("5");
+                } else if (buttonView.getId() == R.id.radioDistance10km) {
+                    app.setDistance("10");
+                } else if (buttonView.getId() == R.id.radioDistance25km) {
+                    app.setDistance("25");
+                } else if (buttonView.getId() == R.id.radioDistance50km) {
+                    app.setDistance("50");
+                }
+            }
+        }
+    };
+
+    /**
+     * フッターViewの設定
+     */
+    private void setFooterView() {
+        // 検索ボタンのonClick設定
+        Button btnSearch = (Button) findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                searchAction();
+            }
+        });
+
+        // ズームアウトボタンのonClick設定
+        Button btnZoomOut = (Button) findViewById(R.id.btnZoomOut);
+        btnZoomOut.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mMapController.zoomOut();
+            }
+        });
+
+        // ズームインボタンのonClick設定
+        Button btnZoomIn = (Button) findViewById(R.id.btnZoomIn);
+        btnZoomIn.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mMapController.zoomIn();
             }
         });
 
         // 現在地ボタンのonClick設定
-        ImageView imgMyLocation = (ImageView) findViewById(R.id.imgMyLocation);
-        imgMyLocation.setOnClickListener(new OnClickListener() {
+        Button btnLocation = (Button) findViewById(R.id.btnLocation);
+        btnLocation.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -318,17 +470,6 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             }
         });
 
-        // 設定ボタンのonClick設定
-        ImageView imgSetting = (ImageView) findViewById(R.id.imgSetting);
-        imgSetting.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),
-                        SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -404,14 +545,14 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             View header = (View) findViewById(R.id.header);
             header.setVisibility(View.VISIBLE);
 
-            // 会員価格処理 START
-            ToggleButton toggleMember = (ToggleButton) findViewById(R.id.toggle_member);
-            toggleMember.setChecked(sp.getBoolean("settings_member", false));
-            // 会員価格処理 START
-
-            // 24H ONLY処理 START
-            ToggleButton toggleRtc = (ToggleButton) findViewById(R.id.toggle_rtc);
-            toggleRtc.setChecked(sp.getBoolean("settings_rtc", false));
+//            // 会員価格処理 START
+//            ToggleButton toggleMember = (ToggleButton) findViewById(R.id.toggle_member);
+//            toggleMember.setChecked(sp.getBoolean("settings_member", false));
+//            // 会員価格処理 START
+//
+//            // 24H ONLY処理 START
+//            ToggleButton toggleRtc = (ToggleButton) findViewById(R.id.toggle_rtc);
+//            toggleRtc.setChecked(sp.getBoolean("settings_rtc", false));
             // 24H ONLY処理 START
         }
 
@@ -467,14 +608,14 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
                         SeekBarPreference.OPT_SEEKBAR_DEF);
         int color = Color.argb((int) ((100 - penetration) * 2.55), 0, 0, 0);
 
-        View header = (View) findViewById(R.id.header);
-        header.setBackgroundColor(color);
+        // View header = (View) findViewById(R.id.header);
+        // header.setBackgroundColor(color);
+        //
+        // View header2 = (View) findViewById(R.id.header2);
+        // header2.setBackgroundColor(color);
 
-        View header2 = (View) findViewById(R.id.header2);
-        header2.setBackgroundColor(color);
-
-        View footer = (View) findViewById(R.id.footer);
-        footer.setBackgroundColor(color);
+        // View footer = (View) findViewById(R.id.footer);
+        // footer.setBackgroundColor(color);
     }
 
     @Override
@@ -544,38 +685,36 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
      */
     public Boolean searchAction() {
 
-        showLoadingView();
-
         try {
             SharedPreferences pref = PreferenceManager
                     .getDefaultSharedPreferences(MainActivity.this);
-            String dist = pref.getString("settings_dist", "10");
+            String dist = app.getDistance();
             resource = getResources();
 
-            String url_string = "http://api.gogo.gs/v1.2/?apid=gsearcho0o0";
-            url_string += "&dist=" + dist;
-            url_string += "&num=" + pref.getString("settings_num", "60");
-            url_string += "&span=" + pref.getString("settings_span", "");
-            Boolean member = pref.getBoolean("settings_member", false);
+            String urlString = "http://api.gogo.gs/v1.2/?apid=gsearcho0o0";
+            urlString += "&dist=" + dist;
+            urlString += "&num=" + pref.getString("settings_num", "60");
+            urlString += "&span=" + pref.getString("settings_span", "");
+            Boolean member = app.getMember();
             if (member == true) {
-                url_string += "&member=1";
+                urlString += "&member=1";
             }
-            url_string += "&kind=" + pref.getString("settings_kind", "0");
+            urlString += "&kind=" + app.getKind();
 
             String sort = pref.getString("settings_sort", "dist");
             if (sort.equals("dist")) {
-                url_string += "&sort=d";
+                urlString += "&sort=d";
             }
 
             // イベントトラック（検索）
-            tracker.trackEvent("Main", "Search", url_string, 0);
+            tracker.trackEvent("Main", "Search", urlString, 0);
 
             // 地図の中心位置を取得
             GeoPoint center = mMapView.getMapCenter();
-            url_string += "&lat=" + (double) center.getLatitudeE6() / E6;
-            url_string += "&lon=" + (double) center.getLongitudeE6() / E6;
+            urlString += "&lat=" + (double) center.getLatitudeE6() / E6;
+            urlString += "&lon=" + (double) center.getLongitudeE6() / E6;
 
-            String url = url_string;
+            String url = urlString;
             Utils.logging("url = " + url.toString());
 
             Double lat = (double) center.getLatitudeE6() / E6;
@@ -597,8 +736,7 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
                         + "&lat_max=" + (double) (lat + 0.0083 * no_dist)
                         + "&lon_min=" + (double) (lon - 0.0125 * no_dist)
                         + "&lon_max=" + (double) (lon + 0.0125 * no_dist)
-                        + "&pm=" + pref.getString("settings_kind", "0")
-                        + "&n=100";
+                        + "&pm=" + app.getKind() + "&n=100";
 
                 ArrayList<String> maker = new ArrayList<String>();
 
@@ -636,63 +774,6 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         return true;
     }
 
-    /**
-     * ローディングViewの表示
-     */
-    private void showLoadingView() {
-        Animation animation = AnimationUtils.loadAnimation(this,
-                R.anim.open_header);
-        animation.setAnimationListener(new AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                // TODO 自動生成されたメソッド・スタブ
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                // TODO 自動生成されたメソッド・スタブ
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                layoutHeader2.setVisibility(View.VISIBLE);
-            }
-        });
-        layoutHeader2.startAnimation(animation);
-    }
-
-    /**
-     * ローディングViewの非表示
-     */
-    private void hideLoadingView() {
-        Animation animation = AnimationUtils.loadAnimation(this,
-                R.anim.close_header);
-        animation.setStartOffset(2000);
-        animation.setAnimationListener(new AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                // TODO 自動生成されたメソッド・スタブ
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                // TODO 自動生成されたメソッド・スタブ
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                layoutHeader2.setVisibility(View.INVISIBLE);
-            }
-        });
-        layoutHeader2.startAnimation(animation);
-    }
-
     @Override
     public void run() {
         // プログレスダイアログを閉じる
@@ -713,9 +794,6 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
                     resource.getText(R.string.dialog_message_out_of_range),
                     Toast.LENGTH_LONG).show();
         } else {
-
-            Drawable speech = getResources().getDrawable(R.drawable.pbase);
-            Drawable nodata = getResources().getDrawable(R.drawable.pnodata);
 
             String pin_type = PreferenceManager.getDefaultSharedPreferences(
                     this).getString("settings_pin_type", "price");
@@ -759,19 +837,10 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
                     standsDao.insert(dto);
 
-                    if (pin_type.compareTo("price") == 0) {
-                        int price = Integer.parseInt(dto.price);
-                        if (price == 9999) {
-                            pinOverlay = new PinItemizedOverlay(nodata);
-                        } else {
-                            pinOverlay = new PinItemizedOverlay(speech);
-                        }
-                    } else {
-                        pinOverlay = new PinItemizedOverlay(getResources()
-                                .getDrawable(
-                                        helper.getBrandImage(dto.brand,
-                                                Integer.valueOf(dto.price))));
-                    }
+                    pinOverlay = new PinItemizedOverlay(getResources()
+                            .getDrawable(
+                                    helper.getBrandImage(dto.brand,
+                                            Integer.valueOf(dto.price))));
 
                     GeoPoint point = new GeoPoint(
                             (int) ((double) dto.latitude * E6),
@@ -793,12 +862,15 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             mMapView.getOverlays().addAll(pins);
             mMapView.invalidate();
 
-            TextView txtMessge = (TextView) findViewById(R.id.txt_message);
-            txtMessge.setText(String.valueOf(dataSize) + "件のスタンドが見つかりました");
-
-            hideLoadingView();
+            Toast.makeText(getApplicationContext(),
+                    String.valueOf(dataSize) + "件のスタンドが見つかりました",
+                    Toast.LENGTH_SHORT).show();
         }
+
         db.close();
+
+        TextView txtMessage = (TextView) findViewById(R.id.txt_message);
+        txtMessage.setText("");
     }
 
     public class PinItemizedOverlay extends ItemizedOverlay<PinOverlayItem>
@@ -810,7 +882,7 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         private List<String> pinTypes = new ArrayList<String>();
         private List<Stand> standList = new ArrayList<Stand>();
         private int fontSize = 12;
-        private int additionHeight = 12;
+        private int additionHeight = 11;
 
         public PinItemizedOverlay(Drawable defaultMarker) {
             super(boundCenterBottom(defaultMarker));
@@ -897,7 +969,7 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
             // Draw point caption and its bounding rectangle
             p.setTextSize(fontSize);
-            p.setColor(Color.BLUE);
+            p.setColor(Color.YELLOW);
             p.setAntiAlias(true);
             p.setTypeface(tf);
 
@@ -906,15 +978,11 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             for (int i = 0; i < size; i++) {
 
                 String price = prices.get(i);
+
+                if (price.contains("9999")) {
+                    price = "---";
+                }
                 String pin = pinTypes.get(i);
-
-                if (pin.compareTo("brand") == 0) {
-                    continue;
-                }
-
-                if (price.equals("9999")) {
-                    continue;
-                }
 
                 GeoPoint locate = points.get(i);
 

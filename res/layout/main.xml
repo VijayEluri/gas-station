@@ -1,13 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/org.chrysaor.android.gas_station"
     android:id="@+id/screen"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
     <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/header"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5" >
+
+            <Button
+                android:id="@+id/btnSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_header_btn_setting_background"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txt_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:shadowColor="#000000"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.2"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="right" >
+
+            <Button
+                android:id="@+id/btnList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_header_btn_list_background"
+                android:text="" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/header_ad"
+        android:layout_below="@+id/header"
+        android:background="@drawable/header_shadow_clamp"
         android:orientation="vertical" >
 
         <ViewStub
@@ -17,34 +75,50 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/header2"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_below="@id/header_ad"
-        android:background="#99000000"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="4dip"
-        android:paddingTop="4dip"
-        android:visibility="invisible" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/header_ad"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingRight="10dp" >
 
-        <TextView
-            android:id="@+id/txt_message"
+        <Button
+            android:id="@+id/btnLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:shadowColor="#000000"
-            android:shadowDx="1.2"
-            android:shadowDy="1.2"
-            android:shadowRadius="1.2"
-            android:textColor="@color/white" />
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/home_btn_location_background"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/home_btn_search_background"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnZoomIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_btn_zoomin_background"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnZoomOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_btn_zoomout_background"
+            android:text="" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/header_ad"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:gravity="center" >
 
         <net.nend.android.NendAdView
@@ -53,279 +127,30 @@
             android:layout_height="50dp"
             NendApiKey="348928903ae5e067a2259d63a1cfe916f3e465ad"
             NendSpotId="6027"
-            android:gravity="center" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header2"
-        android:background="#99000000"
-        android:gravity="right|center"
-        android:padding="5dp"
-        android:visibility="gone" >
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:id="@+id/LinearLayout19"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginRight="2dip"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/TextView01"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1.2"
-                    android:shadowDy="1.2"
-                    android:shadowRadius="1.2"
-                    android:text="会員"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14dip" >
-                </TextView>
-
-                <TextView
-                    android:id="@+id/trace_mylocation_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1.2"
-                    android:shadowDy="1.2"
-                    android:shadowRadius="1.2"
-                    android:text="価格"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14dip" >
-                </TextView>
-            </LinearLayout>
-
-            <ToggleButton
-                android:id="@+id/toggle_member"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/ToggleButton01" >
-            </ToggleButton>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:id="@+id/LinearLayout19"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginRight="2dip"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/TextView01"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1.2"
-                    android:shadowDy="1.2"
-                    android:shadowRadius="1.2"
-                    android:text="24H"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14dip" >
-                </TextView>
-
-                <TextView
-                    android:id="@+id/trace_mylocation_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1.2"
-                    android:shadowDy="1.2"
-                    android:shadowRadius="1.2"
-                    android:text="ONLY"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14dip" >
-                </TextView>
-            </LinearLayout>
-
-            <ToggleButton
-                android:id="@+id/toggle_rtc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/ToggleButton01" >
-            </ToggleButton>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:id="@+id/LinearLayout05"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginRight="2dip"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/TextView01"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1.2"
-                    android:shadowDy="1.2"
-                    android:shadowRadius="1.2"
-                    android:text="現在地"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14dip" >
-                </TextView>
-
-                <TextView
-                    android:id="@+id/trace_mylocation_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1.2"
-                    android:shadowDy="1.2"
-                    android:shadowRadius="1.2"
-                    android:text="追跡"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14dip" >
-                </TextView>
-            </LinearLayout>
-
-            <ToggleButton
-                android:id="@+id/trace_mylocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@+id/ToggleButton01" >
-            </ToggleButton>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/footer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:background="#99000000"
-        android:orientation="horizontal"
-        android:padding="5dp" >
-
-        <LinearLayout
-            android:id="@+id/LinearLayout01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal|center" >
-
-            <ImageView
-                android:id="@+id/search_img"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:background="@drawable/button_footer_background"
-                android:scaleType="center"
-                android:src="@drawable/search" >
-            </ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayout02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center" >
-
-            <ImageView
-                android:id="@+id/main_list"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:background="@drawable/button_footer_background"
-                android:scaleType="center"
-                android:src="@drawable/list" >
-            </ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayout03"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center" >
-
-            <ImageView
-                android:id="@+id/favorite"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:background="@drawable/button_footer_background"
-                android:scaleType="center"
-                android:src="@drawable/favorite" >
-            </ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayout04"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:gravity="center" >
+        </net.nend.android.NendAdView>
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imgMyLocation"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:background="@drawable/button_footer_background"
-                android:scaleType="center"
-                android:src="@drawable/zoomout" >
-            </ImageView>
-        </LinearLayout>
+    <org.chrysaor.android.gas_station.util.MultiDirectionSlidingDrawer
+        xmlns:my="http://schemas.android.com/apk/res/org.chrysaor.android.gas_station"
+        android:id="@+id/drawer"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/header"
+        my:content="@+id/content"
+        my:direction="topToBottom"
+        my:handle="@+id/handle" >
 
-        <LinearLayout
-            android:id="@+id/LinearLayout05"
+        <include
+            android:id="@id/content"
+            android:layout_height="match_parent"
+            layout="@layout/main_setting" />
+
+        <ImageView
+            android:id="@id/handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <ImageView
-                android:id="@+id/imgSetting"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:background="@drawable/button_footer_background"
-                android:scaleType="center"
-                android:src="@drawable/tool" >
-            </ImageView>
-        </LinearLayout>
-    </LinearLayout>
+            android:src="@drawable/home_handle" />
+    </org.chrysaor.android.gas_station.util.MultiDirectionSlidingDrawer>
 
 </RelativeLayout>

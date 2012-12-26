@@ -8,6 +8,7 @@ import org.chrysaor.android.gas_station.util.Utils;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * ガソリンスタンドDao
@@ -67,7 +68,7 @@ public class StandsDao {
     }
 
     public ArrayList<Stand> findAll(String sortColumn) {
-        ArrayList<Stand> gsList = new ArrayList<Stand>();
+        ArrayList<Stand> dtoStandList = new ArrayList<Stand>();
 
         if (sortColumn.equals("price")) {
             sortColumn = COLUMN_PRICE;
@@ -79,16 +80,18 @@ public class StandsDao {
             sortColumn = COLUMN_ID;
         }
 
+        Log.d("hoge", sortColumn);
         Cursor cursor = db.query(TABLE_NAME, COLUMNS, null, null, null, null,
                 sortColumn);
 
         while (cursor.moveToNext()) {
             Stand gsInfo = cursor2Object(cursor);
 
-            gsList.add(gsInfo);
+            dtoStandList.add(gsInfo);
         }
+        Log.d("hoge", "count:" + dtoStandList.size());
 
-        return gsList;
+        return dtoStandList;
     }
 
     public Stand findByShopCd(String shop_cd) {
@@ -120,7 +123,7 @@ public class StandsDao {
     private Stand cursor2Object(Cursor cursor) {
 
         Stand gasStandDto = new Stand();
-        Utils.logging(cursor.getString(13));
+        Utils.logging(cursor.getString(6));
 
         // gasStandDto.RowId = Integer.parseInt(cursor.getString(0));
         gasStandDto.shopCode = cursor.getString(1);
