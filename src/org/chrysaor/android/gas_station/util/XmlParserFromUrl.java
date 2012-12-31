@@ -48,7 +48,6 @@ public class XmlParserFromUrl {
         String value = new String();
 
         if (is == null) {
-            Log.d(LOG_TAG, "null!!");
             return null;
         }
 

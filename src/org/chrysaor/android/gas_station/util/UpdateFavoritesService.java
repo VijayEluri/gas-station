@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.chrysaor.android.gas_station.activity.MainActivity;
+import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.FavoritesDao;
 import org.chrysaor.android.gas_station.lib.dto.Stand;

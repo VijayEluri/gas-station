@@ -52,6 +52,10 @@
             android:key="settings_rtc"
             android:summary="@string/settings_rtc_summary"
             android:title="@string/settings_rtc_title" />
+        <CheckBoxPreference
+            android:key="settings_self"
+            android:summary="@string/settings_self_summary"
+            android:title="@string/settings_self_title" />
 
         <ListPreference
             android:defaultValue="@string/settings_sort_default"
@@ -64,6 +68,7 @@
 
         <CheckBoxPreference
             android:key="settings_no_postdata"
+            android:defaultValue="true"
             android:summary="@string/settings_no_postdata_summary"
             android:title="@string/settings_no_postdata_title" />
     </PreferenceCategory>

@@ -30,7 +30,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
 
-//    private boolean settings_penetration_key = false;
+    // private boolean settings_penetration_key = false;
     private boolean settings_member_key = false;
     GoogleAnalyticsTracker tracker;
 
@@ -57,8 +57,6 @@ public class SettingsActivity extends PreferenceActivity implements
 
             if (key.equals("settings_member")) {
                 settings_member_key = true;
-//            } else if (key.equals("settings_penetration")) {
-//                settings_penetration_key = true;
             }
         }
 
@@ -67,12 +65,6 @@ public class SettingsActivity extends PreferenceActivity implements
                     .setDefaultValue(false);
             setSummaryAll("settings_member");
         }
-
-//        if (settings_penetration_key == false) {
-//            getPreferenceScreen().findPreference("settings_penetration")
-//                    .setDefaultValue(SeekBarPreference.DEFAULT_ORDER);
-//            setSummaryAll("settings_penetration");
-//        }
 
         // パスワード
         Preference passwd = findPreference("settings_passwd");
@@ -100,14 +92,6 @@ public class SettingsActivity extends PreferenceActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
             String key) {
         setSummaryAll(key);
-
-        // 油種 or 会員価格が変更された場合、お気に入りを更新する
-        if (key.equals("settings_member") || key.equals("settings_kind")) {
-            Intent service = new Intent(this, UpdateFavoritesService.class);
-            service.setAction(UpdateFavoritesService.START_ACTION);
-            service.putExtra("mode", "all");
-            startService(service);
-        }
     }
 
     private void setSummaryAll(String key) {
@@ -130,10 +114,7 @@ public class SettingsActivity extends PreferenceActivity implements
             pref.setSummary(pref.getEntry());
 
             // イベントトラック
-            tracker.trackEvent("Settings", // Category
-                    key, // Action
-                    pref.getEntry().toString(), // Label
-                    0);
+            tracker.trackEvent("Settings", key, pref.getEntry().toString(), 0);
 
             if (key.equals("settings_dist")) {
                 setNoPostDataSummary();
@@ -144,10 +125,8 @@ public class SettingsActivity extends PreferenceActivity implements
             pref.setSummary(String.valueOf(pref.getValue()) + "%");
 
             // イベントトラック
-            tracker.trackEvent("Settings", // Category
-                    key, // Action
-                    String.valueOf(pref.getValue()), // Label
-                    0);
+            tracker.trackEvent("Settings", key,
+                    String.valueOf(pref.getValue()), 0);
 
         } else if (class_name.indexOf("CheckBoxPreference") != -1) {
             CheckBoxPreference pref = (CheckBoxPreference) getPreferenceScreen()
@@ -164,10 +143,8 @@ public class SettingsActivity extends PreferenceActivity implements
             }
 
             // イベントトラック
-            tracker.trackEvent("Settings", // Category
-                    key, // Action
-                    String.valueOf(pref.isChecked()), // Label
-                    0);
+            tracker.trackEvent("Settings", key,
+                    String.valueOf(pref.isChecked()), 0);
 
         } else if (class_name.indexOf("EditTextPreference") != -1) {
             EditTextPreference pref = (EditTextPreference) getPreferenceScreen()
@@ -179,10 +156,7 @@ public class SettingsActivity extends PreferenceActivity implements
             }
 
             // イベントトラック
-            tracker.trackEvent("Settings", // Category
-                    key, // Action
-                    pref.getText().toString(), // Label
-                    0);
+            tracker.trackEvent("Settings", key, pref.getText().toString(), 0);
         }
     }
 

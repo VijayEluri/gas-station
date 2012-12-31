@@ -2,7 +2,7 @@
 <resources>
 
     <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">ガススタ!</string>
+    <string name="app_name">ガススタ！</string>
     <string name="title">サンプル</string>
     <string name="about_label">about</string>
     <string name="settings_label">設定</string>
@@ -34,6 +34,8 @@
     <string name="settings_member_title">会員価格</string>
     <string name="settings_rtc_summary">24時間営業のガソリンスタンドのみ表示</string>
     <string name="settings_rtc_title">24時間営業</string>
+    <string name="settings_self_summary">セルフ給油のあるガソリンスタンドのみ表示</string>
+    <string name="settings_self_title">セルフ給油</string>
     <string name="settings_sort_dialogtitle">並び順</string>
     <string name="settings_sort_summary">検索結果の並び順を設定します</string>
     <string name="settings_sort_title">並び順</string>
@@ -73,5 +75,7 @@
     <string name="bug_report_positive_button">送信内容を確認</string>
     <string name="bug_report_negative_button">送信しない</string>
     <string name="tracking_code">UA-20090562-2</string>
+    <string name="nend_spotid">6027</string>
+    <string name="nend_apiid">348928903ae5e067a2259d63a1cfe916f3e465ad</string>
 
 </resources>

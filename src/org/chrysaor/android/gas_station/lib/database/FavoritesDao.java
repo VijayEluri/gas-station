@@ -153,8 +153,10 @@ public class FavoritesDao {
         Cursor cursor = db.query(TABLE_NAME, COLUMNS, selection, null, null,
                 null, null);
 
-        while (cursor.moveToNext()) {
-            return cursor2Object(cursor);
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                return cursor2Object(cursor);
+            }
         }
 
         return null;

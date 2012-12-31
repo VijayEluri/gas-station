@@ -18,24 +18,8 @@
             android:id="@+id/TextView01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="価格を投稿するにはgogo.gsのアカウントが必要です。"
-            android:textColor="@color/white" >
-        </TextView>
-
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ユーザIDとパスワードを入力してください。"
-            android:textColor="@color/white" >
-        </TextView>
-
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:text="ユーザID"
+            android:layout_marginBottom="20dp"
+            android:text="価格を投稿するにはgogo.gsのアカウントが必要です。\nユーザIDとパスワードを入力してください。"
             android:textColor="@color/white" >
         </TextView>
 
@@ -43,21 +27,15 @@
             android:id="@+id/edit_user_id"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:hint="ユーザIDを入力してください"
             android:singleLine="true" >
         </EditText>
-
-        <TextView
-            android:id="@+id/TextView02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="パスワード"
-            android:textColor="@color/white" >
-        </TextView>
 
         <EditText
             android:id="@+id/edit_passwd"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:hint="パスワードを入力してください"
             android:password="true"
             android:singleLine="true" >
         </EditText>
@@ -66,9 +44,9 @@
             android:id="@+id/TextView03"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="※ Yahoo!JAPAN ID,Twitterアカウントはご利用いただけません。"
-            android:textColor="@color/white"
-            android:textSize="13dp" >
+            android:textSize="11sp" >
         </TextView>
 
         <TextView
@@ -76,7 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="gogo.gsのアカウントが無い場合、ユーザ登録（無料）が必要です。" />
+            android:text="gogo.gsのアカウントが無い場合、ユーザ登録（無料）が必要です。"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </ScrollView>

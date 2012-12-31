@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/layoutSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center" >
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/radioGroupSort"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioSortNearby"
+                style="@style/ListNearbyRadioButton"
+                android:text="" />
+
+            <RadioButton
+                android:id="@+id/radioSortLowPrice"
+                style="@style/ListLowPriceRadioButton"
+                android:text="" />
+
+            <RadioButton
+                android:id="@+id/radioSortUpdateDate"
+                style="@style/ListUpdateDateRadioButton"
+                android:text="" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutFavorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center" >
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/radioGroupSort"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioSortCreateDate"
+                style="@style/ListCreateDateRadioButton"
+                android:text="" />
+
+            <RadioButton
+                android:id="@+id/radioSortShopName"
+                style="@style/ListShopNameRadioButton"
+                android:text="" />
+        </RadioGroup>
+    </LinearLayout>
+
+</LinearLayout>

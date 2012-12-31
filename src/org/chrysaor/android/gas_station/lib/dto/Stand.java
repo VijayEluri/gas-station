@@ -86,7 +86,6 @@ public class Stand {
     }
 
     public int getDispPriceColor() {
-        return (price.equals("9999") ? Color.rgb(204, 0, 0) : Color.rgb(0, 0,
-                255));
+        return Color.rgb(0, 0, 255);
     }
 }

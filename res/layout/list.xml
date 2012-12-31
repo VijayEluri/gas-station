@@ -14,81 +14,87 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout04"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
             android:gravity="left|center_vertical" >
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_back"
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ToggleButton
+                android:id="@+id/toggleList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:background="@drawable/common_header_btn_background"
-                android:text="戻る"
-                android:textColor="@color/white" >
-            </Button>
+                android:background="@drawable/list_toggle_list_background"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/LinearLayout05"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="right|center_vertical" >
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/LinearLayout03"
+        android:id="@+id/layoutMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/header_ad"
+        android:layout_above="@+id/layoutAd"
         android:layout_below="@+id/LinearLayout01"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical" >
 
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <ListView
-                android:id="@+id/savedList"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:id="@+id/layoutRoot"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:cacheColorHint="#00000000"
-                android:divider="#00000000"
-                android:fadingEdge="none"
-                android:footerDividersEnabled="false"
-                android:headerDividersEnabled="false"
-                android:listSelector="@color/transrate" >
-            </ListView>
+                android:orientation="vertical" >
+
+                <ListView
+                    android:id="@+id/savedList"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="#00000000"
+                    android:divider="#00000000"
+                    android:fadingEdge="none"
+                    android:footerDividersEnabled="false"
+                    android:headerDividersEnabled="false"
+                    android:listSelector="@color/transrate" >
+                </ListView>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/header_shadow_clamp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/header_shadow"
                 android:orientation="vertical" >
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/header_ad"
+        android:id="@+id/layoutAd"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center" >
-
-        <jp.adlantis.android.AdlantisView
-            android:id="@+id/adView"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_weight="1"
-            android:gravity="center" />
     </LinearLayout>
 
 </RelativeLayout>

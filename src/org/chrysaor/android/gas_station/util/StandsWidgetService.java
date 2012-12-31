@@ -2,7 +2,7 @@ package org.chrysaor.android.gas_station.util;
 
 import java.util.ArrayList;
 
-import org.chrysaor.android.gas_station.activity.MainActivity;
+import org.chrysaor.android.gas_station.MainActivity;
 import org.chrysaor.android.gas_station.lib.dto.Stand;
 
 import com.google.android.maps.GeoPoint;

@@ -7,16 +7,13 @@ import org.chrysaor.android.gas_station.lib.database.StandsDao;
 import org.chrysaor.android.gas_station.lib.dto.Stand;
 import org.chrysaor.android.gas_station.util.DetailAsyncTask;
 import org.chrysaor.android.gas_station.util.DetailTaskCallback;
-import org.chrysaor.android.gas_station.util.ErrorReporter;
 import org.chrysaor.android.gas_station.util.Utils;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Instrumentation;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -25,18 +22,11 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.Toast;
-
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class DetailActivity extends AbstractMyActivity implements
         DetailTaskCallback {
@@ -45,9 +35,13 @@ public class DetailActivity extends AbstractMyActivity implements
     private SQLiteDatabase db = null;
     private StandsDao standsDao = null;
     public Stand info = null;
-    private Integer favState = 0;
-    private ImageButton favButton;
+    private boolean favStatus = false;
     private String ssId = null;
+    private ImageView imgFav = null;
+
+    private static final int MENU_ID_FAV_ADD = 4;
+    private static final int MENU_ID_FAV_DEL = 5;
+    private static final int MENU_ID_ABOUT = 9;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +49,8 @@ public class DetailActivity extends AbstractMyActivity implements
         setContentView(R.layout.detail);
 
         dbHelper = new DatabaseHelper(this);
+
+        imgFav = (ImageView) findViewById(R.id.imgFav);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -65,31 +61,33 @@ public class DetailActivity extends AbstractMyActivity implements
                     R.layout.loading, null), findViewById(R.id.layoutRoot),
                     this).execute(index);
 
-            // db = dbHelper.getReadableDatabase();
-            //
-            // FavoritesDao favoritesDao = new FavoritesDao(db);
-            // if (favoritesDao.findByShopCd(index) != null) {
-            // setFavState(1);
-            // }
-            // db.close();
+            db = dbHelper.getReadableDatabase();
+
+            FavoritesDao favoritesDao = new FavoritesDao(db);
+            if (favoritesDao.findByShopCd(index) != null) {
+                setImageFav(true);
+            } else {
+                setImageFav(false);
+            }
+            db.close();
         }
 
         setHeaderView();
 
+        setAdView();
+    }
+
+    private void setImageFav(boolean status) {
+        favStatus = status;
+
+        if (status) {
+            imgFav.setVisibility(View.VISIBLE);
+        } else {
+            imgFav.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setHeaderView() {
-        // 戻るボタン
-        Button backButton = (Button) findViewById(R.id.btn_back);
-        backButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-        });
 
         // その他
         Button btnOther = (Button) findViewById(R.id.btnOther);
@@ -114,42 +112,46 @@ public class DetailActivity extends AbstractMyActivity implements
         }
     }
 
-    private void setFavState(Integer state) {
-
-        favState = state;
-        switch (favState) {
-        case 0:
-            favButton.setImageDrawable(getResources().getDrawable(
-                    R.drawable.star_empty));
-            break;
-        case 1:
-            favButton.setImageDrawable(getResources().getDrawable(
-                    R.drawable.star_full));
-            break;
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
         // メニューアイテムを追加
         MenuItem item0 = menu.add(0, 0, 0, "ブラウザ");
-        MenuItem item1 = menu.add(0, 1, 0, "共有");
-        MenuItem item2 = menu.add(0, 2, 0, "設定");
-        // MenuItem item4 = menu.add(0, 4, 0, "ブラウザ");
+        MenuItem item1 = menu.add(0, 1, 3, "共有");
+        MenuItem item2 = menu.add(0, 2, 4, "設定");
+        MenuItem item3 = menu.add(0, MENU_ID_ABOUT, 9, "アプリについて");
+        MenuItem item4 = menu.add(0, MENU_ID_FAV_ADD, 1, "お気に入り登録");
+        MenuItem item5 = menu.add(0, MENU_ID_FAV_DEL, 2, "お気に入り解除");
 
         // 追加したメニューアイテムのアイコンを設定
         item0.setIcon(android.R.drawable.ic_menu_view);
         item1.setIcon(android.R.drawable.ic_menu_share);
         item2.setIcon(android.R.drawable.ic_menu_preferences);
-        // item4.setIcon(android.R.drawable.ic_menu_info_details);
+        item3.setIcon(android.R.drawable.ic_menu_info_details);
+        item4.setIcon(R.drawable.ic_menu_fav);
+        item5.setIcon(R.drawable.ic_menu_fav);
 
-        if (Utils.isDonate(this) == false) {
-            MenuItem item3 = menu.add(0, 3, 0, "有料版購入");
-            item3.setIcon(R.drawable.cart);
+        if (Utils.isDonate(getApplicationContext()) == false) {
+            MenuItem item9 = menu.add(0, 3, 5, "有料版購入");
+            item9.setIcon(R.drawable.cart);
         }
 
         return true;
+    }
+
+    // メニューボタンをクリックされるたびにに実行されるメソッド
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (favStatus) {
+            menu.findItem(MENU_ID_FAV_ADD).setVisible(false);
+            menu.findItem(MENU_ID_FAV_DEL).setVisible(true);
+        } else {
+            menu.findItem(MENU_ID_FAV_ADD).setVisible(true);
+            menu.findItem(MENU_ID_FAV_DEL).setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -210,7 +212,7 @@ public class DetailActivity extends AbstractMyActivity implements
             // イベントトラック（設定）
             tracker.trackEvent("Detail", "Settings", "", 0);
 
-            Intent intent3 = new Intent(DetailActivity.this,
+            Intent intent3 = new Intent(getApplicationContext(),
                     SettingsActivity.class);
             startActivity(intent3);
             break;
@@ -224,14 +226,47 @@ public class DetailActivity extends AbstractMyActivity implements
                     .parse("market://details?id=org.chrysaor.android.gas_station.plus"));
             startActivity(intent4);
             break;
-        case 4:
-            // イベントトラック（ブラウザ）
-            tracker.trackEvent("Detail", "Browser", info.shopCode, 0);
-            Intent intent5 = new Intent();
-            intent5.setAction(Intent.ACTION_VIEW);
-            intent5.setData(Uri.parse("http://gogo.gs/shop/" + info.shopCode
-                    + ".html"));
-            startActivity(intent5);
+        case MENU_ID_FAV_ADD: // お気に入り登録
+            // イベントトラック（Donate）
+            tracker.trackEvent("Detail", "Favorite", "", 0);
+
+            db = dbHelper.getReadableDatabase();
+            FavoritesDao favoritesDao = new FavoritesDao(db);
+
+            // 登録件数の確認
+            if (favoritesDao.findAll("create_date").size() >= 20) {
+                Toast.makeText(getApplicationContext(),
+                        "お気に入りは20件までしか登録出来ません。", Toast.LENGTH_SHORT).show();
+            } else {
+                favoritesDao.insert(info);
+                Toast.makeText(getApplicationContext(), "お気に入りに登録しました",
+                        Toast.LENGTH_SHORT).show();
+                setImageFav(true);
+            }
+
+            db.close();
+            break;
+        case MENU_ID_FAV_DEL: // お気に入り解除
+            // イベントトラック（Donate）
+            tracker.trackEvent("Detail", "Favorite", "", 0);
+
+            db = dbHelper.getReadableDatabase();
+            FavoritesDao dao = new FavoritesDao(db);
+
+            dao.deleteByShopCd(info.shopCode);
+            Toast.makeText(getApplicationContext(), "お気に入りを解除しました",
+                    Toast.LENGTH_SHORT).show();
+            setImageFav(false);
+
+            db.close();
+            break;
+        case MENU_ID_ABOUT:
+            // イベントトラック（about）
+            tracker.trackEvent("Detail", "About", null, 0);
+
+            Intent intent2 = new Intent(getApplicationContext(),
+                    AboutActivity.class);
+            startActivity(intent2);
             break;
 
         }
@@ -351,38 +386,5 @@ public class DetailActivity extends AbstractMyActivity implements
             btnFuelPost.setVisibility(View.GONE);
         }
 
-        // お気に入りボタン
-        // favButton.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // db = dbHelper.getReadableDatabase();
-        //
-        // FavoritesDao favoritesDao = new FavoritesDao(db);
-        //
-        // switch (favState) {
-        // case 0:
-        // // 登録件数の確認
-        // if (favoritesDao.findAll("create_date").size() >= 20) {
-        // Toast.makeText(DetailActivity.this,
-        // "お気に入りは20件までしか登録出来ません。", Toast.LENGTH_SHORT)
-        // .show();
-        // } else {
-        // favoritesDao.insert(info);
-        // setFavState(1);
-        // Toast.makeText(DetailActivity.this, "お気に入りに登録しました",
-        // Toast.LENGTH_SHORT).show();
-        // }
-        // break;
-        // case 1:
-        // favoritesDao.deleteByShopCd(info.shopCode);
-        // setFavState(0);
-        // Toast.makeText(DetailActivity.this, "お気に入りを解除しました",
-        // Toast.LENGTH_SHORT).show();
-        // break;
-        // }
-        // db.close();
-        // }
-        // });
     }
 }

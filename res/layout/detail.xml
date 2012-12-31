@@ -26,16 +26,6 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:gravity="left|center_vertical" >
-
-                <Button
-                    android:id="@+id/btn_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:background="@drawable/common_header_btn_background"
-                    android:text="戻る"
-                    android:textColor="@color/white" >
-                </Button>
             </LinearLayout>
 
             <LinearLayout
@@ -50,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dip"
-                    android:background="@drawable/common_header_btn_background" >
+                    android:background="@drawable/detail_header_btn_more_background" >
                 </Button>
             </LinearLayout>
         </LinearLayout>
@@ -60,13 +50,13 @@
         android:id="@+id/layoutRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/LinearLayout02"
+        android:layout_above="@+id/layoutAd"
         android:layout_below="@+id/LinearLayout11"
         android:orientation="vertical" >
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="match_parent" >
 
             <ScrollView
                 android:id="@+id/ScrollView01"
@@ -77,676 +67,700 @@
                 <LinearLayout
                     android:id="@+id/layout_main"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/detail_body"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" >
 
-                    <LinearLayout
-                        android:id="@+id/LinearLayout07"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-
-                        <LinearLayout
-                            android:id="@+id/LinearLayout01"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="10dip"
-                            android:layout_marginRight="10dip"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="10dp" >
-
-                            <ImageView
-                                android:id="@+id/brand_image"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/icon_maker3" />
-
-                            <TextView
-                                android:id="@+id/shop_text"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dip"
-                                android:textColor="@color/black"
-                                android:textSize="15sp" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:id="@+id/imageView1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/detail_body_line" />
-
-                        <LinearLayout
-                            android:id="@+id/LinearLayout03"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:paddingTop="10dip" >
-
-                            <LinearLayout
-                                android:id="@+id/LinearLayout05"
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical" >
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/LinearLayout06"
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical|right" >
-
-                                <ImageView
-                                    android:id="@+id/self"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="4px"
-                                    android:paddingRight="4px"
-                                    android:src="@drawable/service002" />
-
-                                <ImageView
-                                    android:id="@+id/rtc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="4px"
-                                    android:paddingRight="4px"
-                                    android:src="@drawable/service001" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <TableLayout
-                            android:id="@+id/tableLayout1"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dip"
-                            android:layout_marginRight="10dip"
-                            android:layout_marginTop="5dip"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:stretchColumns="1,2" >
-
-                            <TableRow
-                                android:id="@+id/TableRow05"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip"
-                                android:layout_marginTop="5dip"
-                                android:background="@drawable/border_kind_member"
-                                android:gravity="center" >
-
-                                <TextView
-                                    android:id="@+id/TextView08"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="現金価格"
-                                    android:textColor="@color/white" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/tableRow4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip" >
-
-                                <TextView
-                                    android:id="@+id/textView1"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:paddingLeft="5dip"
-                                    android:paddingRight="5dip"
-                                    android:text="レギュラー"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_regular_price"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="#222222"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_regular_date"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/tableRow3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip" >
-
-                                <TextView
-                                    android:id="@+id/TextView06"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:text="ハイオク"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_highoc_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="#111111"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00" />
-
-                                <TextView
-                                    android:id="@+id/txt_highoc_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/tableRow2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip"
-                                android:layout_weight="1" >
-
-                                <TextView
-                                    android:id="@+id/TextView07"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:text="軽油"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_diesel_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="@color/black"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_diesel_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/tableRow1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
-
-                                <TextView
-                                    android:id="@+id/TextView04"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:text="灯油(¥/18L)"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_lamp_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="@color/black"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_lamp_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/tableRow5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip"
-                                android:layout_marginTop="5dip"
-                                android:background="@drawable/border_kind_member"
-                                android:gravity="center" >
-
-                                <TextView
-                                    android:id="@+id/TextView05"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="会員価格"
-                                    android:textColor="@color/white" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/TableRow03"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip" >
-
-                                <TextView
-                                    android:id="@+id/TextView13"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:text="レギュラー"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_regular_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="@color/black"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_regular_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/TableRow04"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip" >
-
-                                <TextView
-                                    android:id="@+id/TextView12"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:text="ハイオク"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_highoc_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="@color/black"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_highoc_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/TableRow01"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="1dip" >
-
-                                <TextView
-                                    android:id="@+id/TextView11"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:text="軽油"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_diesel_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="@color/black"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_diesel_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/TableRow02"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
-
-                                <TextView
-                                    android:id="@+id/TextView17"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/blue"
-                                    android:gravity="center"
-                                    android:text="灯油(¥/18L)"
-                                    android:textColor="@color/white"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_lamp_price"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dip"
-                                    android:layout_weight="1"
-                                    android:background="@color/black"
-                                    android:gravity="right"
-                                    android:paddingBottom="3dip"
-                                    android:paddingRight="5dip"
-                                    android:paddingTop="3dip"
-                                    android:text="---"
-                                    android:textColor="#FFFF00"
-                                    android:width="100dip" />
-
-                                <TextView
-                                    android:id="@+id/txt_mem_lamp_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/text_color"
-                                    android:width="100dip" />
-                            </TableRow>
-                        </TableLayout>
-
-                        <LinearLayout
-                            android:id="@+id/linearLayout1"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dip"
-                            android:layout_marginLeft="10dip"
-                            android:layout_marginRight="10dip"
-                            android:layout_marginTop="5dip"
-                            android:orientation="vertical"
-                            android:padding="10dp" >
-
-                            <TextView
-                                android:id="@+id/textView2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="掲載情報は参加ユーザの皆さんから寄せられる口コミ情報です。日数の経過した投稿は既に価格が変動している場合があります。"
-                                android:textColor="@color/text_color"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center" >
-
-                            <Button
-                                android:id="@+id/btnPricePost"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:background="@drawable/detail_btn_price_post_background" />
-
-                            <Button
-                                android:id="@+id/btnFuelPost"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:background="@drawable/detail_btn_fuel_post_background" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="15dp"
-                            android:gravity="center"
+                            android:layout_height="match_parent"
                             android:orientation="vertical" >
 
-                            <Button
-                                android:id="@+id/btnRoute"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/detail_btn_route_background" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:id="@+id/imageView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/detail_body_line" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingBottom="10dp"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:paddingTop="10dp" >
-
                             <LinearLayout
-                                android:id="@+id/LinearLayout09"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/LinearLayout07"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dip" >
-
-                                <TextView
-                                    android:id="@+id/address"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:background="@drawable/border_label"
-                                    android:gravity="center_vertical|center"
-                                    android:paddingBottom="3dip"
-                                    android:paddingLeft="10dip"
-                                    android:paddingRight="10dip"
-                                    android:paddingTop="3dip"
-                                    android:text="住所"
-                                    android:textColor="@color/white" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/LinearLayout10"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingBottom="5dip"
-                                android:paddingTop="5dip" >
-
-                                <TextView
-                                    android:id="@+id/address_text"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="10dip"
-                                    android:text="TextView"
-                                    android:textColor="@color/black" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/LinearLayout12"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
-
-                                <TextView
-                                    android:id="@+id/distance"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/border_label"
-                                    android:paddingBottom="3dip"
-                                    android:paddingLeft="10dip"
-                                    android:paddingRight="10dip"
-                                    android:paddingTop="3dip"
-                                    android:text="距離"
-                                    android:textColor="@color/white" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/LinearLayout13"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingBottom="5dip"
-                                android:paddingTop="5dip" >
-
-                                <TextView
-                                    android:id="@+id/distance_text"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="10dip"
-                                    android:text="TextView"
-                                    android:textColor="@color/black" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
+                                android:layout_marginBottom="15dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@drawable/border"
                                 android:orientation="vertical" >
 
                                 <LinearLayout
-                                    android:id="@+id/LinearLayout16"
-                                    android:layout_width="wrap_content"
+                                    android:id="@+id/LinearLayout01"
+                                    android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
-                                    android:background="@drawable/detail_photo_bg"
-                                    android:gravity="center"
-                                    android:padding="10dip" >
-
-                                    <ProgressBar
-                                        android:id="@+id/ProgressBar01"
-                                        style="?android:attr/progressBarStyle"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:padding="5dip" />
+                                    android:layout_marginLeft="10dip"
+                                    android:layout_marginRight="10dip"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp" >
 
                                     <ImageView
-                                        android:id="@+id/shop_image"
+                                        android:id="@+id/brand_image"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_margin="2dp"
-                                        android:adjustViewBounds="true"
-                                        android:visibility="invisible" />
+                                        android:src="@drawable/icon_maker3" />
+
+                                    <TextView
+                                        android:id="@+id/shop_text"
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dip"
+                                        android:textColor="@color/black"
+                                        android:textSize="15sp" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:id="@+id/imageView1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/detail_body_line" />
+
+                                <LinearLayout
+                                    android:id="@+id/LinearLayout03"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingTop="10dip" >
+
+                                    <LinearLayout
+                                        android:id="@+id/LinearLayout05"
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="fill_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center_vertical" >
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/LinearLayout06"
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="fill_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center_vertical|right" >
+
+                                        <ImageView
+                                            android:id="@+id/self"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:paddingLeft="4px"
+                                            android:paddingRight="4px"
+                                            android:src="@drawable/service002" />
+
+                                        <ImageView
+                                            android:id="@+id/rtc"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:paddingLeft="4px"
+                                            android:paddingRight="4px"
+                                            android:src="@drawable/service001" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <TableLayout
+                                    android:id="@+id/tableLayout1"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dip"
+                                    android:layout_marginRight="10dip"
+                                    android:layout_marginTop="5dip"
+                                    android:paddingLeft="10dp"
+                                    android:paddingRight="10dp"
+                                    android:stretchColumns="1,2" >
+
+                                    <TableRow
+                                        android:id="@+id/TableRow05"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip"
+                                        android:layout_marginTop="5dip"
+                                        android:background="@drawable/border_kind_member"
+                                        android:gravity="center" >
+
+                                        <TextView
+                                            android:id="@+id/TextView08"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:text="現金価格"
+                                            android:textColor="@color/white" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow4"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip" >
+
+                                        <TextView
+                                            android:id="@+id/textView1"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:paddingLeft="5dip"
+                                            android:paddingRight="5dip"
+                                            android:text="レギュラー"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_regular_price"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_regular_date"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip" >
+
+                                        <TextView
+                                            android:id="@+id/TextView06"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:text="ハイオク"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_highoc_price"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00" />
+
+                                        <TextView
+                                            android:id="@+id/txt_highoc_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip"
+                                        android:layout_weight="1" >
+
+                                        <TextView
+                                            android:id="@+id/TextView07"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:text="軽油"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_diesel_price"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_diesel_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content" >
+
+                                        <TextView
+                                            android:id="@+id/TextView04"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:text="灯油(¥/18L)"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_lamp_price"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_lamp_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow5"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip"
+                                        android:layout_marginTop="5dip"
+                                        android:background="@drawable/border_kind_member"
+                                        android:gravity="center" >
+
+                                        <TextView
+                                            android:id="@+id/TextView05"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:text="会員価格"
+                                            android:textColor="@color/white" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/TableRow03"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip" >
+
+                                        <TextView
+                                            android:id="@+id/TextView13"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:text="レギュラー"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_regular_price"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_regular_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/TableRow04"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip" >
+
+                                        <TextView
+                                            android:id="@+id/TextView12"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:text="ハイオク"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_highoc_price"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_highoc_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/TableRow01"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="1dip" >
+
+                                        <TextView
+                                            android:id="@+id/TextView11"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:text="軽油"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_diesel_price"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_diesel_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/TableRow02"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content" >
+
+                                        <TextView
+                                            android:id="@+id/TextView17"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_label_bg_color"
+                                            android:gravity="center"
+                                            android:text="灯油(¥/18L)"
+                                            android:textColor="@color/white"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_lamp_price"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="1dip"
+                                            android:layout_weight="1"
+                                            android:background="@color/price_bg_color"
+                                            android:gravity="right"
+                                            android:paddingBottom="3dip"
+                                            android:paddingRight="5dip"
+                                            android:paddingTop="3dip"
+                                            android:text="---"
+                                            android:textColor="#FFFF00"
+                                            android:width="100dip" />
+
+                                        <TextView
+                                            android:id="@+id/txt_mem_lamp_date"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:textColor="@color/text_color"
+                                            android:width="100dip" />
+                                    </TableRow>
+                                </TableLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/linearLayout1"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dip"
+                                    android:layout_marginLeft="10dip"
+                                    android:layout_marginRight="10dip"
+                                    android:layout_marginTop="5dip"
+                                    android:orientation="vertical"
+                                    android:padding="10dp" >
+
+                                    <TextView
+                                        android:id="@+id/textView2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="掲載情報は参加ユーザの皆さんから寄せられる口コミ情報です。日数の経過した投稿は既に価格が変動している場合があります。"
+                                        android:textColor="@color/text_color"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center" >
+
+                                    <Button
+                                        android:id="@+id/btnPricePost"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginRight="5dp"
+                                        android:background="@drawable/detail_btn_price_post_background" />
+
+                                    <Button
+                                        android:id="@+id/btnFuelPost"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="5dp"
+                                        android:background="@drawable/detail_btn_fuel_post_background" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="15dp"
+                                    android:gravity="center"
+                                    android:orientation="vertical" >
+
+                                    <Button
+                                        android:id="@+id/btnRoute"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/detail_btn_route_background" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:id="@+id/imageView2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/detail_body_line" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:paddingBottom="10dp"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingTop="10dp" >
+
+                                    <LinearLayout
+                                        android:id="@+id/LinearLayout09"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="10dip" >
+
+                                        <TextView
+                                            android:id="@+id/address"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="fill_parent"
+                                            android:background="@drawable/border_label"
+                                            android:gravity="center_vertical|center"
+                                            android:paddingBottom="3dip"
+                                            android:paddingLeft="10dip"
+                                            android:paddingRight="10dip"
+                                            android:paddingTop="3dip"
+                                            android:text="住所"
+                                            android:textColor="@color/white" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/LinearLayout10"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:paddingBottom="5dip"
+                                        android:paddingTop="5dip" >
+
+                                        <TextView
+                                            android:id="@+id/address_text"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="wrap_content"
+                                            android:paddingLeft="10dip"
+                                            android:text="TextView"
+                                            android:textColor="@color/black" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/LinearLayout12"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content" >
+
+                                        <TextView
+                                            android:id="@+id/distance"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/border_label"
+                                            android:paddingBottom="3dip"
+                                            android:paddingLeft="10dip"
+                                            android:paddingRight="10dip"
+                                            android:paddingTop="3dip"
+                                            android:text="距離"
+                                            android:textColor="@color/white" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/LinearLayout13"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:paddingBottom="5dip"
+                                        android:paddingTop="5dip" >
+
+                                        <TextView
+                                            android:id="@+id/distance_text"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="wrap_content"
+                                            android:paddingLeft="10dip"
+                                            android:text="TextView"
+                                            android:textColor="@color/black" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:orientation="vertical" >
+
+                                        <LinearLayout
+                                            android:id="@+id/LinearLayout16"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/detail_photo_bg"
+                                            android:gravity="center"
+                                            android:padding="10dip" >
+
+                                            <ProgressBar
+                                                android:id="@+id/ProgressBar01"
+                                                style="?android:attr/progressBarStyle"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center"
+                                                android:padding="5dip" />
+
+                                            <ImageView
+                                                android:id="@+id/shop_image"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center"
+                                                android:layout_margin="2dp"
+                                                android:adjustViewBounds="true"
+                                                android:visibility="invisible" />
+                                        </LinearLayout>
+                                    </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
+
                         </LinearLayout>
-                    </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="right"
+                            android:orientation="vertical" >
+
+                            <ImageView
+                                android:id="@+id/imgFav"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="10dp"
+                                android:src="@drawable/detail_toggle_fav" />
+
+
+                        </LinearLayout>
+                    </FrameLayout>
                 </LinearLayout>
             </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/header_shadow_clamp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/header_shadow"
                 android:orientation="vertical" >
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/LinearLayout02"
+        android:id="@+id/layoutAd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:gravity="center"
         android:orientation="vertical" >
-
-        <jp.adlantis.android.AdlantisView
-            android:id="@+id/adView"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_weight="1"
-            android:gravity="center" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -52,7 +52,7 @@ import android.widget.Toast;
  * 投稿画面
  * 
  * @author Shinichi Matsuo
- *
+ * 
  */
 public class PostActivity extends AbstractMyActivity {
 
@@ -278,23 +278,12 @@ public class PostActivity extends AbstractMyActivity {
             // ブランド
             ImageView imgBrand = (ImageView) findViewById(R.id.brand_image);
             StandsHelper helper = StandsHelper.getInstance();
-            imgBrand.setImageResource(helper.getBrandImage(info.brand,
-                    Integer.valueOf(info.price)));
+            imgBrand.setImageResource(helper.getIconImage(info.brand));
 
             // 店名
             TextView textShopName = (TextView) findViewById(R.id.shop_text);
             textShopName.setText(info.shopName);
         }
-
-        // 戻るボタン
-        Button backButton = (Button) findViewById(R.id.btn_back);
-        backButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         // ヘルプボタン
         Button helpButton = (Button) findViewById(R.id.btn_help);

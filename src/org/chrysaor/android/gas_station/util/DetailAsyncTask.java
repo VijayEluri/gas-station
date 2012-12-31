@@ -65,7 +65,7 @@ public class DetailAsyncTask extends
     @Override
     protected AsyncTaskResult<Stand> doInBackground(String... params) {
         StandsHelper helper = StandsHelper.getInstance();
-        Stand info = helper.getGsInfo(context, params[0]);
+        Stand info = helper.getStand(context, params[0]);
 
         if (info == null) {
             return AsyncTaskResult.createErrorResult(0);
@@ -77,13 +77,11 @@ public class DetailAsyncTask extends
     @Override
     protected void onPreExecute() {
         loading.showLoading();
-        // showLoading();
     }
 
     protected void onPostExecute(AsyncTaskResult<Stand> result) {
 
         loading.hideLoading();
-        // hideLoading();
 
         if (result.isError()) {
             // エラーをコールバックで返す
@@ -97,8 +95,7 @@ public class DetailAsyncTask extends
         ImageView imgBrand = (ImageView) viewMain
                 .findViewById(R.id.brand_image);
         StandsHelper helper = StandsHelper.getInstance();
-        imgBrand.setImageResource(helper.getBrandImage(info.brand,
-                Integer.valueOf(info.price)));
+        imgBrand.setImageResource(helper.getIconImage(info.brand));
 
         // セルフ
         if (info.self != null && info.self.compareTo("SELF") != 0) {
@@ -146,7 +143,7 @@ public class DetailAsyncTask extends
                 InputStream in = null;
                 try {
                     bfo.inPurgeable = true;
-                    bfo.inPreferredConfig = Bitmap.Config.ARGB_4444;
+                    // bfo.inPreferredConfig = Bitmap.Config.ARGB_4444;
                     // bfo.inSampleSize = 2;
 
                     in = WebApi.getHttpInputStream(url);

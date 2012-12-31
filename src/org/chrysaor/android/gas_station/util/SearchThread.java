@@ -12,7 +12,6 @@ public class SearchThread extends Thread {
     private Handler handler;
     private final Runnable listener;
     private String[] url;
-    private Stand gsInfo;
 
     // URL由来のストリーム
     protected InputStream is;
@@ -30,9 +29,6 @@ public class SearchThread extends Thread {
         this.handler = handler;
         this.listener = listener;
         this.url = url;
-
-        // 各情報取得クラスをインスタンス化
-        gsInfo = new Stand();
     }
 
     @Override

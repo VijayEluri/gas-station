@@ -19,16 +19,6 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="left|center_vertical" >
-
-            <Button
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:background="@drawable/btn_back_states"
-                android:text="戻る"
-                android:textColor="@color/white" >
-            </Button>
         </LinearLayout>
 
         <LinearLayout
@@ -43,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dip"
-                android:background="@drawable/btn_back_states"
+                android:background="@drawable/common_header_btn_background"
                 android:text="ヘルプ"
                 android:textColor="@color/white" >
             </Button>
@@ -69,8 +59,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
-                android:orientation="vertical"
-                android:padding="10dip" >
+                android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/LinearLayout01"
@@ -80,7 +69,8 @@
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:padding="10dp" >
 
                     <ImageView
                         android:id="@+id/brand_image"
@@ -99,318 +89,302 @@
                         android:textSize="15sp" >
                     </TextView>
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/LinearLayout07"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/border"
-                android:orientation="vertical"
-                android:padding="10dip" >
-
-                <TableLayout
-                    android:id="@+id/TableLayout01"
-                    android:layout_width="fill_parent"
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:stretchColumns="0,1,2" >
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/detail_body_line" />
 
-                    <TableRow
-                        android:id="@+id/TableRow01"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp" >
 
-                        <TextView
-                            android:id="@+id/TextView04"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="確認方法"
-                            android:textColor="@color/black" >
-                        </TextView>
+                    <TableLayout
+                        android:id="@+id/TableLayout01"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dip"
+                        android:stretchColumns="0,1,2" >
 
-                        <Spinner
-                            android:id="@+id/list_check"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_span="2"
-                            android:entries="@array/post_check_kind" >
-                        </Spinner>
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/TableRow02"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/TextView05"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="価格区分"
-                            android:textColor="@color/black" >
-                        </TextView>
-
-                        <Spinner
-                            android:id="@+id/list_price_kind"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_span="2"
-                            android:entries="@array/post_price_kind" >
-                        </Spinner>
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/TableRow03"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/TextView06"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="レギュラー"
-                            android:textColor="@color/black" >
-                        </TextView>
-
-                        <EditText
-                            android:id="@+id/txt_regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLength="3"
-                            android:numeric="integer"
-                            android:singleLine="true" >
-                        </EditText>
-
-                        <TextView
-                            android:id="@+id/TextView02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="円/L"
-                            android:textColor="@color/black" >
-                        </TextView>
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/TableRow04"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/TextView07"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="ハイオク"
-                            android:textColor="@color/black" >
-                        </TextView>
-
-                        <EditText
-                            android:id="@+id/txt_highoc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLength="3"
-                            android:numeric="integer"
-                            android:singleLine="true" >
-                        </EditText>
-
-                        <TextView
-                            android:id="@+id/TextView02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="円/L"
-                            android:textColor="@color/black" >
-                        </TextView>
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/TableRow05"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/TextView08"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="軽油"
-                            android:textColor="@color/black" >
-                        </TextView>
-
-                        <EditText
-                            android:id="@+id/txt_diesel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLength="3"
-                            android:numeric="integer"
-                            android:singleLine="true" >
-                        </EditText>
-
-                        <TextView
-                            android:id="@+id/TextView02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="円/L"
-                            android:textColor="@color/black" >
-                        </TextView>
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/TableRow06"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/TextView09"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="left|center_vertical"
-                            android:text="灯油"
-                            android:textColor="@color/black" >
-                        </TextView>
-
-                        <EditText
-                            android:id="@+id/txt_lamp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLength="4"
-                            android:numeric="integer"
-                            android:singleLine="true" >
-                        </EditText>
-
-                        <TextView
-                            android:id="@+id/label_lamp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:layout_weight="1"
-                            android:gravity="left|center_vertical"
-                            android:text="円/18L"
-                            android:textColor="@color/black" >
-                        </TextView>
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/tableRow1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/textView1"
+                        <TableRow
+                            android:id="@+id/TableRow01"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" >
-                        </TextView>
 
-                        <LinearLayout
-                            android:id="@+id/linearLayout1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_span="2" >
+                            <TextView
+                                android:id="@+id/TextView04"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="確認方法"
+                                android:textColor="@color/black" />
 
-                            <RadioGroup
-                                android:id="@+id/radioGroup1"
+                            <Spinner
+                                android:id="@+id/list_check"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal" >
+                                android:layout_span="2"
+                                android:entries="@array/post_check_kind" />
+                        </TableRow>
 
-                                <RadioButton
-                                    android:id="@+id/radio0"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="true"
-                                    android:text="円/18L"
-                                    android:textColor="@color/black" >
-                                </RadioButton>
-
-                                <RadioButton
-                                    android:id="@+id/radio1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="円/1L"
-                                    android:textColor="@color/black" >
-                                </RadioButton>
-                            </RadioGroup>
-                        </LinearLayout>
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/TableRow07"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/TextView01"
+                        <TableRow
+                            android:id="@+id/TableRow02"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="コメント"
-                            android:textColor="@color/black" >
-                        </TextView>
-                    </TableRow>
-                </TableLayout>
+                            android:layout_height="wrap_content" >
 
-                <EditText
-                    android:id="@+id/edit_comment"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:text="店頭で確認" >
-                </EditText>
+                            <TextView
+                                android:id="@+id/TextView05"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="価格区分"
+                                android:textColor="@color/black" />
 
-                <TextView
-                    android:id="@+id/TextView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:text="※ 会員価格はその詳細、WEB/メルマガで確認した場合はURLも記載してください。"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" >
-                </TextView>
+                            <Spinner
+                                android:id="@+id/list_price_kind"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_span="2"
+                                android:entries="@array/post_price_kind" />
+                        </TableRow>
 
-                <TextView
-                    android:id="@+id/TextView11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:text="※ 価格以外の情報や他ユーザへのコメントは記入しないでください。"
-                    android:textColor="@color/black"
-                    android:textSize="12dip" >
-                </TextView>
+                        <TableRow
+                            android:id="@+id/TableRow03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
 
-                <CheckBox
-                    android:id="@+id/chk_save_select_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="確認方法、価格区分を記憶する"
-                    android:textColor="@color/black" >
-                </CheckBox>
+                            <TextView
+                                android:id="@+id/TextView06"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="レギュラー"
+                                android:textColor="@color/black" />
 
-                <CheckBox
-                    android:id="@+id/chk_tweet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="投稿内容をツイートする"
-                    android:textColor="@color/black" >
-                </CheckBox>
+                            <EditText
+                                android:id="@+id/txt_regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLength="3"
+                                android:numeric="integer"
+                                android:singleLine="true" >
 
-                <Button
-                    android:id="@+id/btn_post"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dip"
-                    android:padding="10dip"
-                    android:text="投稿する" >
-                </Button>
+                                <requestFocus />
+                            </EditText>
+
+                            <TextView
+                                android:id="@+id/TextView02"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="円/L"
+                                android:textColor="@color/black" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/TableRow04"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/TextView07"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="ハイオク"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/txt_highoc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLength="3"
+                                android:numeric="integer"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/TextView02"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="円/L"
+                                android:textColor="@color/black" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/TableRow05"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/TextView08"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="軽油"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/txt_diesel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLength="3"
+                                android:numeric="integer"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/TextView02"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="円/L"
+                                android:textColor="@color/black" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/TableRow06"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/TextView09"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="left|center_vertical"
+                                android:text="灯油"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/txt_lamp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLength="4"
+                                android:numeric="integer"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/label_lamp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1"
+                                android:gravity="left|center_vertical"
+                                android:text="円/18L"
+                                android:textColor="@color/black" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/tableRow1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <LinearLayout
+                                android:id="@+id/linearLayout1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_span="2" >
+
+                                <RadioGroup
+                                    android:id="@+id/radioGroup1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal" >
+
+                                    <RadioButton
+                                        android:id="@+id/radio0"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:checked="true"
+                                        android:text="円/18L"
+                                        android:textColor="@color/black" />
+
+                                    <RadioButton
+                                        android:id="@+id/radio1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="円/1L"
+                                        android:textColor="@color/black" />
+                                </RadioGroup>
+                            </LinearLayout>
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/TableRow07"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/TextView01"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="コメント"
+                                android:textColor="@color/black" />
+                        </TableRow>
+                    </TableLayout>
+
+                    <EditText
+                        android:id="@+id/edit_comment"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
+                        android:ems="10"
+                        android:text="店頭で確認" />
+
+                    <TextView
+                        android:id="@+id/TextView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
+                        android:text="※ 会員価格はその詳細、WEB/メルマガで確認した場合はURLも記載してください。"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/TextView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
+                        android:text="※ 価格以外の情報や他ユーザへのコメントは記入しないでください。"
+                        android:textColor="@color/black"
+                        android:textSize="12dip" />
+
+                    <CheckBox
+                        android:id="@+id/chk_save_select_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="確認方法、価格区分を記憶する"
+                        android:textColor="@color/black" />
+
+                    <CheckBox
+                        android:id="@+id/chk_tweet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip"
+                        android:text="投稿内容をツイートする"
+                        android:textColor="@color/black" />
+
+                    <Button
+                        android:id="@+id/btn_post"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dip"
+                        android:background="@drawable/post_btn_price_post_background"
+                        android:padding="10dip"
+                        android:text="" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

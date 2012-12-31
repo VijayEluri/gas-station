@@ -109,7 +109,7 @@ public class GasStaApplication extends Application {
      * @return
      */
     public boolean getNoData() {
-        return sharedPreferences.getBoolean("settings_no_postdata", false);
+        return sharedPreferences.getBoolean("settings_no_postdata", true);
     }
 
     /**

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/org.chrysaor.android.gas_station"
+    android:id="@+id/screen"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/header"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical" >
+
+            <Button
+                android:id="@+id/btnSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/home_header_btn_setting_background"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txt_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:shadowColor="#000000"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.2"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical|right" >
+
+            <Button
+                android:id="@+id/btnList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/home_header_btn_list_background"
+                android:text="" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/header"
+        android:orientation="vertical" >
+
+        <ViewStub
+            android:id="@+id/mapview_stub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layoutAd"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingRight="10dp" >
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/home_btn_search_background" />
+
+        <Button
+            android:id="@+id/btnLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/home_btn_location_background"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnZoomIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_btn_zoomin_background"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnZoomOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_btn_zoomout_background"
+            android:text="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutAd"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <org.chrysaor.android.gas_station.util.MultiDirectionSlidingDrawer
+        xmlns:my="http://schemas.android.com/apk/res/org.chrysaor.android.gas_station"
+        android:id="@+id/drawer"
+        android:layout_width="fill_parent"
+        android:layout_height="280dp"
+        android:layout_below="@+id/header"
+        my:content="@+id/content"
+        my:direction="topToBottom"
+        my:handle="@+id/handle" >
+
+        <include
+            android:id="@id/content"
+            android:layout_height="match_parent"
+            layout="@layout/main_setting" />
+
+        <ImageView
+            android:id="@id/handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/home_handle" />
+    </org.chrysaor.android.gas_station.util.MultiDirectionSlidingDrawer>
+
+</RelativeLayout>

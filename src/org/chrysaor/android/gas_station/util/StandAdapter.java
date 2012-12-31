@@ -1,5 +1,6 @@
 package org.chrysaor.android.gas_station.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -93,7 +94,7 @@ public class StandAdapter<T> extends ArrayAdapter {
             // テキストをビューにセット
             if (holder.price != null) {
                 if (item.price.equals("9999")) {
-                    holder.price.setText("no data");
+                    holder.price.setText("---");
                 } else {
                     holder.price.setText(item.price + "円");
                 }
@@ -104,17 +105,21 @@ public class StandAdapter<T> extends ArrayAdapter {
             if (holder.dist != null) {
                 if (item.distance != null) {
                     Float distance = Float.parseFloat(item.distance) / 1000;
-                    holder.dist.setText(distance.toString() + "km");
+                    BigDecimal bi = new BigDecimal(String.valueOf(distance));
+
+                    // 小数第三位で切り上げ
+                    double k2 = bi.setScale(2, BigDecimal.ROUND_UP)
+                            .doubleValue();
+                    holder.dist.setText(k2 + "km");
                 } else {
                     // 距離が登録されてない（お気に入りGS）の場合、非表示
-                    holder.dist.setVisibility(View.GONE);
+                    holder.dist.setVisibility(View.INVISIBLE);
                 }
             }
 
             StandsHelper helper = StandsHelper.getInstance();
             holder.brand.setImageDrawable(context.getResources().getDrawable(
-                    helper.getBrandImage(item.brand,
-                            Integer.valueOf(item.price))));
+                    helper.getIconImage(item.brand)));
 
             // お気に入り
             if (favList == null

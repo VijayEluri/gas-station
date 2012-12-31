@@ -80,7 +80,6 @@ public class StandsDao {
             sortColumn = COLUMN_ID;
         }
 
-        Log.d("hoge", sortColumn);
         Cursor cursor = db.query(TABLE_NAME, COLUMNS, null, null, null, null,
                 sortColumn);
 
@@ -89,7 +88,6 @@ public class StandsDao {
 
             dtoStandList.add(gsInfo);
         }
-        Log.d("hoge", "count:" + dtoStandList.size());
 
         return dtoStandList;
     }
@@ -110,6 +108,11 @@ public class StandsDao {
         return db.delete(TABLE_NAME, "shop_cd = '" + shop_cd + "'", null);
     }
 
+    /**
+     * 全レコードを削除
+     * 
+     * @return
+     */
     public int deleteAll() {
         return db.delete(TABLE_NAME, null, null);
     }
