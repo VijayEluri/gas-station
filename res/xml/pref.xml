@@ -30,7 +30,7 @@
         <PreferenceScreen android:title="ブランド" >
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetClass="org.chrysaor.android.gas_station.ui.SettingsCategoryActivity"
+                android:targetClass="org.chrysaor.android.gas_station.activity.SettingsCategoryActivity"
                 android:targetPackage="org.chrysaor.android.gas_station" >
             </intent>
         </PreferenceScreen>
