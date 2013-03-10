@@ -9,6 +9,8 @@ import org.chrysaor.android.gas_station.util.DetailAsyncTask;
 import org.chrysaor.android.gas_station.util.DetailTaskCallback;
 import org.chrysaor.android.gas_station.util.Utils;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.AlertDialog;
 import android.app.Instrumentation;
 import android.content.DialogInterface;
@@ -43,6 +45,8 @@ public class DetailActivity extends AbstractMyActivity implements
     private static final int MENU_ID_FAV_DEL = 5;
     private static final int MENU_ID_ABOUT = 9;
 
+    private static final String ADMOB_MEDIATION_ID = "606b320887ed479a";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +76,11 @@ public class DetailActivity extends AbstractMyActivity implements
             db.close();
         }
 
+        // ヘッダーViewの設定
         setHeaderView();
 
-        setAdView();
+        // 広告Viewの設定
+        setAdView(ADMOB_MEDIATION_ID);
     }
 
     private void setImageFav(boolean status) {
@@ -160,7 +166,8 @@ public class DetailActivity extends AbstractMyActivity implements
         switch (item.getItemId()) {
         case 0:
             // イベントトラック（ブラウザ）
-            tracker.trackEvent("Detail", "Browser", info.shopCode, 0);
+            EasyTracker.getTracker().sendEvent("Detail", "Browser",
+                    info.shopCode, (long) 0);
 
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
@@ -197,7 +204,8 @@ public class DetailActivity extends AbstractMyActivity implements
                         "#kind", kind);
 
                 // イベントトラック（共有）
-                tracker.trackEvent("Detail", "Share", info.shopCode, 0);
+                EasyTracker.getTracker().sendEvent("Detail", "Share",
+                        info.shopCode, (long) 0);
 
                 Intent intent2 = new Intent();
                 intent2.setAction(Intent.ACTION_SEND);
@@ -210,7 +218,8 @@ public class DetailActivity extends AbstractMyActivity implements
             break;
         case 2:
             // イベントトラック（設定）
-            tracker.trackEvent("Detail", "Settings", "", 0);
+            EasyTracker.getTracker().sendEvent("Detail", "Settings", "",
+                    (long) 0);
 
             Intent intent3 = new Intent(getApplicationContext(),
                     SettingsActivity.class);
@@ -218,7 +227,8 @@ public class DetailActivity extends AbstractMyActivity implements
             break;
         case 3:
             // イベントトラック（Donate）
-            tracker.trackEvent("Detail", "Donate", "", 0);
+            EasyTracker.getTracker()
+                    .sendEvent("Detail", "Donate", "", (long) 0);
 
             Intent intent4 = new Intent();
             intent4.setAction(Intent.ACTION_VIEW);
@@ -227,8 +237,9 @@ public class DetailActivity extends AbstractMyActivity implements
             startActivity(intent4);
             break;
         case MENU_ID_FAV_ADD: // お気に入り登録
-            // イベントトラック（Donate）
-            tracker.trackEvent("Detail", "Favorite", "", 0);
+            // イベントトラック
+            EasyTracker.getTracker().sendEvent("Detail", "Favorite", "Add",
+                    (long) 0);
 
             db = dbHelper.getReadableDatabase();
             FavoritesDao favoritesDao = new FavoritesDao(db);
@@ -247,8 +258,9 @@ public class DetailActivity extends AbstractMyActivity implements
             db.close();
             break;
         case MENU_ID_FAV_DEL: // お気に入り解除
-            // イベントトラック（Donate）
-            tracker.trackEvent("Detail", "Favorite", "", 0);
+            // イベントトラック
+            EasyTracker.getTracker().sendEvent("Detail", "Favorite", "Del",
+                    (long) 0);
 
             db = dbHelper.getReadableDatabase();
             FavoritesDao dao = new FavoritesDao(db);
@@ -262,7 +274,7 @@ public class DetailActivity extends AbstractMyActivity implements
             break;
         case MENU_ID_ABOUT:
             // イベントトラック（about）
-            tracker.trackEvent("Detail", "About", null, 0);
+            EasyTracker.getTracker().sendEvent("Detail", "About", "", (long) 0);
 
             Intent intent2 = new Intent(getApplicationContext(),
                     AboutActivity.class);
@@ -293,7 +305,8 @@ public class DetailActivity extends AbstractMyActivity implements
             @Override
             public void onClick(View v) {
                 // イベントトラック（ルート検索）
-                tracker.trackEvent("Detail", "RouteSearch", info.shopCode, 0);
+                EasyTracker.getTracker().sendEvent("Detail", "RouteSearch",
+                        info.shopCode, (long) 0);
 
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
@@ -314,7 +327,9 @@ public class DetailActivity extends AbstractMyActivity implements
             @Override
             public void onClick(View v) {
                 // イベントトラック（価格投稿）
-                tracker.trackEvent("Detail", "Post", info.shopCode, 0);
+                EasyTracker.getTracker().sendEvent("Detail", "Post",
+                        info.shopCode, (long) 0);
+
                 Intent intent = new Intent(getApplicationContext(),
                         PostActivity.class);
                 intent.putExtra("shopcode", info.shopCode);
@@ -332,7 +347,8 @@ public class DetailActivity extends AbstractMyActivity implements
                 @Override
                 public void onClick(View v) {
                     // イベントトラック（給油記録）
-                    tracker.trackEvent("Detail", "Charge", info.shopCode, 0);
+                    EasyTracker.getTracker().sendEvent("Detail", "Charge",
+                            info.shopCode, (long) 0);
 
                     if (Utils.installedGasLogFree(DetailActivity.this)
                             || Utils.installedGasLogPayment(DetailActivity.this)) {

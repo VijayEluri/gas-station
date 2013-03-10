@@ -17,6 +17,8 @@ import org.chrysaor.android.gas_station.util.StandAdapter;
 import org.chrysaor.android.gas_station.util.Utils;
 import org.chrysaor.android.gas_station.util.XmlParserFromUrl;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +26,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -53,6 +54,8 @@ public class ListActivity extends AbstractMyActivity {
 
     private static final int DISPLAY_MODE_SEARCH_LIST = 1;
     private static final int DISPLAY_MODE_FAVORITE_LIST = 2;
+
+    private static final String ADMOB_MEDIATION_ID = "6d78136e266f48f2";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,7 @@ public class ListActivity extends AbstractMyActivity {
         // ヘッダーViewの設定
         setHeaderView();
 
-        setAdView();
+        setAdView(ADMOB_MEDIATION_ID);
 
     }
 
@@ -132,7 +135,8 @@ public class ListActivity extends AbstractMyActivity {
                 final Stand item = (Stand) adapter.getItemAtPosition(position);
 
                 // イベントトラック（詳細）
-                tracker.trackEvent("List", "Detail", item.shopCode, 0);
+                EasyTracker.getTracker().sendEvent("List", "Detail",
+                        item.shopCode, (long) 0);
 
                 Intent intent1 = new Intent(getApplicationContext(),
                         DetailActivity.class);
@@ -162,7 +166,8 @@ public class ListActivity extends AbstractMyActivity {
                     boolean isChecked) {
                 if (isChecked) {
                     // イベントトラック
-                    tracker.trackEvent("List", "ViewMode", "Favorite", 0);
+                    EasyTracker.getTracker().sendEvent("List", "ViewMode",
+                            "Favorite", (long) 0);
 
                     loading.setMode(LoadingManager.MODE_PAGE);
 
@@ -179,7 +184,8 @@ public class ListActivity extends AbstractMyActivity {
                     task.execute(DISPLAY_MODE_FAVORITE_LIST);
                 } else {
                     // イベントトラック
-                    tracker.trackEvent("List", "ViewMode", "Search", 0);
+                    EasyTracker.getTracker().sendEvent("List", "ViewMode",
+                            "Search", (long) 0);
 
                     loading.setMode(LoadingManager.MODE_PAGE);
 
@@ -294,7 +300,8 @@ public class ListActivity extends AbstractMyActivity {
                 task.execute(DISPLAY_MODE_SEARCH_LIST);
 
                 // イベントトラック（並び順）
-                tracker.trackEvent("List", "SearchSort", modeSearchSort, 0);
+                EasyTracker.getTracker().sendEvent("List", "SearchSort",
+                        "modeSearchSort", (long) 0);
             }
         }
     };
@@ -323,7 +330,8 @@ public class ListActivity extends AbstractMyActivity {
                 task.execute(DISPLAY_MODE_FAVORITE_LIST);
 
                 // イベントトラック（並び順）
-                tracker.trackEvent("List", "FavoriteSort", modeFavoriteSort, 0);
+                EasyTracker.getTracker().sendEvent("List", "FavoriteSort",
+                        modeFavoriteSort, (long) 0);
             }
         }
     };

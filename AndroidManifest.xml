@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.chrysaor.android.gas_station"
     android:installLocation="preferExternal"
-    android:versionCode="35"
-    android:versionName="3.0.1" >
+    android:versionCode="37"
+    android:versionName="3.0.3" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -32,22 +32,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- 設定画面 -->
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/settings_label"
             android:theme="@style/CustomTheme" />
+        <!-- アプリについて -->
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/about_label"
             android:theme="@style/CustomTheme" />
+        <!-- 一覧画面 -->
         <activity
             android:name=".activity.ListActivity"
             android:label="@string/settings_label"
             android:theme="@style/CustomTheme" />
-        <activity
-            android:name=".activity.FavoriteListActivity"
-            android:label="@string/settings_label"
-            android:theme="@style/CustomTheme" />
+        <!-- 詳細画面 -->
         <activity
             android:name=".activity.DetailActivity"
             android:label="@string/settings_label"
@@ -56,6 +56,7 @@
                 <action android:name="android.intent.action.MAIN.VIEW" />
             </intent-filter>
         </activity>
+        <!-- 投稿画面 -->
         <activity
             android:name=".activity.PostActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -71,6 +72,10 @@
             android:label="ブランド" />
 
         <service android:name=".util.UpdateFavoritesService" />
+
+        <activity
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
     </application>
 
     <uses-sdk

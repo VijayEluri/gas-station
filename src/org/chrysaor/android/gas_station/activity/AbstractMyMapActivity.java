@@ -1,36 +1,28 @@
 package org.chrysaor.android.gas_station.activity;
 
-import java.util.Random;
-
-import jp.adlantis.android.AdlantisView;
-import jp.adlantis.android.utils.AdlantisUtils;
-import net.nend.android.NendAdView;
-
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
 import org.chrysaor.android.gas_station.util.GasStaApplication;
 import org.chrysaor.android.gas_station.util.Utils;
 
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.LinearLayout.LayoutParams;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.maps.MapActivity;
 
 public abstract class AbstractMyMapActivity extends MapActivity {
 
-    protected GoogleAnalyticsTracker tracker;
     public static String lastEvent = null;
     protected GasStaApplication app;
 
@@ -51,27 +43,24 @@ public abstract class AbstractMyMapActivity extends MapActivity {
         ErrorReporter.bugreport(this);
 
         app = (GasStaApplication) getApplication();
-        tracker = GoogleAnalyticsTracker.getInstance();
+    }
 
-        // Start the tracker in manual dispatch mode...
-        tracker.start(this.getResources().getString(R.string.tracking_code),
-                20, this);
-        tracker.trackPageView("/" + this.getClass().getName());
-        tracker.setCustomVar(1, "Model", Build.MODEL, 1);
-        try {
-            tracker.setCustomVar(2, "Version", getPackageManager()
-                    .getPackageInfo(getPackageName(), 1).versionName, 1);
-        } catch (NameNotFoundException e) {
-        }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this); // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this); // Add this method.
     }
 
     @Override
     protected void onDestroy() {
 
         super.onDestroy();
-
-        // Stop the tracker when it is no longer needed.
-        tracker.stop();
 
         ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(
                 android.R.id.content);
@@ -107,56 +96,32 @@ public abstract class AbstractMyMapActivity extends MapActivity {
         }
     }
 
-    protected void setAdView() {
+    /**
+     * 広告の表示
+     * 
+     * @param mediationId
+     */
+    protected void setAdView(String mediationId) {
         LinearLayout layoutAd = (LinearLayout) findViewById(R.id.layoutAd);
 
         if (Utils.isDonate(getApplicationContext())) {
             layoutAd.setVisibility(View.INVISIBLE);
         } else {
             layoutAd.setVisibility(View.VISIBLE);
-            Random rnd = new Random();
 
-            int ran = rnd.nextInt(2);
+            try {
 
-            switch (ran) {
-            case 0: // Nend
-                showNendAdView(layoutAd);
-                break;
-            case 1:
-            default:
-                // AdLantis
-                showAdLantisView(layoutAd);
-                break;
+                AdView adView = new AdView(this, AdSize.BANNER, mediationId);
+
+                layoutAd.addView(adView);
+
+                AdRequest adRequest = new AdRequest();
+                adView.loadAd(adRequest);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * Nendの広告を表示
-     * 
-     * @param view
-     */
-    private void showNendAdView(LinearLayout view) {
-        NendAdView nendAdView = new NendAdView(
-                getApplicationContext(),
-                Integer.parseInt(getResources().getString(R.string.nend_spotid)),
-                getResources().getString(R.string.nend_apiid));
-        view.addView(nendAdView, new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    }
-
-    /**
-     * Adlantisの広告を表示
-     * 
-     * @param view
-     */
-    private void showAdLantisView(LinearLayout view) {
-        AdlantisView adView = new AdlantisView(this);
-        view.addView(
-                adView,
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.FILL_PARENT, AdlantisUtils
-                                .adHeightPixels(this)));
     }
 
     protected final SimpleOnGestureListener simpleOnGestureListener = new SimpleOnGestureListener() {

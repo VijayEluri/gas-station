@@ -3,10 +3,8 @@ package org.chrysaor.android.gas_station.activity;
 import org.chrysaor.android.gas_station.R;
 import org.chrysaor.android.gas_station.util.ErrorReporter;
 import org.chrysaor.android.gas_station.util.SeekBarPreference;
-import org.chrysaor.android.gas_station.util.UpdateFavoritesService;
 import org.chrysaor.android.gas_station.util.Utils;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -15,11 +13,11 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.preference.Preference.OnPreferenceChangeListener;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.analytics.tracking.android.EasyTracker;
 
 /**
  * 設定画面
@@ -32,7 +30,6 @@ public class SettingsActivity extends PreferenceActivity implements
 
     // private boolean settings_penetration_key = false;
     private boolean settings_member_key = false;
-    GoogleAnalyticsTracker tracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,12 +38,6 @@ public class SettingsActivity extends PreferenceActivity implements
 
         ErrorReporter.setup(this);
         ErrorReporter.bugreport(SettingsActivity.this);
-
-        tracker = GoogleAnalyticsTracker.getInstance();
-
-        // Start the tracker in manual dispatch mode...
-        tracker.start("UA-20090562-2", 20, this);
-        tracker.trackPageView("/SettingsActivity");
 
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
@@ -89,6 +80,18 @@ public class SettingsActivity extends PreferenceActivity implements
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this); // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this); // Add this method.
+    }
+
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
             String key) {
         setSummaryAll(key);
@@ -114,7 +117,8 @@ public class SettingsActivity extends PreferenceActivity implements
             pref.setSummary(pref.getEntry());
 
             // イベントトラック
-            tracker.trackEvent("Settings", key, pref.getEntry().toString(), 0);
+            EasyTracker.getTracker().sendEvent("Settings", key,
+                    pref.getEntry().toString(), (long) 0);
 
             if (key.equals("settings_dist")) {
                 setNoPostDataSummary();
@@ -125,8 +129,8 @@ public class SettingsActivity extends PreferenceActivity implements
             pref.setSummary(String.valueOf(pref.getValue()) + "%");
 
             // イベントトラック
-            tracker.trackEvent("Settings", key,
-                    String.valueOf(pref.getValue()), 0);
+            EasyTracker.getTracker().sendEvent("Settings", key,
+                    String.valueOf(pref.getValue()), (long) 0);
 
         } else if (class_name.indexOf("CheckBoxPreference") != -1) {
             CheckBoxPreference pref = (CheckBoxPreference) getPreferenceScreen()
@@ -143,8 +147,8 @@ public class SettingsActivity extends PreferenceActivity implements
             }
 
             // イベントトラック
-            tracker.trackEvent("Settings", key,
-                    String.valueOf(pref.isChecked()), 0);
+            EasyTracker.getTracker().sendEvent("Settings", key,
+                    String.valueOf(pref.isChecked()), (long) 0);
 
         } else if (class_name.indexOf("EditTextPreference") != -1) {
             EditTextPreference pref = (EditTextPreference) getPreferenceScreen()
@@ -156,7 +160,8 @@ public class SettingsActivity extends PreferenceActivity implements
             }
 
             // イベントトラック
-            tracker.trackEvent("Settings", key, pref.getText().toString(), 0);
+            EasyTracker.getTracker().sendEvent("Settings", key,
+                    pref.getText().toString(), (long) 0);
         }
     }
 
@@ -194,13 +199,6 @@ public class SettingsActivity extends PreferenceActivity implements
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Stop the tracker when it is no longer needed.
-        tracker.stop();
     }
 
     @Override

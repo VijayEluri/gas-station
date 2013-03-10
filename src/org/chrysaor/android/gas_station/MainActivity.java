@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,6 +14,7 @@ import org.chrysaor.android.gas_station.activity.AbstractMyMapActivity;
 import org.chrysaor.android.gas_station.activity.DetailActivity;
 import org.chrysaor.android.gas_station.activity.ListActivity;
 import org.chrysaor.android.gas_station.activity.SettingsActivity;
+import org.chrysaor.android.gas_station.lib.data.Price;
 import org.chrysaor.android.gas_station.lib.database.DatabaseHelper;
 import org.chrysaor.android.gas_station.lib.database.StandsDao;
 import org.chrysaor.android.gas_station.lib.dto.Stand;
@@ -38,11 +40,11 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.speech.tts.TextToSpeech;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -63,29 +65,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class MainActivity extends AbstractMyMapActivity implements Runnable {
+public class MainActivity extends AbstractMyMapActivity implements Runnable,
+        TextToSpeech.OnInitListener {
 
     private static final int E6 = 1000000;
-    private static final long LOCATION_MIN_TIME = 10000 * 1;
-    private static final float LOCATION_MIN_DISTANCE = 5.0F;
     public static final String ACTION_FAVORITE = "org.chrysaor.android.intent.receive.FAVORITE";
+    private static final String ADMOB_MEDIATION_ID = "6198e089d1544c13";
 
     private MapController mMapController = null;
     private MapView mMapView = null;
-    private LocationManager mLocationManager;
     public static Location myLocation = null;
     private static Boolean donate = false;
     protected InputStream is;
     private ProgressDialog dialog;
     private Resources resource;
     private LocationOverlay overlay;
-    private SQLiteDatabase db;
     private ArrayList<Stand> dtoStandList;
     private static Typeface tf;
     public static Display display;
@@ -94,6 +95,7 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
     private Timer mTimer = null;
     private Handler mHandler = new Handler();
     private boolean slideEditFlg = false;
+    private TextToSpeech tts;
 
     /** ガソリンスタンド検索スレッド */
     private SearchThread searchThread;
@@ -107,6 +109,9 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
         gestureDetector = new GestureDetector(this, simpleOnGestureListener);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // TTS初期か
+        tts = new TextToSpeech(this, this);
 
         // ダイアログの初期化
         dialog = new ProgressDialog(this);
@@ -168,7 +173,7 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         setFooterView();
 
         // 広告Viewの設定
-        setAdView();
+        setAdView(ADMOB_MEDIATION_ID);
 
         // Overlayとして登録
         mMapView.getOverlays().add(overlay);
@@ -187,8 +192,10 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
             @Override
             public void onClick(View v) {
+
                 // イベントトラック（リスト）
-                tracker.trackEvent("Main", "List", null, 0);
+                EasyTracker.getTracker()
+                        .sendEvent("Main", "List", "", (long) 0);
 
                 Intent intent = new Intent(getApplicationContext(),
                         ListActivity.class);
@@ -513,23 +520,6 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         gestureDetector.onTouchEvent(event);
-
-        // switch (event.getAction()) {
-        // case MotionEvent.ACTION_UP:
-        // if (lastEvent == "onFling" || lastEvent == "onScroll") {
-        // setTimer();
-        // } else {
-        // if (mTimer != null) {
-        // mTimer.cancel();
-        // }
-        // }
-        // break;
-        // default:
-        // if (mTimer != null) {
-        // mTimer.cancel();
-        // }
-        // break;
-        // }
         return super.dispatchTouchEvent(event);
     }
 
@@ -593,18 +583,12 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_UP:
-        case MotionEvent.ACTION_CANCEL:
-            break;
-        case MotionEvent.ACTION_MOVE:
-            CenterCircleOverlay location = new CenterCircleOverlay(this);
-            mMapView.getOverlays().add(location);
-            break;
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != tts) {
+            // TextToSpeechのリソースを解放する
+            tts.shutdown();
         }
-        return true;
     }
 
     @Override
@@ -634,7 +618,8 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
         switch (item.getItemId()) {
         case 0:
             // イベントトラック（設定）
-            tracker.trackEvent("Main", "Settings", null, 0);
+            EasyTracker.getTracker()
+                    .sendEvent("Main", "Settings", "", (long) 0);
 
             Intent intent = new Intent(MainActivity.this,
                     SettingsActivity.class);
@@ -642,7 +627,8 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             return true;
         case 1:
             // イベントトラック（現在地）
-            tracker.trackEvent("Main", "Location", null, 0);
+            EasyTracker.getTracker()
+                    .sendEvent("Main", "Location", "", (long) 0);
 
             // overlay.setMyLocationFlag(true);
             GeoPoint l = overlay.getMyLocation();
@@ -658,7 +644,7 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             return searchAction();
         case 3:
             // イベントトラック（about）
-            tracker.trackEvent("Main", "About", null, 0);
+            EasyTracker.getTracker().sendEvent("Main", "About", "", (long) 0);
 
             Intent intent2 = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(intent2);
@@ -696,7 +682,8 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             }
 
             // イベントトラック（検索）
-            tracker.trackEvent("Main", "Search", urlString, 0);
+            EasyTracker.getTracker().sendEvent("Main", "Search", urlString,
+                    (long) 0);
 
             // 地図の中心位置を取得
             GeoPoint center = mMapView.getMapCenter();
@@ -787,6 +774,7 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
             db.beginTransaction();
             int dataSize = 0;
+            int lowPrice = 0;
 
             try {
                 SharedPreferences pref = PreferenceManager
@@ -805,6 +793,15 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
                 for (int i = 0; i < size; i++) {
 
                     Stand dto = dtoStandList.get(i);
+
+                    int price = Integer.valueOf(dto.price);
+                    if (price != 9999) {
+                        if (lowPrice == 0) {
+                            lowPrice = price;
+                        } else {
+                            lowPrice = Math.min(lowPrice, price);
+                        }
+                    }
 
                     // 24時間営業のGSかチェックする
                     if (app.get24h() == true && dto.rtc.compareTo("24H") != 0) {
@@ -850,9 +847,25 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             mMapView.getOverlays().addAll(pins);
             mMapView.invalidate();
 
-            Toast.makeText(getApplicationContext(),
-                    String.valueOf(dataSize) + "件のスタンドが見つかりました",
-                    Toast.LENGTH_SHORT).show();
+            String msg = String.valueOf(dataSize) + "件のスタンドが見つかりました";
+
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT)
+                    .show();
+
+//            try {
+//                if (tts.isSpeaking()) {
+//                    // 読み上げ中なら止める
+//                    tts.stop();
+//                }
+//
+//                // 読み上げ開始
+//                String str = msg
+//                        + ((lowPrice > 0) ? "。最安値は" + lowPrice + "円です。" : "");
+//                tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
         }
 
         db.close();
@@ -923,7 +936,8 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
             Stand info = standList.get(index);
 
             // イベントトラック（GSタップ）
-            tracker.trackEvent("Main", "Stand", info.shopCode, 0);
+            EasyTracker.getTracker().sendEvent("Main", "Stand", info.shopCode,
+                    (long) 0);
 
             Intent intent1 = new Intent(MainActivity.this, DetailActivity.class);
             intent1.putExtra("shopcode", info.shopCode);
@@ -983,6 +997,20 @@ public class MainActivity extends AbstractMyMapActivity implements Runnable {
 
         public PinOverlayItem(GeoPoint point) {
             super(point, "", "");
+        }
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (TextToSpeech.SUCCESS == status) {
+            Locale locale = Locale.JAPANESE;
+            if (tts.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE) {
+                tts.setLanguage(locale);
+            } else {
+                Log.d("", "Error SetLocale");
+            }
+        } else {
+            Log.d("", "Error Init");
         }
     }
 }

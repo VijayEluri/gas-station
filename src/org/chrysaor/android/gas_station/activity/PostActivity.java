@@ -19,6 +19,8 @@ import org.chrysaor.android.gas_station.util.StandsHelper;
 import org.chrysaor.android.gas_station.util.Utils;
 import org.chrysaor.android.gas_station.util.XmlParserFromUrl;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -318,8 +320,8 @@ public class PostActivity extends AbstractMyActivity {
                 postExecute();
 
                 // イベントトラック（価格投稿）
-                tracker.trackEvent("Post", "Post", ss_id, 0);
-
+                EasyTracker.getTracker().sendEvent("Post", "Post", ss_id,
+                        (long) 0);
             }
         });
     }
